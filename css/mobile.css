@@ -1,0 +1,66 @@
+
+.main {
+  margin: 0;
+  width: 100%;
+  background-color: Black;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+  font-family: Raleway;
+}
+
+h1 {
+  font-size: 5vh;
+}
+
+p {
+  font-size: 3vh;
+}
+
+a {
+  font-size: 3vh;
+}
+
+.top_img_mobile {
+
+  width: auto;
+  height: auto;
+  display: inherit;
+}
+.top_img_mobile img{
+  height: 20vh;
+  width: auto;
+}
+
+.left_image {
+  display: none;
+  width: 0;
+  height: 100vh;
+  float: left;
+  align-content: center;
+  overflow: hidden;
+  position: relative;
+
+}
+
+.links a{
+  color: #ffcc00;
+  font-family: Raleway-Thin;
+}
+.links p{
+  padding-bottom: 30px;
+}
+
+.this{
+  padding-bottom: 0;
+}
+
+.what{
+  text-align: center;
+  margin-bottom: 50px
+}
+
+.img {
+  height: 0;
+  width: 0;
+}
