@@ -32,7 +32,7 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 100%;
+  width: auto;
   margin-bottom: 10px;
 }
 
@@ -43,7 +43,6 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  white-space: nowrap;
 }
 
 @keyframes fadein {
@@ -74,8 +73,10 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  white-space: nowrap;
   width: auto;
   margin-left: 5%;
+  margin-right: 5%;
 }
 
 .what{
