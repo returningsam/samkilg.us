@@ -74,9 +74,7 @@ a {
   flex-direction: column;
   justify-content: center;
   white-space: nowrap;
-  width: auto;
-  margin-left: 5%;
-  margin-right: 5%;
+  width: 100%;
 }
 
 .what{
@@ -142,6 +140,7 @@ a {
   width: auto;
   height: auto;
   display: inherit;
+  margin-left: -10px;
 }
 
 .top_img_mobile img{
