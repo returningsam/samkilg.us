@@ -22,10 +22,11 @@ h1 {
 }
 
 a {
-  font-family: sans-serif;
+  font-family: 'Raleway';
   font-size: 1.5rem;
   color: white;
   text-decoration: none;
+  font-weight:200;
 }
 
 .top_part {
@@ -228,12 +229,7 @@ a {
   height: 100%;
   width: 100%;
   display: none;
-  z-index: 100;
-}
-
-.hidden_stufffff a {
-  font-size: 1rem;
-  font-weight: 200;
+  z-index: 1;
 }
 
 .option {
