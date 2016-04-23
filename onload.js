@@ -200,7 +200,10 @@ var canvas;
 var randomChars1 = [];
 var randomChars2 = [];
 window.onload = function() {
-
+  var username = "samkilgus";
+  var hostname = "gmail.com";
+  var mailtext = username + "@" + hostname ;
+  document.getElementById("emale").innerHTML = mailtext;
   if (document.cookie.indexOf("6546545665656565124984897289489435465") === -1) {
     document.getElementById("bodeee").style.backgroundColor = "white";
     document.cookie="6546545665656565124984897289489435465=1";
