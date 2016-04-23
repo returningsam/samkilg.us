@@ -111,22 +111,21 @@ var lskdf = 0;
 function newchar() {
   i--;
   if (i === 1) {
-    var torem1 = document.getElementById("box");
-    if (torem1) {
-      torem1.style.display = "none";
-    }
+    document.getElementById("boxchrome").style.display = "none";
+    document.getElementById("box").style.display = "none";
     clearInterval(tostop);
   }
   else{
     if (i === 25) {
       stopbuild = true;
-      document.getElementById("replay").style.display = "block";
       document.getElementById("tot").style.opacity = "1";
       document.getElementById("tot").className += " fade_in";
       document.getElementById("replay").style.opacity = "1";
       document.getElementById("replay").className += " fade_in";
-      document.getElementById("hidden_stufffff").style.opacity = "1";
-      document.getElementById("hidden_stufffff").className += " fade_in";
+      document.getElementById("soundcloud").style.opacity = "1";
+      document.getElementById("soundcloud").className += " fade_in";
+      document.getElementById("codelines").style.opacity = "1";
+      document.getElementById("codelines").className += " fade_in";
     }
 
     maxsize += maxsize/20;
@@ -154,20 +153,21 @@ function newchar() {
 function newcharChrome() {
   i--;
   if (i === 1) {
-    var torem1 = document.getElementById("boxchrome");
-    if (torem1) {
-      torem1.style.display = "none";
-    }
+    document.getElementById("boxchrome").style.display = "none";
+    document.getElementById("box").style.display = "none";
     clearInterval(tostop);
   }
   else{
     if (i === 25) {
       stopbuild = true;
-      document.getElementById("replay").style.display = "block";
       document.getElementById("tot").style.opacity = "1";
       document.getElementById("tot").className += " fade_in";
-      document.getElementById("hidden_stufffff").style.display = "block";
+      document.getElementById("replay").style.opacity = "1";
       document.getElementById("replay").className += " fade_in";
+      document.getElementById("soundcloud").style.opacity = "1";
+      document.getElementById("soundcloud").className += " fade_in";
+      document.getElementById("codelines").style.opacity = "1";
+      document.getElementById("codelines").className += " fade_in";
     }
 
     maxsize += maxsize/20;
@@ -218,9 +218,10 @@ window.onload = function() {
     document.getElementById("boxchrome").style.display = "none";
     document.getElementById("tot").style.opacity = "1";
     document.getElementById("tot").className += " fade_in";
-    document.getElementById("hidden_stufffff").style.display = "block !important";
-    document.getElementById("hidden_stufffff").className += " fade_in";
-    document.getElementById("replay").style.display = "block";
+    document.getElementById("soundcloud").style.opacity = "1";
+    document.getElementById("soundcloud").className += " fade_in";
+    document.getElementById("codelines").style.opacity = "1";
+    document.getElementById("codelines").className += " fade_in";
     document.getElementById("replay").style.opacity = "1";
     document.getElementById("replay").className += " fade_in";
   }
