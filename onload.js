@@ -150,6 +150,19 @@ function newchar() {
   }
 };
 
+function show_errthang() {
+  document.getElementById("box").style.display = "none";
+  document.getElementById("boxchrome").style.display = "none";
+  document.getElementById("tot").style.opacity = "1";
+  document.getElementById("tot").className += " fade_in";
+  for (var i = 0; i < document.getElementsByClassName('option').length; i++) {
+    document.getElementsByClassName('option')[i].style.opacity = "1";
+    document.getElementsByClassName('option')[i].className += " fade_in";
+  }
+  document.getElementById("replay").style.opacity = "1";
+  document.getElementById("replay").className += " fade_in";
+}
+
 function newcharChrome() {
   i--;
   if (i === 1) {
@@ -160,14 +173,7 @@ function newcharChrome() {
   else{
     if (i === 25) {
       stopbuild = true;
-      document.getElementById("tot").style.opacity = "1";
-      document.getElementById("tot").className += " fade_in";
-      document.getElementById("replay").style.opacity = "1";
-      document.getElementById("replay").className += " fade_in";
-      document.getElementById("soundcloud").style.opacity = "1";
-      document.getElementById("soundcloud").className += " fade_in";
-      document.getElementById("codelines").style.opacity = "1";
-      document.getElementById("codelines").className += " fade_in";
+      show_errthang();
     }
 
     maxsize += maxsize/20;
@@ -217,50 +223,27 @@ window.onload = function() {
     loopchar();
   }
   else {
-    document.getElementById("box").style.display = "none";
-    document.getElementById("boxchrome").style.display = "none";
-    document.getElementById("tot").style.opacity = "1";
-    document.getElementById("tot").className += " fade_in";
-    document.getElementById("soundcloud").style.opacity = "1";
-    document.getElementById("soundcloud").className += " fade_in";
-    document.getElementById("codelines").style.opacity = "1";
-    document.getElementById("codelines").className += " fade_in";
-    document.getElementById("replay").style.opacity = "1";
-    document.getElementById("replay").className += " fade_in";
-  }
-  var f = Math.floor(Math.random()*4);
-  if (f == 0) {
-    document.getElementById("soundcloud").style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("soundcloud").style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else if (f == 1){
-    document.getElementById("soundcloud").style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("soundcloud").style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else if (f == 1){
-    document.getElementById("soundcloud").style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("soundcloud").style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else {
-    document.getElementById("soundcloud").style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("soundcloud").style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  var c = Math.floor(Math.random()*4);
-  if (c == 0) {
-    document.getElementById("codelines").style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("codelines").style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else if (c == 1){
-    document.getElementById("codelines").style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("codelines").style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else if (c == 2){
-    document.getElementById("codelines").style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("codelines").style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
-  }
-  else{
-    document.getElementById("codelines").style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
-    document.getElementById("codelines").style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
+    show_errthang();
   }
 
+  for (var i = 0; i < document.getElementsByClassName('option').length; i++) {
+    var s = Math.floor(Math.random()*4);
+    var ele = document.getElementsByClassName('option')[i]
+    if (s == 0) {
+      ele.style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
+      ele.style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
+    }
+    else if (s == 1){
+      ele.style.top = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
+      ele.style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
+    }
+    else if (s == 2){
+      ele.style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
+      ele.style.left = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
+    }
+    else {
+      ele.style.bottom = (Math.random()*(document.getElementById('bodeee').clientHeight / 3)).toString() + "px";
+      ele.style.right = (Math.random()*(document.getElementById('bodeee').clientWidth / 3)).toString() + "px";
+    }
+  }
 };
