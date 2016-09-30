@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
+    <meta charset="utf-8">
+    <title>Sam Kilgus</title>
     <script>
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
@@ -18,75 +20,96 @@
       ga('create', 'UA-73703405-1', 'auto');
       ga('send', 'pageview');
     </script>
-    <script type="text/javascript">
-      function deleteCookie() {
-        document.cookie = encodeURIComponent("6546545665656565124984897289489435465") + "=deleted; expires=" + new Date(0).toUTCString();
-        location.reload();
-      }
-    </script>
 
-    <title>Sam Kilgus</title>
-    <meta charset="utf-8"/>
-    <script src="onload.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,200,500" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/style_temp.css" type="text/css"/>
-    <!--<link href="css/mobile.css" media="(max-width: 1000px)" rel="stylesheet" type="text/css"/>-->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" charset="utf-8"></script>
   </head>
-
-  <body id="bodeee">
-
-    <canvas id="box" class="box">Your browser does not support the canvas element... Please wait...</canvas>
-
-    <div id="boxchrome" class="box"></div>
-
-    <div onclick="deleteCookie()" id="replay" class="replay">
-      <p id="replay_text">replay animation ⟲</p>
-    </div>
+  <body>
 
 
-    <div id="soundcloud" class="option"><a target="_blank" href="https://soundcloud.com/es1gns">soundcloud</a></div>
-    <div id="codelines" class="option"><a target="_blank" href="http://codelines.xyz">codelines.xyz</a></div>
-    <div id="turtle" class="option"><a target="_blank" href="http://turtle.randart.xyz">turtle.randart.xyz</a></div>
-    <div id="curves" class="option"><a target="_blank" href="http://curves.randart.xyz">curves.randart.xyz</a></div>
-    <div id="spacefill" class="option"><a target="_blank" href="http://spacefill.xyz">spacefill.xyz</a></div>
+    <!--
+      Hello,
+
+      Thank you for inspecting my website code. I really do appreciate it.
+
+      If you happen to find anything wrong or that could be improved, I'd love
+      to hear your thoughts.
+
+      If you happen to be impressed by my code/coding style and also happend to
+      be a potential employer, I would love to hear from you, as I am
+      always looking for job opportunities.
+
+      Either way, I would like to hear from you and would like to gift you
+      this donut as a sign of appreciation:
+
+                    k;double sin()
+               ,cos();main(){float A=
+             0,B=0,i,j,z[1760];char b[
+           1760];printf("\x1b[2J");for(;;
+        ){memset(b,32,1760);memset(z,0,7040)
+        ;for(j=0;6.28>j;j+=0.07)for(i=0;6.28
+       >i;i+=0.02){float c=sin(i),d=cos(j),e=
+       sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c*
+       h*e+f*g+5),l=cos      (i),m=cos(B),n=s\
+      in(B),t=c*h*g-f*        e;int x=40+30*D*
+      (l*h*m-t*n),y=            12+15*D*(l*h*n
+      +t*m),o=x+80*y,          N=8*((f*e-c*d*g
+       )*m-c*d*e-f*g-l        *d*n);if(22>y&&
+       y>0&&x>0&&80>x&&D>z[o]){z[o]=D;;;b[o]=
+       ".,-~:;=!*#$@"[N>0?N:0];}}/*#****!!-*/
+        printf("\x1b[H");for(k=0;1761>k;k++)
+          putchar(k%80?b[k]:10);A+=0.04;B+=
+            0.02;}}/*****####*******!!=;:~
+              ~::==!!!**********!!!==::-
+                .,~~;;;========;;;:~-.
+                    ..,,,,,,,,,,*/
+
+      (source: https://www.a1k0n.net/2006/09/15/obfuscated-c-donut.html)
+
+      Thanks again,
+
+      ~~ Sam Kilgus
+
+    -->
 
 
-    <div id="tot" class="tot">
-      <div class="main">
-
-        <div class="top_part">
-          <div class="top_img_mobile">
-            <img src="media/S.svg" alt="head_mobile"/>
+    <canvas id="canvas"></canvas>
+    <main class="row center main_hidden">
+      <div id="main_inner" class="column center">
+        <div id="title" class="title column">
+          <div class="row center">
+            <img src="assets/S.svg" alt="logo" />
           </div>
 
-          <div class="intro">
-            <h1>Sam Kilgus</h1>
+          <p class="title_text row center">Sam Kilgus</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="about" class="column">
+          <p class="about_text">Computer Science Junior</p>
+          <p class="about_text middle_one">Rochester Institute of Technology</p>
+          <p id="emael" class="about_text"></p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="links" class="links column">
+          <div class="row space_between">
+            <p onclick="open_link('resume')">Resume</p>
+            <p onclick="open_link('github')">GitHub</p>
           </div>
-        </div>
-
-        <div id="sep1" class="separator"></div>
-
-        <div class="what">
-
-          <p>Computer Science Junior</p>
-
-          <p>Rochester Institute of Technology</p>
-
-          <p id="emale" class="last"></p>
-        </div>
-
-
-        <div id="sep2" class="separator"></div>
-
-        <div class="links">
-          <div class="link"><a target="_blank" href="media/resume.pdf"><p>Resume</p></a></div>
-          <div class="link"><a class="centerlink" href="https://github.com/returningsam" target="_blank"><p>GitHub</p></a></div>
-          <div class="link"><a class="centerlink" href="https://www.linkedin.com/in/samkilgus" target="_blank"><p>LinkedIn</p></a></div>
-          <div class="link"><a href="https://www.instagram.com/returningsam/" target="_blank"><p class="this">Instagram</p></a></div>
+          <div class="row space_between">
+            <p onclick="open_link('linkedin')">LinkedIn</p>
+            <p onclick="open_link('instagram')">Instagram</p>
+          </div>
         </div>
       </div>
-    </div>
-
+      <div onclick="replay_button();" id="replay_button" class="replay_button">
+        <p>replay animation ⟲</p>
+      </div>
+    </main>
   </body>
-
 </html>
