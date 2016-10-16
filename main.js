@@ -233,7 +233,7 @@ window.onload = function () {
     show_main(true);
   }
   //ignorethisplz
-  var url = "http://cleanalytics.us-west-2.elasticbeanstalk.com/new_page_view";
+  var url = "https://cleanalytics.us-west-2.elasticbeanstalk.com/new_page_view";
   var request = new XMLHttpRequest();
   if (request) {
     request.open('GET',url,true);
