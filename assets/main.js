@@ -232,4 +232,12 @@ window.onload = function () {
   else {
     show_main(true);
   }
+
+  // send new user notification to personal analytics platform
+  var url = "http://cleanalytics.zswyi3k5ep.us-east-1.elasticbeanstalk.com/new_page_view";
+  var request = new XMLHttpRequest();
+  if (request) {
+    request.open('GET',url,true);
+    request.send();
+  }
 }
