@@ -91,7 +91,7 @@ var links = {
   'linkedin': 'https://www.linkedin.com/in/samkilgus',
   'github': 'https://github.com/returningsam',
   'instagram': 'https://www.instagram.com/returningsam/',
-  'resume': 'assets/resume.pdf'
+  'resume': 'http://samkilgus.us-east-1.elasticbeanstalk.com/get_resume'
 };
 
 /**
