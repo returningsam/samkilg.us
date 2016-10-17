@@ -50,21 +50,7 @@ function start_server() {
           return;
         }
         response.writeHead(200, {
-          "Content-Type": "application/javascript",
-          "Access-Control-Allow-Headers": "X-Requested-With",
-          "Access-Control-Allow-Origin": "*"
-         });
-        response.end(file, "utf-8");
-      });
-    }
-    else if (path=="/get_logo") {
-      fs.readFile('./assets/S.svg', function(err, file) {
-        if(err) {
-          server_log("logo file not found...");
-          return;
-        }
-        response.writeHead(200, {
-          "Content-Type": "application/javascript",
+          "Content-Type": "image/svg+xml",
           "Access-Control-Allow-Headers": "X-Requested-With",
           "Access-Control-Allow-Origin": "*"
          });
@@ -78,7 +64,7 @@ function start_server() {
           return;
         }
         response.writeHead(200, {
-          "Content-Type": "application/javascript",
+          "Content-Type": "application/pdf",
           "Access-Control-Allow-Headers": "X-Requested-With",
           "Access-Control-Allow-Origin": "*"
          });
@@ -91,6 +77,15 @@ function start_server() {
           // write an error response or nothing here
           return;
         }
+
+        // send new user notification to personal analytics platform
+        var url = "http://cleanalytics.zswyi3k5ep.us-east-1.elasticbeanstalk.com/new_page_view";
+        var request = new XMLHttpRequest();
+        if (request) {
+          request.open('GET',url,true);
+          request.send();
+        }
+
         response.writeHead(200, {
           "Content-Type": "text/html",
           "Access-Control-Allow-Headers": "X-Requested-With",

@@ -232,11 +232,4 @@ window.onload = function () {
   else {
     show_main(true);
   }
-  //ignorethisplz
-  var url = "https://cleanalytics.us-west-2.elasticbeanstalk.com/new_page_view";
-  var request = new XMLHttpRequest();
-  if (request) {
-    request.open('GET',url,true);
-    request.send();
-  }
 }
