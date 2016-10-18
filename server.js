@@ -71,6 +71,20 @@ function start_server() {
         response.end(file, "utf-8");
       });
     }
+    else if (path=="/favicon.ico") {
+      fs.readFile('./assets/S.ico', function(err, file) {
+        if(err) {
+          server_log("resume file not found...");
+          return;
+        }
+        response.writeHead(200, {
+          "Content-Type": "image/x-icon",
+          "Access-Control-Allow-Headers": "X-Requested-With",
+          "Access-Control-Allow-Origin": "*"
+         });
+        response.end(file, "utf-8");
+      });
+    }
     else{
       fs.readFile('./assets/index.html', function(err, file) {
         if(err) {
