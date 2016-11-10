@@ -44,7 +44,7 @@ function start_server() {
       });
     }
     else if (path=="/get_logo") {
-      fs.readFile('./assets/S.svg', function(err, file) {
+      fs.readFile('./assets/white_emboss.svg', function(err, file) {
         if(err) {
           server_log("logo file not found...");
           return;
