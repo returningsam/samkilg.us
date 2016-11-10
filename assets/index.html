@@ -22,17 +22,22 @@
     </script>
 
     <script type="text/javascript">
-      var base = window.location.href;
-      var css_url = base + "/get_css";
-      var js_url = base + "/get_js";
-      var logo_url = base + "/get_logo";
-      var css_link = document.createElement('link');
-      css_link.href = css_url;
-      document.head.appendChild(css_link);
-      var js_script = document.createElement("script");
-      js_script.src = js_url;
-      document.head.appendChild(js_script);
-      document.getElementById('logo_img_tag').src = logo_url;
+      window.onload = function () {
+        var base = window.location.href;
+        var css_url = base + "get_css";
+        var js_url = base + "get_js";
+        var logo_url = base + "get_logo";
+        var css_link = document.createElement('link');
+        css_link.href = css_url;
+        css_link.type = "text/css";
+        css_link.rel = "stylesheet";
+        document.head.appendChild(css_link);
+        var js_script = document.createElement("script");
+        js_script.src = js_url;
+        js_script.type = "text/javascript";
+        document.head.appendChild(js_script);
+        document.getElementById('logo_img_tag').src = logo_url;
+      }
     </script>
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400" rel="stylesheet">

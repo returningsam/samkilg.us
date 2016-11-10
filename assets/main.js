@@ -223,6 +223,26 @@ function replay_button() {
   text_fill();
 }
 
+function run_all() {
+  page_setup();
+  if (document.cookie.indexOf("samkilguscookies_hasvisited=1") < 0) {
+    document.cookie="samkilguscookies_hasvisited=1";
+    text_fill();
+  }
+  else {
+    show_main(true);
+  }
+
+  // send new user notification to personal analytics platform
+  var url = "http://cleanalytics.samkilg.us/new_page_view";
+  var request = new XMLHttpRequest();
+  if (request) {
+    request.open('GET',url,true);
+    request.send();
+  }
+  console.log("Asdfasfasf");
+}
+
 window.onload = function () {
   page_setup();
   if (document.cookie.indexOf("samkilguscookies_hasvisited=1") < 0) {
@@ -240,4 +260,7 @@ window.onload = function () {
     request.open('GET',url,true);
     request.send();
   }
+  console.log("Asdfasfasf");
 }
+
+run_all();
