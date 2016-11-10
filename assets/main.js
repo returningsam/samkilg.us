@@ -234,7 +234,7 @@ window.onload = function () {
   }
 
   // send new user notification to personal analytics platform
-  var url = "http://cleanalytics.zswyi3k5ep.us-east-1.elasticbeanstalk.com/new_page_view";
+  var url = "http://cleanalytics.samkilg.us/new_page_view";
   var request = new XMLHttpRequest();
   if (request) {
     request.open('GET',url,true);

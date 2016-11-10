@@ -21,10 +21,22 @@
       ga('send', 'pageview');
     </script>
 
+    <script type="text/javascript">
+      var base = window.location.href;
+      var css_url = base + "/get_css";
+      var js_url = base + "/get_js";
+      var logo_url = base + "/get_logo";
+      var css_link = document.createElement('link');
+      css_link.href = css_url;
+      document.head.appendChild(css_link);
+      var js_script = document.createElement("script");
+      js_script.src = js_url;
+      document.head.appendChild(js_script);
+      document.getElementById('logo_img_tag').src = logo_url;
+    </script>
+
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
-    <link rel="stylesheet" href="http://samkilgus.us-east-1.elasticbeanstalk.com/get_css">
-    <script src="http://samkilgus.us-east-1.elasticbeanstalk.com/get_js" charset="utf-8"></script>
   </head>
   <body>
 
@@ -80,7 +92,7 @@
       <div id="main_inner" class="column center">
         <div id="title" class="title column">
           <div class="row center">
-            <img src="http://samkilgus.us-east-1.elasticbeanstalk.com/get_logo" alt="logo" />
+            <img id="logo_img_tag" alt="logo" />
           </div>
 
           <p class="title_text row center">Sam Kilgus</p>
