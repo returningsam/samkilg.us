@@ -11,12 +11,12 @@ var url = require('url');
 var port = process.env.PORT || 3000;
 
 function start_server() {
-  // Configure our HTTP server to respond to requests.
+  // Configure the HTTP server to respond to requests.
   var server = http.createServer(function (request, response) {
     var path = url.parse(request.url).pathname;
     server_log("Request recieved: " + path);
     if (path=="/get_logo") {
-      fs.readFile('./assets/white_emboss.svg', function(err, file) {
+      fs.readFile('./assets/white_flat.svg', function(err, file) {
         if(err) {
           server_log("logo file not found...");
           return;

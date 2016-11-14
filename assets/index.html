@@ -35,13 +35,11 @@
       }
 
       img {
-        width: 10000px;
-        height: 10000px;
+        width: 100px;
+        height: 100px;
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transition: top 1s 1s, left 1s 1s, height 1s 1s, width 1s 1s;
-        z-index: 100;
+        top: 60px;
+        left: 60px;
       }
 
       main {
@@ -55,6 +53,14 @@
 
         z-index: 0;
         padding: 60px;
+      }
+
+      @media screen and (max-width: 720px), screen and (max-height: 800px) {
+        .zoom {
+          zoom: 0.75;
+          -moz-transform: scale(0.75);
+          -moz-transform-origin: 0 0;
+        }
       }
 
       /*******************************************************************************
@@ -71,7 +77,6 @@
 
       .content p {
         color: white;
-
         margin-top: 10px;
       }
 
@@ -106,7 +111,7 @@
         font-size: 1.7rem;
         font-weight: 500;
         text-align: right;
-        transition: bottom 0.4s 0.4s;
+        transition: bottom 0.4s 0.8s;
       }
 
       .link_cont p {
@@ -203,11 +208,7 @@
       }
 
       window.onload = function () {
-        document.getElementById('logo').src = window.location.href + "get_logo";
-        document.getElementById('logo').style.width = "100px";
-        document.getElementById('logo').style.height = "100px";
-        document.getElementById('logo').style.left = "60px";
-        document.getElementById('logo').style.top = "60px";
+        document.getElementById('logo').src = window.location.href + "get_logo"
         document.getElementById('link_cont').style.bottom = "60px";
         document.getElementById('overlay').addEventListener('mouseover', function () {
           resize_overlay(true);
@@ -225,7 +226,7 @@
       }
     </script>
   </head>
-  <body>
+  <body class="zoom">
     <img id="logo" alt="logo" />
     <div id="content" class="content">
       <p class="title">Sam Kilgus</p>
