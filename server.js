@@ -15,35 +15,7 @@ function start_server() {
   var server = http.createServer(function (request, response) {
     var path = url.parse(request.url).pathname;
     server_log("Request recieved: " + path);
-    if (path=="/get_css") {
-      fs.readFile('./assets/style.css', function(err, file) {
-        if(err) {
-          server_log("css file not found...");
-          return;
-        }
-        response.writeHead(200, {
-          "Content-Type": "text/css",
-          "Access-Control-Allow-Headers": "X-Requested-With",
-          "Access-Control-Allow-Origin": "*"
-        });
-        response.end(file, "utf-8");
-      });
-    }
-    else if (path=="/get_js") {
-      fs.readFile('./assets/main.js', function(err, file) {
-        if(err) {
-          server_log("js file not found...");
-          return;
-        }
-        response.writeHead(200, {
-          "Content-Type": "application/javascript",
-          "Access-Control-Allow-Headers": "X-Requested-With",
-          "Access-Control-Allow-Origin": "*"
-         });
-        response.end(file, "utf-8");
-      });
-    }
-    else if (path=="/get_logo") {
+    if (path=="/get_logo") {
       fs.readFile('./assets/white_emboss.svg', function(err, file) {
         if(err) {
           server_log("logo file not found...");
