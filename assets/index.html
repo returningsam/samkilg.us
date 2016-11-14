@@ -3,130 +3,241 @@
   <head>
     <meta charset="utf-8">
     <title>Sam Kilgus</title>
-    <script>
-      (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments)
-        },
-        i[r].l = 1 * new Date();
-        a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
-      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    <meta name="theme-color" content="#282828">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500" rel="stylesheet">
+    <style media="screen">
+      html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: "Raleway";
+        margin: 0;
+        padding: 0;
+        background-color: #282828;
+      }
 
-      ga('create', 'UA-73703405-1', 'auto');
-      ga('send', 'pageview');
-    </script>
+      p {
+        margin: 0;
+        padding: 0;
+      }
 
+      a {
+        text-decoration: none;
+        color: white;
+        transition: color 0.2s;
+      }
+
+      a:hover {
+        text-decoration: none;
+        color: #ffcc00;
+        transition: color 0.2s;
+        cursor: pointer;
+      }
+
+      img {
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 60px;
+        left: 60px;
+      }
+
+      main {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        height: inherit;
+        width: inherit;
+
+        z-index: 0;
+        padding: 60px;
+      }
+
+      /*******************************************************************************
+      ******************************** Description ***********************************
+      *******************************************************************************/
+
+      .content {
+        position: fixed;
+        left: 60px;
+        padding-right: 20px;
+        font-size: 1.7rem;
+        font-weight: 500;
+      }
+
+      .content p {
+        color: white;
+
+        margin-top: 10px;
+      }
+
+      .title {
+        font-size: 3.5rem !important;
+        font-weight: 300;
+      }
+
+      /*******************************************************************************
+      ******************************** Overlay ***************************************
+      *******************************************************************************/
+
+
+      .overlay {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        border-bottom: 3000px solid white;
+        border-left: 3000px solid transparent;
+        filter: drop-shadow(15px 15px 30px black);
+        transition: border 1s 0.2s;
+      }
+
+      .link_cont {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        bottom: -200px;
+        right: 60px;
+        z-index: 2;
+        font-size: 1.7rem;
+        font-weight: 500;
+        text-align: right;
+        transition: bottom 0.4s 0.4s;
+      }
+
+      .link_cont p {
+        margin-top: 10px;
+        padding-bottom: 3px;
+        color: #282828;
+      }
+
+      .link_cont p:hover {
+        cursor: pointer;
+      }
+
+      .link_cont p:hover + .underline {
+        height: 2px;
+        width: 100%;
+        background-color: #282828;
+        transition: width 0.2s;
+      }
+
+      .underline {
+        height: 2px;
+        width: 0;
+        background-color: #282828;
+        transition: width 0.2s;
+      }
+    </style>
     <script type="text/javascript">
+      function go_to_link(element) {
+        var links = {
+          'linkedin': 'https://www.linkedin.com/in/samkilgus',
+          'github': 'https://github.com/returningsam',
+          'instagram': 'https://www.instagram.com/returningsam/',
+          'resume': 'resume.pdf'
+        }
+        window.open(links[element.innerHTML],'_blank');
+      }
+
+      function fill_emael() {
+        var username = 'samkilgus';
+        var hostname = 'gmail.com';
+        var mailtext = username + '@' + hostname ;
+        var link_ele = document.createElement('a');
+        link_ele.href = 'mailto:' + mailtext;
+        link_ele.innerHTML = mailtext;
+        document.getElementById('emael').appendChild(link_ele);
+      }
+
+      var ratio;
+
+      function resize_overlay(extra) {
+        ratio = window.innerHeight/window.innerWidth;
+        if (ratio > 1.5) {
+          ratio = 1.50;
+        }
+        if (ratio < 0.6) {
+          ratio = 0.6;
+        }
+
+        if (extra) {
+          ratio += 0.05;
+        }
+
+        var footer = document.getElementById('overlay');
+        var border_left = Math.round((window.innerHeight * ratio));
+        var border_bottom = Math.round((window.innerWidth * (1/ratio))-300);
+
+        var shape_ratio = Math.min(border_left/border_bottom,border_bottom/border_left);
+        shape_ratio = Math.max(0,shape_ratio);
+
+        border_left = border_left - (300 * shape_ratio);
+        border_bottom = border_bottom - (300 * shape_ratio);
+
+        if (border_left < document.getElementById('link_cont').clientWidth + 120) {
+          border_left = document.getElementById('link_cont').clientWidth + 120;
+        }
+        if (border_bottom < document.getElementById('link_cont').clientHeight + 120) {
+          border_bottom = document.getElementById('link_cont').clientHeight + 120;
+        }
+
+
+
+        footer.style.borderBottom = border_bottom.toString() + "px solid white";
+        footer.style.borderLeft = border_left.toString() + "px solid transparent";
+      }
+
+      function reposition_desc() {
+        var desc = document.getElementById('content');
+        desc.style.bottom = Math.max(60,60*Math.pow(ratio+.4,3)).toString() + "px";
+      }
+
+      window.onresize = function () {
+        resize_overlay();
+        reposition_desc();
+      }
+
       window.onload = function () {
-        var base = window.location.href;
-        var css_url = base + "get_css";
-        var js_url = base + "get_js";
-        var logo_url = base + "get_logo";
-        var css_link = document.createElement('link');
-        css_link.href = css_url;
-        css_link.type = "text/css";
-        css_link.rel = "stylesheet";
-        document.head.appendChild(css_link);
-        var js_script = document.createElement("script");
-        js_script.src = js_url;
-        js_script.type = "text/javascript";
-        document.head.appendChild(js_script);
-        document.getElementById('logo_img_tag').src = logo_url;
+        document.getElementById('link_cont').style.bottom = "60px";
+        document.getElementById('overlay').addEventListener('mouseover', function () {
+          resize_overlay(true);
+        });
+        document.getElementById('link_cont').addEventListener('mouseover', function () {
+          resize_overlay(true);
+        });
+
+        document.getElementById('overlay').addEventListener('mouseout', function () {
+          resize_overlay(false);
+        });
+        resize_overlay();
+        reposition_desc();
+        fill_emael();
       }
     </script>
-
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
   </head>
   <body>
+    <img src="white_emboss.svg" alt="logo" />
+    <div id="content" class="content">
+      <p class="title">Sam Kilgus</p>
+      <p>computer science junior</p>
+      <p>rochester institute of technology</p>
+      <p id="emael"></p>
+    </div>
+    <div id="overlay" class="overlay">
 
-
-    <!--
-      Hello,
-
-      Thank you for inspecting my website code. I really do appreciate it.
-
-      If you happen to find anything wrong or that could be improved, I'd love
-      to hear your thoughts.
-
-      If you happen to be impressed by my code/coding style and also happen to
-      be a potential employer, I would love to hear from you, as I am
-      always looking for job opportunities.
-
-      Either way, I would like to hear from you and would like to give you
-      this donut as a sign of appreciation:
-
-                    k;double sin()
-               ,cos();main(){float A=
-             0,B=0,i,j,z[1760];char b[
-           1760];printf("\x1b[2J");for(;;
-        ){memset(b,32,1760);memset(z,0,7040)
-        ;for(j=0;6.28>j;j+=0.07)for(i=0;6.28
-       >i;i+=0.02){float c=sin(i),d=cos(j),e=
-       sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c*
-       h*e+f*g+5),l=cos      (i),m=cos(B),n=s\
-      in(B),t=c*h*g-f*        e;int x=40+30*D*
-      (l*h*m-t*n),y=            12+15*D*(l*h*n
-      +t*m),o=x+80*y,          N=8*((f*e-c*d*g
-       )*m-c*d*e-f*g-l        *d*n);if(22>y&&
-       y>0&&x>0&&80>x&&D>z[o]){z[o]=D;;;b[o]=
-       ".,-~:;=!*#$@"[N>0?N:0];}}/*#****!!-*/
-        printf("\x1b[H");for(k=0;1761>k;k++)
-          putchar(k%80?b[k]:10);A+=0.04;B+=
-            0.02;}}/*****####*******!!=;:~
-              ~::==!!!**********!!!==::-
-                .,~~;;;========;;;:~-.
-                    ..,,,,,,,,,,*/
-
-      (source: https://www.a1k0n.net/2006/09/15/obfuscated-c-donut.html)
-
-      Thanks again,
-
-      ~~ Sam Kilgus
-
-    -->
-
-
-    <canvas id="canvas"></canvas>
-    <main class="row center main_hidden">
-      <div id="main_inner" class="column center">
-        <div id="title" class="title column">
-          <div class="row center">
-            <img id="logo_img_tag" alt="logo" />
-          </div>
-
-          <p class="title_text row center">Sam Kilgus</p>
-        </div>
-
-        <div class="divider"></div>
-
-        <div id="about" class="column">
-          <p class="about_text">Computer Science Junior</p>
-          <p class="about_text middle_one">Rochester Institute of Technology</p>
-          <p id="emael" class="about_text"></p>
-        </div>
-
-        <div class="divider"></div>
-
-        <div id="links" class="links column">
-          <div class="row space_between">
-            <p onclick="open_link('resume');">Resume</p>
-            <p onclick="open_link('github');">GitHub</p>
-          </div>
-          <div class="row space_between">
-            <p onclick="open_link('linkedin');">LinkedIn</p>
-            <p onclick="open_link('instagram');">Instagram</p>
-          </div>
-        </div>
-      </div>
-      <div onclick="replay_button();" id="replay_button" class="replay_button">
-        <p>replay animation ⟲</p>
-      </div>
-    </main>
+    </div>
+    <div id="link_cont" class="link_cont">
+      <p onclick="go_to_link(this)">github</p>
+      <div class="underline"></div>
+      <p onclick="go_to_link(this)">resume</p>
+      <div class="underline"></div>
+      <p onclick="go_to_link(this)">linkedin</p>
+      <div class="underline"></div>
+      <p onclick="go_to_link(this)">instagram</p>
+      <div class="underline"></div>
+    </div>
   </body>
 </html>
