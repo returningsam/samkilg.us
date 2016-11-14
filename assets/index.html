@@ -35,11 +35,13 @@
       }
 
       img {
-        width: 100px;
-        height: 100px;
+        width: 10000px;
+        height: 10000px;
         position: fixed;
-        top: 60px;
-        left: 60px;
+        top: 50%;
+        left: 50%;
+        transition: top 1s 1s, left 1s 1s, height 1s 1s, width 1s 1s;
+        z-index: 100;
       }
 
       main {
@@ -202,6 +204,10 @@
 
       window.onload = function () {
         document.getElementById('logo').src = window.location.href + "get_logo";
+        document.getElementById('logo').style.width = "100px";
+        document.getElementById('logo').style.height = "100px";
+        document.getElementById('logo').style.left = "60px";
+        document.getElementById('logo').style.top = "60px";
         document.getElementById('link_cont').style.bottom = "60px";
         document.getElementById('overlay').addEventListener('mouseover', function () {
           resize_overlay(true);
