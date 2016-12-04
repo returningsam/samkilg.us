@@ -7,7 +7,7 @@ var locs = {
 };
 var overlay_hover = false;
 
-var zoom_val = 3;
+var zoom_val = 2;
 
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
