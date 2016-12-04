@@ -10,6 +10,8 @@ var url = require('url');
 
 var port = process.env.PORT || 3000;
 
+var locs = {};
+
 function start_server() {
   // Configure the HTTP server to respond to requests.
   var server = http.createServer(function (request, response) {
@@ -37,6 +39,34 @@ function start_server() {
         }
         response.writeHead(200, {
           "Content-Type": "application/pdf",
+          "Access-Control-Allow-Headers": "X-Requested-With",
+          "Access-Control-Allow-Origin": "*"
+         });
+        response.end(file, "utf-8");
+      });
+    }
+    else if (path=="/get_css") {
+      fs.readFile('./assets/style.css', function(err, file) {
+        if(err) {
+          server_log("resume file not found...");
+          return;
+        }
+        response.writeHead(200, {
+          "Content-Type": "text/css",
+          "Access-Control-Allow-Headers": "X-Requested-With",
+          "Access-Control-Allow-Origin": "*"
+         });
+        response.end(file, "utf-8");
+      });
+    }
+    else if (path=="/get_js") {
+      fs.readFile('./assets/main.js', function(err, file) {
+        if(err) {
+          server_log("resume file not found...");
+          return;
+        }
+        response.writeHead(200, {
+          "Content-Type": "application/javascript",
           "Access-Control-Allow-Headers": "X-Requested-With",
           "Access-Control-Allow-Origin": "*"
          });

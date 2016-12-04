@@ -4,248 +4,44 @@
     <meta charset="utf-8">
     <title>Sam Kilgus</title>
     <meta name="theme-color" content="#282828">
+
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500" rel="stylesheet">
-    <style media="screen">
-      html, body {
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        font-family: "Raleway";
-        margin: 0;
-        padding: 0;
-        background-color: #282828;
-      }
+    <link rel="stylesheet" href="http://samkilgus-staging.us-east-1.elasticbeanstalk.com/get_css">
+    <script src="http://samkilgus-staging.us-east-1.elasticbeanstalk.com/get_js" charset="utf-8"></script>
 
-      p {
-        margin: 0;
-        padding: 0;
-      }
-
-      a {
-        text-decoration: none;
-        color: white;
-        transition: color 0.2s;
-      }
-
-      a:hover {
-        text-decoration: none;
-        color: #ffcc00;
-        transition: color 0.2s;
-        cursor: pointer;
-      }
-
-      img {
-        width: 100px;
-        height: 100px;
-        position: fixed;
-        top: 60px;
-        left: 60px;
-      }
-
-      main {
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-        top: 0;
-        left: 0;
-        height: inherit;
-        width: inherit;
-
-        z-index: 0;
-        padding: 60px;
-      }
-
-      @media screen and (max-width: 720px), screen and (max-height: 800px) {
-        .zoom {
-          zoom: 0.75;
-          -moz-transform: scale(0.75);
-          -moz-transform-origin: 0 0;
-        }
-      }
-
-      /*******************************************************************************
-      ******************************** Description ***********************************
-      *******************************************************************************/
-
-      .content {
-        position: fixed;
-        left: 60px;
-        padding-right: 20px;
-        font-size: 1.7rem;
-        font-weight: 500;
-      }
-
-      .content p {
-        color: white;
-        margin-top: 10px;
-      }
-
-      .title {
-        font-size: 3.5rem !important;
-        font-weight: 300;
-      }
-
-      /*******************************************************************************
-      ******************************** Overlay ***************************************
-      *******************************************************************************/
-
-
-      .overlay {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        border-bottom: 3000px solid white;
-        border-left: 3000px solid transparent;
-        filter: drop-shadow(15px 15px 30px black);
-        transition: border 1s 0.2s;
-      }
-
-      .link_cont {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        bottom: -200px;
-        right: 60px;
-        z-index: 2;
-        font-size: 1.7rem;
-        font-weight: 500;
-        text-align: right;
-        transition: bottom 0.4s 0.8s;
-      }
-
-      .link_cont p {
-        margin-top: 10px;
-        padding-bottom: 3px;
-        color: #282828;
-      }
-
-      .link_cont p:hover {
-        cursor: pointer;
-      }
-
-      .link_cont p:hover + .underline {
-        height: 2px;
-        width: 100%;
-        background-color: #282828;
-        transition: width 0.2s;
-      }
-
-      .underline {
-        height: 2px;
-        width: 0;
-        background-color: #282828;
-        transition: width 0.2s;
-      }
-    </style>
-    <script type="text/javascript">
-      function go_to_link(element) {
-        var links = {
-          'linkedin': 'https://www.linkedin.com/in/samkilgus',
-          'github': 'https://github.com/returningsam',
-          'instagram': 'https://www.instagram.com/returningsam/',
-          'resume': window.location.href + 'get_resume'
-        }
-        window.open(links[element.innerHTML],'_blank');
-      }
-
-      function fill_emael() {
-        var username = 'samkilgus';
-        var hostname = 'gmail.com';
-        var mailtext = username + '@' + hostname ;
-        var link_ele = document.createElement('a');
-        link_ele.href = 'mailto:' + mailtext;
-        link_ele.innerHTML = mailtext;
-        document.getElementById('emael').appendChild(link_ele);
-      }
-
-      var ratio;
-
-      function resize_overlay(extra) {
-        ratio = window.innerHeight/window.innerWidth;
-        if (ratio > 1.5) {
-          ratio = 1.50;
-        }
-        if (ratio < 0.6) {
-          ratio = 0.6;
-        }
-
-        if (extra) {
-          ratio += 0.05;
-        }
-
-        var footer = document.getElementById('overlay');
-        var border_left = Math.round((window.innerHeight * ratio));
-        var border_bottom = Math.round((window.innerWidth * (1/ratio))-300);
-
-        var shape_ratio = Math.min(border_left/border_bottom,border_bottom/border_left);
-        shape_ratio = Math.max(0,shape_ratio);
-
-        border_left = border_left - (300 * shape_ratio);
-        border_bottom = border_bottom - (300 * shape_ratio);
-
-        if (border_left < document.getElementById('link_cont').clientWidth + 120) {
-          border_left = document.getElementById('link_cont').clientWidth + 120;
-        }
-        if (border_bottom < document.getElementById('link_cont').clientHeight + 120) {
-          border_bottom = document.getElementById('link_cont').clientHeight + 120;
-        }
-
-
-
-        footer.style.borderBottom = border_bottom.toString() + "px solid white";
-        footer.style.borderLeft = border_left.toString() + "px solid transparent";
-      }
-
-      function reposition_desc() {
-        var desc = document.getElementById('content');
-        desc.style.bottom = Math.max(60,60*Math.pow(ratio+.4,3)).toString() + "px";
-      }
-
-      window.onresize = function () {
-        resize_overlay();
-        reposition_desc();
-      }
-
-      window.onload = function () {
-        document.getElementById('logo').src = window.location.href + "get_logo"
-        document.getElementById('link_cont').style.bottom = "60px";
-        document.getElementById('overlay').addEventListener('mouseover', function () {
-          resize_overlay(true);
-        });
-        document.getElementById('link_cont').addEventListener('mouseover', function () {
-          resize_overlay(true);
-        });
-
-        document.getElementById('overlay').addEventListener('mouseout', function () {
-          resize_overlay(false);
-        });
-        resize_overlay();
-        reposition_desc();
-        fill_emael();
-      }
-    </script>
   </head>
-  <body class="zoom">
-    <img id="logo" alt="logo" />
-    <div id="content" class="content">
-      <p class="title">Sam Kilgus</p>
-      <p>computer science junior</p>
-      <p>rochester institute of technology</p>
-      <p id="emael"></p>
-    </div>
-    <div id="overlay" class="overlay">
 
+  <!--========================================================================
+  =========================================================================-->
+
+  <body class="zoom">
+    <div id="loader" class="loader_cont">
+      <div class="left_bar load_bar"></div>
+      <div class="center_bar load_bar"></div>
+      <div class="right_bar load_bar"></div>
     </div>
-    <div id="link_cont" class="link_cont">
-      <p onclick="go_to_link(this)">github</p>
-      <div class="underline"></div>
-      <p onclick="go_to_link(this)">resume</p>
-      <div class="underline"></div>
-      <p onclick="go_to_link(this)">linkedin</p>
-      <div class="underline"></div>
-      <p onclick="go_to_link(this)">instagram</p>
-      <div class="underline"></div>
-    </div>
+    <main>
+      <img id="logo" alt="logo" />
+      <div id="content" class="content">
+        <p class="title">Sam Kilgus</p>
+        <p>computer science junior</p>
+        <p>rochester institute of technology</p>
+        <p id="emael"></p>
+      </div>
+      <div id="overlay" class="overlay"></div>
+      <div id="link_cont" class="link_cont">
+        <p onclick="go_to_link(this)">github</p>
+        <div class="underline"></div>
+        <p onclick="go_to_link(this)">resume</p>
+        <div class="underline"></div>
+        <p onclick="go_to_link(this)">linkedin</p>
+        <div class="underline"></div>
+        <p onclick="go_to_link(this)">instagram</p>
+        <div class="underline"></div>
+      </div>
+    </main>
+    <div id="map" class="map"></div>
   </body>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-lFQabDysnU3LmTDQ-lgBciNxvEAQ2vE&callback=initMap"
+  async defer></script>
 </html>
