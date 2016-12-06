@@ -12,6 +12,8 @@ var overlay_hover = false;
 
 var zoom_val = 3;
 
+var circles = [];
+
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
  */
@@ -61,11 +63,17 @@ function render_map() {
       if (!locs) {
         locs = {};
       }
-      var new_loc = {lat: parseFloat((location.coords.latitude).toFixed(2)),lng: parseFloat((location.coords.longitude).toFixed(2))};
+      var new_loc = {
+        loc: {
+          lat: parseFloat((location.coords.latitude).toFixed(2)),
+          lng: parseFloat((location.coords.longitude).toFixed(2))
+        },
+        count: 1
+      };
       var found = false;
       for (var i = 0; i < Object.keys(locs).length; i++) {
         var key = Object.keys(locs)[i];
-        if (locs[key] && locs[key].lat == new_loc.lat && locs[key].lng == new_loc.lng) {
+        if (locs[key] && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
           found = true;
           my_id = key;
         }
@@ -73,19 +81,28 @@ function render_map() {
       if (!found) {
         my_id = gen_id();
         locs[my_id] = new_loc;
-        push_data();
       }
+      else {
+        locs[my_id].count += 1;
+      }
+      push_data();
 
       make_map();
     }, make_map);
   }
   catch (e) {
-    make_map()
+    make_map();
   }
 
 }
 
 function update_locs() {
+  for (var i = 0; i < circles.length; i++) {
+    if (circles[i]) {
+      circles[i].setMap(null)
+      delete circles[i];
+    }
+  }
   var me_circle = new google.maps.Circle({
     strokeColor: "#ffcc00",
     strokeOpacity: 0.8,
@@ -94,17 +111,14 @@ function update_locs() {
     fillOpacity: 0.35,
     map: map,
     center: my_loc,
-    radius: 200000,
+    radius: 100000,
     clickable: false
   });
   if (locs) {
     for (var i = 0; i < Object.keys(locs).length; i++) {
       var key = Object.keys(locs)[i];
       if (locs[key]) {
-        var radius = 100000;
-        if (my_id && key == my_id) {
-          radius = 200000;
-        }
+        var radius = 10000 * locs[key].count;
         var new_circle = new google.maps.Circle({
           strokeColor: "#eeeeee",
           strokeOpacity: 0.8,
@@ -112,10 +126,11 @@ function update_locs() {
           fillColor: "#eeeeee",
           fillOpacity: 0.35,
           map: map,
-          center: locs[key],
+          center: locs[key].loc,
           radius: radius,
           clickable: false
         });
+        circles.push(new_circle);
       }
     }
   }
@@ -193,12 +208,6 @@ function show_page() {
   document.getElementById('content').style.opacity = "1";
   document.getElementById('link_cont').style.bottom = "60px";
   document.getElementsByTagName('main')[0].style.backgroundColor = "rgba(0,0,0,0)";
-  document.getElementById('overlay').addEventListener('mouseover', function () {
-    if (!overlay_hover) {
-      resize_overlay(true);
-      overlay_hover = true;
-    }
-  });
   document.getElementById('link_cont').addEventListener('mouseover', function () {
     if (!overlay_hover) {
       resize_overlay(true);
@@ -206,7 +215,7 @@ function show_page() {
     }
   });
 
-  document.getElementById('overlay').addEventListener('mouseout', function () {
+  document.getElementById('link_cont').addEventListener('mouseout', function () {
     if (overlay_hover) {
       resize_overlay(false);
       overlay_hover = false;
@@ -230,8 +239,8 @@ function push_data() {
 
 function init_firebase() {
   var config = {
-    apiKey: "AIzaSyAEMswKkmrv-CJdMfojOtIKptIFNOfgbCk",
-    databaseURL: "https://samkilgus-9e989.firebaseio.com",
+    apiKey: "AIzaSyAjBBQw54yQAUUCMU5fUoj4bhCfWI_lRvk",
+    databaseURL: "https://samkilgus-49192.firebaseio.com",
   };
   firebase.initializeApp(config);
   database = firebase.database();
@@ -249,6 +258,11 @@ window.onload = function () {
 }
 
 window.onbeforeunload = function () {
-  delete locs[my_id];
+  if (locs[my_id].count > 1) {
+    locs[my_id].count -= 1;
+  }
+  else {
+    delete locs[my_id];
+  }
   push_data();
 }
