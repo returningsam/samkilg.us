@@ -5,14 +5,16 @@ var my_id;
 var database;
 var db_ready;
 var my_loc = {lat:43.08,lng:-77.67}
-var locs = {
-
-};
+var locs;
 var overlay_hover = false;
 
 var zoom_val = 3;
 
 var circles = [];
+
+var me_circle;
+
+var hours_to_decay = 12;
 
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
@@ -27,10 +29,32 @@ function gen_id() {
   do {
     new_id = "";
     for (var i = 0; i < r_in_r(5,15); i++) {
-      new_id += ops[r_in_r(0,ops.length)];
+      new_id += ops[r_in_r(0,ops.length-1)];
     }
   } while (locs[new_id]);
   return new_id;
+}
+
+function set_cookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function get_cookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length,c.length);
+    }
+  }
+  return false;
 }
 
 function make_map() {
@@ -57,7 +81,6 @@ function initMap() {
 }
 
 function render_map() {
-  // Styles a map in night mode.
   try {
     navigator.geolocation.getCurrentPosition(function(location) {
       if (!locs) {
@@ -68,42 +91,56 @@ function render_map() {
           lat: parseFloat((location.coords.latitude).toFixed(2)),
           lng: parseFloat((location.coords.longitude).toFixed(2))
         },
-        count: 1
+        count: 1,
+        decay: Math.round(Date.now()/3600000)
       };
       var found = false;
       for (var i = 0; i < Object.keys(locs).length; i++) {
         var key = Object.keys(locs)[i];
-        if (locs[key] && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
+        if (locs[key] && locs[key].decay == locs[key].decay && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
           found = true;
           my_id = key;
+          break;
         }
       }
       if (!found) {
-        my_id = gen_id();
+        // check cookie for id
+        if (get_cookie('samkilgussite') && locs[get_cookie('samkilgussite')]) {
+          my_id = get_cookie('samkilgussite');
+        }
+        else {
+          my_id = gen_id();
+          set_cookie('samkilgussite',my_id,1);
+        }
+
         locs[my_id] = new_loc;
       }
       else {
         locs[my_id].count += 1;
+        locs[my_id].decay = Math.round(Date.now()/3600000);
       }
       push_data();
-
       make_map();
     }, make_map);
   }
   catch (e) {
     make_map();
   }
-
 }
 
 function update_locs() {
+  console.log("update_locs");
   for (var i = 0; i < circles.length; i++) {
     if (circles[i]) {
       circles[i].setMap(null)
       delete circles[i];
     }
   }
-  var me_circle = new google.maps.Circle({
+  if (me_circle) {
+    me_circle.setMap(null);
+    me_circle = null;
+  }
+  me_circle = new google.maps.Circle({
     strokeColor: "#ffcc00",
     strokeOpacity: 0.8,
     strokeWeight: 2,
@@ -121,15 +158,16 @@ function update_locs() {
         var radius = 10000 * locs[key].count;
         var new_circle = new google.maps.Circle({
           strokeColor: "#eeeeee",
-          strokeOpacity: 0.8,
+          strokeOpacity: 0.8 * (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay))),
           strokeWeight: 2,
           fillColor: "#eeeeee",
-          fillOpacity: 0.35,
+          fillOpacity: 0.35 * (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay))),
           map: map,
           center: locs[key].loc,
           radius: radius,
           clickable: false
         });
+
         circles.push(new_circle);
       }
     }
@@ -198,6 +236,7 @@ function reposition_desc() {
 }
 
 function show_page() {
+  setInterval(update_locs, 1800000);
   setTimeout(function () {
     resize_overlay();
   }, 100);
@@ -227,6 +266,7 @@ function show_page() {
   window.onresize = function () {
     resize_overlay();
     reposition_desc();
+
     if (map) {
       map.setCenter(center);
     }
@@ -237,9 +277,22 @@ function push_data() {
   firebase.database().ref('locs/').set(locs);
 }
 
+function check_decays() {
+  if (locs) {
+    for (var i = 0; i < Object.keys(locs).length; i++) {
+      var key = Object.keys(locs)[i];
+      if (locs[key] && (1.0 - ((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay)) <= 0) {
+        delete locs[key];
+      }
+    }
+  }
+
+  push_data();
+}
+
 function init_firebase() {
   var config = {
-    apiKey: "AIzaSyAjBBQw54yQAUUCMU5fUoj4bhCfWI_lRvk",
+    apiKey: "AIzaSyCg-eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q",
     databaseURL: "https://samkilgus-49192.firebaseio.com",
   };
   firebase.initializeApp(config);
@@ -247,9 +300,9 @@ function init_firebase() {
 
   firebase.database().ref('locs/').on('value',function (snapshot) {
     locs = snapshot.val();
-    db_ready = true;
     update_locs();
-  })
+    check_decays();
+  });
 }
 
 window.onload = function () {
@@ -257,12 +310,12 @@ window.onload = function () {
   document.getElementById('overlay').style.borderLeft = (window.innerHeight*4).toString() + "px solid transparent";
 }
 
-window.onbeforeunload = function () {
-  if (locs[my_id].count > 1) {
-    locs[my_id].count -= 1;
-  }
-  else {
-    delete locs[my_id];
-  }
-  push_data();
-}
+// window.onbeforeunload = function () {
+//   if (locs[my_id].count > 1) {
+//     locs[my_id].count -= 1;
+//   }
+//   else {
+//     delete locs[my_id];
+//   }
+//   push_data();
+// }

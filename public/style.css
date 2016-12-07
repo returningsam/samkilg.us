@@ -1,6 +1,7 @@
 .map {
   background-color: #3A3A3A;
   height: 100%;
+  width: 100%;
 }
 
 a[href^="http://maps.google.com/maps"]{display:none !important}
@@ -15,6 +16,7 @@ a[href^="https://maps.google.com/maps"]{display:none !important}
 
 html, body {
   height: 100%;
+  width: 100%;
   font-family: "Raleway";
   margin: 0;
   padding: 0;
@@ -179,7 +181,7 @@ main .underline {
 
 .load_bar {
   position: absolute;
-  width: calc(100%/4.3);
+  width: calc(100%/3.9);
   background-color: #282828;
   border-radius: 2px;
 }
