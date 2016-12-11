@@ -1,9 +1,8 @@
 {
   "rules": {
     "locs": {
-      ".validate": "newData.hasChildren(['count', 'date', 'decay', 'loc'])",
       "$uid": {
-        ".validate": "$uid.length < 16 && $uid.length > 4",
+        ".validate": "$uid.length < 16 && $uid.length > 4 && newData.hasChildren(['count', 'date', 'decay', 'loc'])",
         "count": {
           ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > -1"
         },

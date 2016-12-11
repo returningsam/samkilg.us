@@ -73,7 +73,12 @@ function make_map() {
 }
 
 function initMap() {
-  init_firebase();
+  try {
+    init_firebase();
+  } catch (e) {
+      console.log(e);
+  }
+
   setTimeout(function () {
     render_map()
   }, 1000);
@@ -128,6 +133,7 @@ function render_map() {
         }
         locs[my_id].decay = Math.round(Date.now()/3600000);
       }
+      console.log(JSON.stringify(locs));
       push_data();
       make_map();
     }, make_map);
@@ -318,7 +324,7 @@ function check_decays() {
       }
     }
   }
-
+  console.log(JSON.stringify(locs));
   push_data();
 }
 
