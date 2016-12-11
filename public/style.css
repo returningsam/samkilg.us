@@ -150,6 +150,60 @@ main .underline {
 }
 
 /*******************************************************************************
+******************************** Logo ******************************************
+*******************************************************************************/
+
+.logo_cont {
+  pointer-events: all;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  top: 60px;
+  left: 60px;
+  z-index: 100;
+
+  -ms-transform: skewX(28deg); /* IE 9 */
+    -webkit-transform: skewX(28deg); /* Safari */
+    transform: skewX(28deg); /* Standard syntax */
+  transition: opacity 1s;
+  cursor: pointer;
+}
+
+.logo_cont:hover .logo_left_bar{
+  top: 40%;
+}
+.logo_cont:hover .logo_right_bar{
+  top: 10%;
+}
+
+.logo_bar {
+  position: absolute;
+  width: calc(100%/3.9);
+  background-color: white;
+  border-radius: 2px;
+}
+
+.logo_left_bar {
+  top: 50%;
+  left: 0;
+  height: 50%;
+  -webkit-transition: top 0.5s;
+  transition: top 0.5s;
+}
+.logo_right_bar {
+  top: 0;
+  right: 0;
+  height: 50%;
+  -webkit-transition: top 0.5s;
+  transition: top 0.5s;
+}
+
+.logo_center_bar {
+  left: calc((100%/2) - ((100%/4.3)/2));
+  height: 100%;
+}
+
+/*******************************************************************************
 ******************************** Loader ****************************************
 *******************************************************************************/
 
@@ -202,4 +256,47 @@ main .underline {
 .center_bar {
   left: calc((100%/2) - ((100%/4.3)/2));
   height: 100%;
+}
+
+/*******************************************************************************
+******************************** Description ***********************************
+*******************************************************************************/
+
+.desc_cont {
+  z-index: 50;
+  background-color: rgba(24, 24, 24, 0.9);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.desc_text_cont {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.desc_title {
+  text-align: center;
+  font-size: 3rem;
+  color: #ffcc00;
+}
+
+.desc_text {
+  width: 50%;
+  min-width: 500px;
+  text-align: justify;
+  color: white;
+  font-size: 1.3rem;
 }

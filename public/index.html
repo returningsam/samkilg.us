@@ -22,7 +22,11 @@
       <div class="right_bar load_bar"></div>
     </div>
     <main class="zoom">
-      <img src="white_flat.svg" id="logo" alt="logo" />
+      <div id="logo_cont" class="logo_cont">
+        <div class="logo_left_bar logo_bar"></div>
+        <div class="logo_center_bar logo_bar"></div>
+        <div class="logo_right_bar logo_bar"></div>
+      </div>
       <div id="content" class="content">
         <p class="title">Sam Kilgus</p>
         <p id="emael"></p>
@@ -40,8 +44,34 @@
         <p onclick="go_to_link(this)">instagram</p>
         <div class="underline"></div>
       </div>
+      <div class="zoom desc_cont" id="desc_cont">
+        <div class="desc_text_cont">
+          <p class="desc_title">What is all this?</p>
+        </div>
+        <div class="desc_text_cont">
+          <p class="desc_text">
+            Thank you very much for visiting my website! If you are currently looking to fill an Internship/Co-op position and think my skills would match such a position, I would love to hear from you. If you are not, feel free to explore the site and/or say hi anyway!
+          </p>
+        </div>
+        <div class="desc_text_cont">
+          <p class="desc_text">
+            Along with providing you with a directory to any information you may need about me, this website shows the locations of all people who have viewed this site within the past 24 hours. The yellow circle on the map shows the location of Rochester Institute of Technology, where I am currently based.
+          </p>
+        </div>
+        <div class="desc_text_cont">
+          <p class="desc_text">
+            Each white circle shows the location of a visitor of the site within the past 24 hours. If multiple people view the site within about 1 km of each other, their location circle will grow to reflect the number of people in that area. Over a 24 hour period of your location being marked on the map, your circle will fade (become more translucent) until it disappears.
+          </p>
+        </div>
+        <div class="desc_text_cont">
+          <p class="desc_text">
+            If your location is not shown on the map, you either did not grant the site the necessary permissions or your browser does not support the HTML5 Geolocation API. All latitude and longitude values are rounded to 2 decimal place on capture to make sure your specific location is secure.
+          </p>
+        </div>
+      </div>
     </main>
     <div id="map" class="map"></div>
+
   </body>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg-eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q&callback=initMap"
   async defer></script>

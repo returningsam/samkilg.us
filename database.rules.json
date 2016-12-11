@@ -1,5 +1,38 @@
 {
   "rules": {
+    "locs": {
+      ".validate": "newData.hasChildren(['count', 'date', 'decay', 'loc'])",
+      "$uid": {
+        ".validate": "$uid.length < 16 && $uid.length > 4",
+        "count": {
+          ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > -1"
+        },
+        "date": {
+          ".validate": "newData.isString() && newData.val().length < 19 && newData.val().length > 16"
+        },
+        "decay": {
+          ".validate": "newData.isNumber() && newData.val() < ((now/3600000)+2) && newData.val() > ((now/3600000)-2)"
+        },
+        "loc": {
+          ".validate": "newData.hasChildren(['lat', 'lng'])",
+          "lat": {
+            ".validate": "newData.isNumber() && newData.val() <= 180 && newData.val() >= -180"
+          },
+          "lng": {
+            ".validate": "newData.isNumber() && newData.val() <= 180 && newData.val() >= -180"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "$other": {
+      ".validate": false
+    },
     ".read": true,
     ".write": true
   }
