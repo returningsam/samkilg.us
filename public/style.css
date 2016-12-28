@@ -147,11 +147,28 @@ main .underline {
   width: 0;
   background-color: #282828;
   transition: width 0.2s;
+  flex-shrink: 0;
 }
 
 /*******************************************************************************
 ******************************** Logo ******************************************
 *******************************************************************************/
+
+.logo_cont_nohover {
+  pointer-events: all;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  top: 60px;
+  left: 60px;
+  z-index: 100;
+
+  -ms-transform: skewX(28deg); /* IE 9 */
+    -webkit-transform: skewX(28deg); /* Safari */
+    transform: skewX(28deg); /* Standard syntax */
+  transition: opacity 1s;
+  cursor: pointer;
+}
 
 .logo_cont {
   pointer-events: all;

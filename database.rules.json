@@ -7,7 +7,7 @@
           ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > -1"
         },
         "date": {
-          ".validate": "newData.isString() && newData.val().length < 19 && newData.val().length > 16"
+          ".validate": "newData.isString() && newData.val().length < 25 && newData.val().length > 16"
         },
         "decay": {
           ".validate": "newData.isNumber() && newData.val() < ((now/3600000)+2) && newData.val() > ((now/3600000)-2)"

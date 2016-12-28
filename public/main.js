@@ -17,6 +17,9 @@ var me_circle;
 
 var hours_to_decay = 24;
 
+var timedout = false;
+var page_shown = false;
+
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
  */
@@ -78,20 +81,17 @@ function initMap() {
   } catch (e) {
       console.log(e);
   }
-
-  setTimeout(function () {
-    render_map()
-  }, 1000);
+  render_map();
 }
 
 function get_date() {
   var date = new Date();
-  var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-  return months[date.getMonth()] + " " + date.getDate() + " " + date.toLocaleTimeString();
+  return date.toUTCString().replace(" GMT","").replace(" 2016","").replace(" 2017","");
 }
 
 function render_map() {
   try {
+    make_map();
     navigator.geolocation.getCurrentPosition(function(location) {
       if (!locs) {
         locs = {};
@@ -105,7 +105,6 @@ function render_map() {
         decay: Math.round(Date.now()/3600000),
         date: get_date()
       };
-      console.log(JSON.stringify(new_loc));
       var found = false;
       for (var i = 0; i < Object.keys(locs).length; i++) {
         var key = Object.keys(locs)[i];
@@ -133,18 +132,18 @@ function render_map() {
         }
         locs[my_id].decay = Math.round(Date.now()/3600000);
       }
-      console.log(JSON.stringify(locs));
       push_data();
-      make_map();
-    }, make_map);
+
+      update_locs();
+    }, update_locs);
   }
   catch (e) {
-    make_map();
+    update_locs();
   }
 }
 
 function update_locs() {
-  console.log("update_locs");
+
   for (var i = 0; i < circles.length; i++) {
     if (circles[i]) {
       circles[i].setMap(null)
@@ -170,7 +169,7 @@ function update_locs() {
     for (var i = 0; i < Object.keys(locs).length; i++) {
       var key = Object.keys(locs)[i];
       if (locs[key]) {
-        var radius = 10000 * locs[key].count;
+        var radius = 50000 * locs[key].count;
         var new_circle = new google.maps.Circle({
           strokeColor: "#eeeeee",
           strokeOpacity: 0.8 * (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay))),
@@ -200,13 +199,15 @@ function go_to_link(element) {
 }
 
 function fill_emael() {
-  var username = 'samkilgus';
-  var hostname = 'gmail.com';
-  var mailtext = username + '@' + hostname ;
-  var link_ele = document.createElement('a');
-  link_ele.href = 'mailto:' + mailtext;
-  link_ele.innerHTML = mailtext;
-  document.getElementById('emael').appendChild(link_ele);
+  if (document.getElementById('emael').innerHTML.length < 1) {
+    var username = 'samkilgus';
+    var hostname = 'gmail.com';
+    var mailtext = username + '@' + hostname ;
+    var link_ele = document.createElement('a');
+    link_ele.href = 'mailto:' + mailtext;
+    link_ele.innerHTML = mailtext;
+    document.getElementById('emael').appendChild(link_ele);
+  }
 }
 
 var ratio;
@@ -250,11 +251,24 @@ function reposition_desc() {
   desc.style.bottom = Math.max(60,60*Math.pow(ratio+.4,3)).toString() + "px";
 }
 
-function show_page() {
-  setInterval(update_locs, 1800000);
+function fix_hover() {
+  document.getElementById('logo_cont').className = "logo_cont_nohover";
   setTimeout(function () {
-    resize_overlay();
-  }, 100);
+    document.getElementById('logo_cont').className = "logo_cont";
+  }, 10);
+}
+
+function show_page() {
+  if (page_shown) {
+    return;
+  }
+  page_shown = true;
+  setInterval(update_locs, 1800000);
+
+  resize_overlay();
+  setTimeout(resize_overlay, 10);
+  setTimeout(resize_overlay, 1100);
+
   document.getElementById('loader').style.opacity = 0;
   setTimeout(function () {
     document.getElementById('loader').style.display = "none";
@@ -276,29 +290,25 @@ function show_page() {
     }
   });
 
-  document.getElementById('logo_cont').addEventListener("click", function () {
+  document.getElementById('logo_cont').addEventListener("mouseup", function () {
     if (desc_shown) {
       document.getElementById('desc_cont').style.opacity = 0;
       document.getElementById('desc_cont').style.pointerEvents = "none";
-      document.getElementById('logo_cont').className = null;
-      document.getElementById('logo_cont').className = "logo_cont";
       desc_shown = false;
     }
     else {
       document.getElementById('desc_cont').style.opacity = 1;
       document.getElementById('desc_cont').style.pointerEvents = "all";
-      document.getElementById('logo_cont').className = null;
-      document.getElementById('logo_cont').className = "logo_cont";
       desc_shown = true;
     }
+    fix_hover();
   });
-  document.getElementById('desc_cont').addEventListener("click",function (click_ev) {
+  document.getElementById('desc_cont').addEventListener("mouseup",function (click_ev) {
     if (click_ev.target.localName == "div") {
       document.getElementById('desc_cont').style.opacity = 0;
       document.getElementById('desc_cont').style.pointerEvents = "none";
-      document.getElementById('logo_cont').className = null;
-      document.getElementById('logo_cont').className = "logo_cont";
       desc_shown = false;
+      fix_hover();
     }
   });
   resize_overlay();
@@ -307,10 +317,6 @@ function show_page() {
   window.onresize = function () {
     resize_overlay();
     reposition_desc();
-
-    if (map) {
-      map.setCenter(new_center);
-    }
   }
 }
 
@@ -324,7 +330,6 @@ function check_decays() {
       }
     }
   }
-  console.log(JSON.stringify(locs));
   push_data();
 }
 
