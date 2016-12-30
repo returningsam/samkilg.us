@@ -265,10 +265,6 @@ function show_page() {
   page_shown = true;
   setInterval(update_locs, 1800000);
 
-  resize_overlay();
-  setTimeout(resize_overlay, 10);
-  setTimeout(resize_overlay, 1100);
-
   document.getElementById('loader').style.opacity = 0;
   setTimeout(function () {
     document.getElementById('loader').style.display = "none";
@@ -285,7 +281,7 @@ function show_page() {
 
   document.getElementById('link_cont').addEventListener('mouseout', function () {
     if (overlay_hover) {
-      resize_overlay(false);
+      resize_overlay();
       overlay_hover = false;
     }
   });
@@ -318,6 +314,7 @@ function show_page() {
     resize_overlay();
     reposition_desc();
   }
+  setTimeout(resize_overlay, 1000);
 }
 
 
