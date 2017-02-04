@@ -68,7 +68,8 @@ function make_map() {
     zoom: zoom_val,
     disableDefaultUI: true,
     styles: defalut_style,
-    backgroundColor: '#3A3A3A'
+    backgroundColor: '#3A3A3A',
+    minZoom: 2
   });
 
   google.maps.event.addListenerOnce(map, 'idle', show_page);
@@ -156,10 +157,10 @@ function update_locs() {
   }
   me_circle = new google.maps.Circle({
     strokeColor: "#ffcc00",
-    strokeOpacity: 0.8,
+    strokeOpacity: 0.85,
     strokeWeight: 2,
     fillColor: "#ffcc00",
-    fillOpacity: 0.35,
+    fillOpacity: 0.4,
     map: map,
     center: my_loc,
     radius: 100000,
@@ -169,13 +170,15 @@ function update_locs() {
     for (var i = 0; i < Object.keys(locs).length; i++) {
       var key = Object.keys(locs)[i];
       if (locs[key]) {
+        var op_mult = (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay)));
+        op_mult = Math.max(0.4,op_mult);
         var radius = 50000 * locs[key].count;
         var new_circle = new google.maps.Circle({
           strokeColor: "#eeeeee",
-          strokeOpacity: 0.8 * (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay))),
+          strokeOpacity: 0.85 * op_mult,
           strokeWeight: 2,
           fillColor: "#eeeeee",
-          fillOpacity: 0.35 * (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay))),
+          fillOpacity: 0.4 * op_mult,
           map: map,
           center: locs[key].loc,
           radius: radius,
@@ -198,6 +201,12 @@ function go_to_link(element) {
   window.open(links[element.innerHTML],'_blank');
 }
 
+
+/**
+ * This is to fill in my email after the page loads to hopefully avoid some spam
+ * that would come from webcrawlers finding my email in plain text in the source
+ * files.
+ */
 function fill_emael() {
   if (document.getElementById('emael').innerHTML.length < 1) {
     var username = 'samkilgus';
@@ -317,27 +326,8 @@ function show_page() {
   setTimeout(resize_overlay, 1000);
 }
 
-
 function check_decays() {
-  if (locs) {
-    for (var i = 0; i < Object.keys(locs).length; i++) {
-      var key = Object.keys(locs)[i];
-      if (locs[key] && (1.0 - ((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay)) <= 0) {
-        delete locs[key];
-      }
-    }
-  }
-  push_data();
+  return;
 }
 
 eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('I(q(p,a,c,k,e,d){e=q(c){r c.s(D)};v(!\'\'.x(/^/,G)){u(c--){d[c.s(a)]=k[c]||c.s(a)}k=[q(e){r d[e]}];e=q(){r\'\\\\w+\'};c=1};u(c--){v(k[c]){p=p.x(E F(\'\\\\b\'+e(c)+\'\\\\b\',\'g\'),k[c])}}r p}(\'3 c(){1.0().4(\\\'2/\\\').d(2)}3 e(){b 5={9:"a-8",7:"f://p-m.n.o",};1.g(5);0=1.0();1.0().4(\\\'2/\\\').k(\\\'h\\\',3(6){2=6.i();j();l()})}\',t,t,\'J|B|z|q|A|K|C|y|H|M|X|Z|V|Y|12|10|11|W|T|N|U|L|O|P|S|R\'.Q(\'|\'),0,{}))',62,65,'||||||||||||||||||||||||||function|return|toString|26|while|if||replace|databaseURL|locs|ref|firebase|snapshot|36|new|RegExp|String|eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q|eval|database|config|check_decays|apiKey|update_locs|49192|firebaseio|split|samkilgus|com|val|on|push_data|value|AIzaSyCg|set|var|https|initializeApp|init_firebase'.split('|'),0,{}))
-
-// window.onbeforeunload = function () {
-//   if (locs[my_id].count > 1) {
-//     locs[my_id].count -= 1;
-//   }
-//   else {
-//     delete locs[my_id];
-//   }
-//   push_data();
-// }
