@@ -46,13 +46,11 @@ function tokenize_content() {
     objs[i].innerHTML = "";
     for (var j = 0; j < tokens.length; j++) {
       if (tokens[j] == "Sam") {
-        objs[i].innerHTML += "<a href='https://samkilg.us'><span>" + tokens[j] + " </span></a>";
-      }
-      else if (tokens[j] == "Kilgus.") {
-        objs[i].innerHTML += "<a href='https://samkilg.us'><span>" + tokens[j] + "</span></a>";
+        objs[i].innerHTML += "<a href='https://samkilg.us'><span>" + tokens[j] + " " + tokens[j+1] + "</span></a>";
+        j++;
       }
       else {
-        objs[i].innerHTML += "<span>" + tokens[j] + " </span>";
+        objs[i].innerHTML += "<div><span>" + tokens[j] + " </span></div>";
       }
     }
   }
@@ -176,31 +174,33 @@ function change_objs(mos_x,mos_y) {
 }
 
 function resize() {
-  document.body.removeEventListener('mousemove',mv_handler);
-  var objs = document.getElementsByTagName('p');
-  for (var i = 0; i < objs.length; i++) {
-    objs[i].style = null;
-  }
-  var objs = document.getElementsByTagName('h1');
-  for (var i = 0; i < objs.length; i++) {
-    objs[i].style = null;
-  }
-  var objs = document.getElementsByTagName('p');
-  for (var i = 0; i < objs.length; i++) {
-    objs[i].style.width = objs[i].clientWidth + "px";
-    objs[i].style.maxWidth = objs[i].clientWidth + "px";
-    objs[i].style.height = objs[i].clientHeight + "px";
-    objs[i].style.maxHeight = objs[i].clientHeight + "px";
-  }
-  var objs = document.getElementsByTagName('h1');
-  for (var i = 0; i < objs.length; i++) {
-    objs[i].style.width = objs[i].clientWidth + "px";
-    objs[i].style.maxWidth = objs[i].clientWidth + "px";
-    objs[i].style.height = objs[i].clientHeight + "px";
-    objs[i].style.maxHeight = objs[i].clientHeight + "px";
-  }
-  get_objects();
-  document.body.addEventListener('mousemove',mv_handler);
+  setTimeout(function () {
+    document.body.removeEventListener('mousemove',mv_handler);
+    var objs = document.getElementsByTagName('p');
+    for (var i = 0; i < objs.length; i++) {
+      objs[i].style = null;
+    }
+    var objs = document.getElementsByTagName('h1');
+    for (var i = 0; i < objs.length; i++) {
+      objs[i].style = null;
+    }
+    var objs = document.getElementsByTagName('p');
+    for (var i = 0; i < objs.length; i++) {
+      objs[i].style.width = objs[i].clientWidth + "px";
+      objs[i].style.maxWidth = objs[i].clientWidth + "px";
+      objs[i].style.height = objs[i].clientHeight + "px";
+      objs[i].style.maxHeight = objs[i].clientHeight + "px";
+    }
+    var objs = document.getElementsByTagName('h1');
+    for (var i = 0; i < objs.length; i++) {
+      objs[i].style.width = objs[i].clientWidth + "px";
+      objs[i].style.maxWidth = objs[i].clientWidth + "px";
+      objs[i].style.height = objs[i].clientHeight + "px";
+      objs[i].style.maxHeight = objs[i].clientHeight + "px";
+    }
+    get_objects();
+    document.body.addEventListener('mousemove',mv_handler);
+  }, 10);
 }
 
 window.onload = function () {

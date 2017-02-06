@@ -2,15 +2,15 @@
   "rules": {
     "locs": {
       "$uid": {
-        ".validate": "$uid.length < 16 && $uid.length > 4 && newData.hasChildren(['count', 'date', 'decay', 'loc'])",
+        ".validate": "$uid.length < 20 && newData.hasChildren(['count', 'date', 'decay', 'loc'])",
         "count": {
           ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > -1"
         },
         "date": {
-          ".validate": "newData.isString() && newData.val().length < 25 && newData.val().length > 16"
+          ".validate": "newData.isString() && newData.val().length < 30"
         },
         "decay": {
-          ".validate": "newData.isNumber() && newData.val() < ((now/3600000)+2) && newData.val() > ((now/3600000)-2)"
+          ".validate": "newData.isNumber() && newData.val() < ((now/3600000)+10)"
         },
         "loc": {
           ".validate": "newData.hasChildren(['lat', 'lng'])",
