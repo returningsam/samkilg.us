@@ -4,7 +4,7 @@
       "$uid": {
         ".validate": "$uid.length < 20 && newData.hasChildren(['count', 'date', 'decay', 'loc'])",
         "count": {
-          ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > -1"
+          ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > 0"
         },
         "date": {
           ".validate": "newData.isString() && newData.val().length < 30"
