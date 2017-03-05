@@ -109,10 +109,19 @@ h1 span {
   margin: 5px 0;
 }
 
-a span {
+h1 a span {
   border: none;
   white-space: nowrap;
   height: auto;
   border-bottom: 3px solid white;
+}
+
+p a span {
+  border: none;
+  white-space: nowrap;
+  height: auto;
+  border-bottom: 3px solid white;
+  color: black;
+  text-decoration: underline;
 }
 /**/

@@ -216,7 +216,7 @@ main .underline {
 }
 
 .logo_center_bar {
-  left: calc((100%/2) - ((100%/4.3)/2));
+  left: calc((100%/2) - ((100%/4.1)/2));
   height: 100%;
 }
 
@@ -271,7 +271,7 @@ main .underline {
 }
 
 .center_bar {
-  left: calc((100%/2) - ((100%/4.3)/2));
+  left: calc((100%/2) - ((100%/4.1)/2));
   height: 100%;
 }
 

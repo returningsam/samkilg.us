@@ -1,7 +1,9 @@
 {
   "rules": {
     "locs": {
+      ".write": "newData.exists()",
       "$uid": {
+        ".write": "newData.exists()",
         ".validate": "$uid.length < 20 && newData.hasChildren(['count', 'date', 'decay', 'loc'])",
         "count": {
           ".validate": "newData.isNumber() && newData.val() < 100 && newData.val() > 0"
@@ -33,6 +35,6 @@
       ".validate": false
     },
     ".read": true,
-    ".write": true
+    ".write": "newData.exists()"
   }
 }
