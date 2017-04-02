@@ -114,7 +114,7 @@ function colorBars() {
   for (var i = 0; i < animEls.length; i++) {
     animEls[i].style.backgroundColor = pallet.splice(0,1)[0];
   }
-  console.log(pallets);
+  //console.log(pallets);
 }
 
 /*******************************************************************************
@@ -145,6 +145,27 @@ var printTimeout;
 var drawTimeout;
 
 var lightFill = "#333";
+
+function randomLife() {
+  SURVIVES = [];
+  CREATES = [];
+  for (var i = 0; i < r_in_r(1,8); i++) {
+    var newInt = r_in_r(1,8);
+    while (SURVIVES.indexOf(newInt) > -1) {
+      newInt = r_in_r(1,8);
+    }
+    SURVIVES.push(newInt);
+  }
+  for (var i = 0; i < r_in_r(1,8); i++) {
+    var newInt = r_in_r(1,8);
+    while (CREATES.indexOf(newInt) > -1) {
+      newInt = r_in_r(1,8);
+    }
+    CREATES.push(newInt);
+  }
+  console.log(SURVIVES);
+  console.log(CREATES);
+}
 
 /**
  * Counts the number of live nodes around a spot in the grid
@@ -310,7 +331,10 @@ function canvMouseEventListener(mEvent) {
  * Resets the canvas. Called when the grid is clicked.
  */
 function resetCanvas() {
-  colorBars()
+  // HEY YOU SHOULD UNCOMMENT THIS IF YOU WANNA SEE SOMETHING COOL
+  // randomLife();
+  // ^^^ This line here ^^^
+  colorBars();
   for (var x = 0; x < grid.length; x++) {
     for (var y = 0; y < grid[x].length; y++) {
       grid[x][y] = [0,1];
@@ -363,7 +387,7 @@ function isSafari() {
   if (ua.match(/iphone/i) !== null)
     mobile = true;
 
-  console.log(mobile);
+  // console.log(mobile);
   return mobile || /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
 }
 
