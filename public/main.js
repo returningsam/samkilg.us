@@ -20,6 +20,8 @@ var hours_to_decay = 24;
 var timedout = false;
 var page_shown = false;
 
+
+
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
  */
@@ -267,6 +269,10 @@ function fix_hover() {
   }, 10);
 }
 
+function push_data() {
+  firebase.database().ref('locs/').set(locs);
+}
+
 function show_page() {
   if (page_shown) {
     return;
@@ -326,4 +332,4 @@ function show_page() {
   setTimeout(resize_overlay, 1000);
 }
 
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('I(q(p,a,c,k,e,d){e=q(c){r c.s(D)};v(!\'\'.x(/^/,G)){u(c--){d[c.s(a)]=k[c]||c.s(a)}k=[q(e){r d[e]}];e=q(){r\'\\\\w+\'};c=1};u(c--){v(k[c]){p=p.x(E F(\'\\\\b\'+e(c)+\'\\\\b\',\'g\'),k[c])}}r p}(\'3 c(){1.0().4(\\\'2/\\\').d(2)}3 e(){b 5={9:"a-8",7:"f://p-m.n.o",};1.g(5);0=1.0();1.0().4(\\\'2/\\\').k(\\\'h\\\',3(6){2=6.i();j();l()})}\',t,t,\'J|B|z|q|A|K|C|y|H|M|X|Z|V|Y|12|10|11|W|T|N|U|L|O|P|S|R\'.Q(\'|\'),0,{}))',62,65,'||||||||||||||||||||||||||function|return|toString|26|while|if||replace|databaseURL|locs|ref|firebase|snapshot|36|new|RegExp|String|eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q|eval|database|config|check_decays|apiKey|update_locs|49192|firebaseio|split|samkilgus|com|val|on|push_data|value|AIzaSyCg|set|var|https|initializeApp|init_firebase'.split('|'),0,{}))
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('0 m(){n 8={o:"p-l",k:"g://f-h.i.j",};2.q(8);1=2.1();2.1().A(\'7/\').B(\'x\',0(a){7=a.s();t()})}3.u=0(){6.5(\'9\').d.C=(3.y*4).e()+"b c z";6.5(\'9\').d.r=(3.v*4).e()+"b c w"}',39,39,'function|database|firebase|window||getElementById|document|locs|config|overlay|snapshot|px|solid|style|toString|samkilgus|https|49192|firebaseio|com|databaseURL|eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q|init_firebase|var|apiKey|AIzaSyCg|initializeApp|borderLeft|val|update_locs|onload|innerHeight|transparent|value|innerWidth|white|ref|on|borderBottom'.split('|'),0,{}))
