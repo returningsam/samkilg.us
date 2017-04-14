@@ -67,7 +67,12 @@ main img {
     -moz-transform: scale(0.75);
     -moz-transform-origin: 0 0;
   }
+  main {
+    width: calc(100%/0.75) !important;
+    height: calc(100%/0.75) !important;
+  }
 }
+
 
 /*******************************************************************************
 ******************************** Description ***********************************
@@ -114,7 +119,7 @@ main .overlay {
 main .link_cont {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   bottom: -200px;
   right: 60px;
   z-index: 6;

@@ -15,7 +15,7 @@ var circles = [];
 
 var me_circle;
 
-var hours_to_decay = 24;
+var hours_to_decay = 48;
 
 var timedout = false;
 var page_shown = false;
@@ -92,53 +92,55 @@ function get_date() {
   return date.toUTCString().replace(" GMT","").replace(" 2016","").replace(" 2017","");
 }
 
+function capture_location(location) {
+  if (!locs) {
+    locs = {};
+  }
+  var new_loc = {
+    loc: {
+      lat: parseFloat((location.coords.latitude).toFixed(2)),
+      lng: parseFloat((location.coords.longitude).toFixed(2))
+    },
+    count: 1,
+    decay: Math.round(Date.now()/3600000),
+    date: get_date()
+  };
+  var found = false;
+  for (var i = 0; i < Object.keys(locs).length; i++) {
+    var key = Object.keys(locs)[i];
+    if (locs[key] && locs[key].decay == locs[key].decay && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
+      found = true;
+      my_id = key;
+      break;
+    }
+  }
+  if (!found) {
+    // check cookie for id
+    if (get_cookie('samkilgussite') && locs[get_cookie('samkilgussite')]) {
+      my_id = get_cookie('samkilgussite');
+    }
+    else {
+      my_id = gen_id();
+      set_cookie('samkilgussite',my_id,1);
+    }
+
+    locs[my_id] = new_loc;
+  }
+  else {
+    if (get_cookie('samkilgussite') != my_id) {
+      locs[my_id].count += 1;
+    }
+    locs[my_id].decay = Math.round(Date.now()/3600000);
+  }
+  push_data();
+
+  update_locs();
+}
+
 function render_map() {
   try {
     make_map();
-    navigator.geolocation.getCurrentPosition(function(location) {
-      if (!locs) {
-        locs = {};
-      }
-      var new_loc = {
-        loc: {
-          lat: parseFloat((location.coords.latitude).toFixed(2)),
-          lng: parseFloat((location.coords.longitude).toFixed(2))
-        },
-        count: 1,
-        decay: Math.round(Date.now()/3600000),
-        date: get_date()
-      };
-      var found = false;
-      for (var i = 0; i < Object.keys(locs).length; i++) {
-        var key = Object.keys(locs)[i];
-        if (locs[key] && locs[key].decay == locs[key].decay && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
-          found = true;
-          my_id = key;
-          break;
-        }
-      }
-      if (!found) {
-        // check cookie for id
-        if (get_cookie('samkilgussite') && locs[get_cookie('samkilgussite')]) {
-          my_id = get_cookie('samkilgussite');
-        }
-        else {
-          my_id = gen_id();
-          set_cookie('samkilgussite',my_id,1);
-        }
-
-        locs[my_id] = new_loc;
-      }
-      else {
-        if (get_cookie('samkilgussite') != my_id) {
-          locs[my_id].count += 1;
-        }
-        locs[my_id].decay = Math.round(Date.now()/3600000);
-      }
-      push_data();
-
-      update_locs();
-    }, update_locs);
+    navigator.geolocation.getCurrentPosition(capture_location, update_locs);
   }
   catch (e) {
     update_locs();
@@ -172,7 +174,8 @@ function update_locs() {
     for (var i = 0; i < Object.keys(locs).length; i++) {
       var key = Object.keys(locs)[i];
       if (locs[key]) {
-        var op_mult = (1.0 - (((Math.round(Date.now()/3600000) - locs[key].decay)/hours_to_decay)));
+        var num_hours = Math.round(Date.now()/3600000)
+        var op_mult = (1.0 - (((num_hours - locs[key].decay)/hours_to_decay)));
         op_mult = Math.max(0.4,op_mult);
         var radius = 50000 * locs[key].count;
         var new_circle = new google.maps.Circle({
@@ -267,10 +270,13 @@ function fix_hover() {
   setTimeout(function () {
     document.getElementById('logo_cont').className = "logo_cont";
   }, 10);
+  resize_overlay();
+  reposition_desc();
 }
 
 function push_data() {
-  firebase.database().ref('locs/').set(locs);
+  console.log(locs[my_id]);
+  firebase.database().ref('locs/'+ my_id + "/").set(locs[my_id]);
 }
 
 function show_page() {
@@ -329,7 +335,12 @@ function show_page() {
     resize_overlay();
     reposition_desc();
   }
-  setTimeout(resize_overlay, 1000);
+  if (fixOverlayInterval) {
+    clearInterval(fixOverlayInterval);
+  }
+  fixOverlayInterval = setInterval(resize_overlay, 1000);
 }
+
+var fixOverlayInterval;
 
 eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('0 m(){n 8={o:"p-l",k:"g://f-h.i.j",};2.q(8);1=2.1();2.1().A(\'7/\').B(\'x\',0(a){7=a.s();t()})}3.u=0(){6.5(\'9\').d.C=(3.y*4).e()+"b c z";6.5(\'9\').d.r=(3.v*4).e()+"b c w"}',39,39,'function|database|firebase|window||getElementById|document|locs|config|overlay|snapshot|px|solid|style|toString|samkilgus|https|49192|firebaseio|com|databaseURL|eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q|init_firebase|var|apiKey|AIzaSyCg|initializeApp|borderLeft|val|update_locs|onload|innerHeight|transparent|value|innerWidth|white|ref|on|borderBottom'.split('|'),0,{}))

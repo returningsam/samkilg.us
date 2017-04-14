@@ -14,6 +14,31 @@ var pallets = [
   ["#FF5434","#CC1E2C","#731630"]
 ];
 
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ */
+function r_in_r(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function nextColor() {
+  for (var i = 0; i < curColor.length; i++) {
+    if (curColor[i] > 253) {
+      curColor[i] = curColor[i] - r_in_r(0,MAX_CHANGE);
+    }
+    else if (curColor[i] < 2) {
+      curColor[i] = curColor[i] + r_in_r(0,MAX_CHANGE);
+    }
+    else {
+      curColor[i] = curColor[i] + r_in_r(-MAX_CHANGE,MAX_CHANGE);
+    }
+  }
+}
+
+function colorToString() {
+  return "rgb(" + curColor[0] + ", " + curColor[1] + ", " + curColor[2] + ")";
+}
+
 function fixElement(elem) {
   var posY = elem.getBoundingClientRect().top;
   elem.style.position = "fixed";
@@ -146,6 +171,10 @@ var drawTimeout;
 
 var lightFill = "#333";
 
+var curColor = [r_in_r(10,240),r_in_r(10,240),r_in_r(10,240)];
+
+var MAX_CHANGE = 10;
+
 function randomLife() {
   SURVIVES = [];
   CREATES = [];
@@ -258,12 +287,13 @@ function nextGen() {
  */
 function nextDraw() {
   //console.log("drawing");
+  nextColor();
   for (var x = 0; x < grid.length; x++) {
     for (var y = 0; y < grid[x].length; y++) {
       if (grid[x][y][1] == 1) {
         if (grid[x][y][0] == 1) {
+          ctx.fillStyle = colorToString();
           ctx.fillRect(x*2*dotSize,y*2*dotSize,dotSize*2,dotSize*2);
-
         }
         else if (grid[x][y][0] == 0) {
           ctx.fillStyle = "#000";
@@ -283,8 +313,6 @@ function nextDraw() {
  * @param  {int} y y coordinate to put a dot.
  */
 function putDot(x,y) {
-  // console.log("dis hapnin");
-
   grid[x][y] = [1,1];
 
   nextDraw();
@@ -332,7 +360,7 @@ function canvMouseEventListener(mEvent) {
  */
 function resetCanvas() {
   // HEY YOU SHOULD UNCOMMENT THIS IF YOU WANNA SEE SOMETHING COOL
-  // randomLife();
+  //randomLife();
   // ^^^ This line here ^^^
   colorBars();
   for (var x = 0; x < grid.length; x++) {
@@ -359,11 +387,15 @@ function initCanv() {
   ctx = canv.getContext('2d');
   ctx.fillStyle = lightFill;
 
-  dotSize = (maxWidth/800);
+  dotSize = (maxWidth/1000);
   initGrid();
 
   canv.addEventListener('mousemove',canvMouseEventListener);
   canv.addEventListener('click',resetCanvas);
+  console.log("You can draw on that black box over there by hoving your mouse over it. Click anywhere in the black box to reset the canvas. To randomize the pattern being drawn, just run this function: 'randomLife()'. Then just draw some more!");
+  console.log();
+  console.log();
+  console.log();
 }
 
 /*******************************************************************************
