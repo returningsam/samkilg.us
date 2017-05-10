@@ -1,324 +1,78 @@
-.map {
-  background-color: #3A3A3A;
-  height: 100%;
-  width: 100%;
+html, body, canvas {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto Mono";
+    overflow: hidden;
 }
 
-a[href^="http://maps.google.com/maps"]{display:none !important}
-a[href^="https://maps.google.com/maps"]{display:none !important}
-
-.gmnoprint a, .gmnoprint span, .gm-style-cc {
-    display:none;
-}
-.gmnoprint div {
-    background:none !important;
-}
-
-html, body {
-  height: 100%;
-  width: 100%;
-  font-family: "Raleway";
-  margin: 0;
-  padding: 0;
-}
-
-main {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 2;
-  background-color: #1c1c1c;
-  transition: background-color 1s 0.5s;
-  pointer-events: none;
+.overlay {
+    position: fixed;
+    bottom: 30px;
+    left: 50px;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    float: left;
+    padding: 20px;
+    width: auto;
+    height: auto;
+    -webkit-user-select: none;
+       -moz-user-select: -moz-none;
+        -ms-user-select: none;
+            user-select: none;
+    transition: height 0.5s, width 0.5s, left 0.5s, bottom 0.5s;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+       -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+            box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-main p {
-  margin: 0;
-  padding: 0;
+.button {
+    text-decoration: underline;
 }
 
-main a {
-  text-decoration: none;
-  color: white;
-  transition: color 0.2s;
+.button:hover {
+    cursor: pointer;
 }
 
-main a:hover {
-  text-decoration: none;
-  color: #ffcc00;
-  transition: color 0.2s;
-  cursor: pointer;
+.mainCont {
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
-main img {
-  width: 100px;
-  height: 100px;
-  position: fixed;
-  top: 60px;
-  left: 60px;
-  z-index: 3;
+.contactCont {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
 }
 
-@media screen and (max-width: 720px), screen and (max-height: 800px) {
-  .zoom {
-    zoom: 0.75;
-    -moz-transform: scale(0.75);
-    -moz-transform-origin: 0 0;
-  }
-  main {
-    width: calc(100%/0.75) !important;
-    height: calc(100%/0.75) !important;
-  }
+.contentBox {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-
-/*******************************************************************************
-******************************** Description ***********************************
-*******************************************************************************/
-
-main .content {
-  pointer-events: all;
-  position: fixed;
-  left: 60px;
-  padding-right: 20px;
-  font-size: 1.7rem;
-  font-weight: 500;
-  z-index: 4;
-  opacity: 0;
+a {
+    color: black;
 }
 
-main .content p {
-  color: white;
-  margin-top: 10px;
+h1 {
+    padding: 0;
+    margin: 0;
+    font-weight: 300;
 }
 
-main .title {
-  font-size: 3.5rem !important;
-  font-weight: 300;
+p {
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
 }
 
-/*******************************************************************************
-******************************** Overlay ***************************************
-*******************************************************************************/
-
-
-main .overlay {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-  border-bottom: 1000rem solid white;
-  border-left: 1000rem solid transparent;
-  filter: drop-shadow(15px 15px 30px black);
-  transition: border 0.6s 0.2s;
-  pointer-events: none;
-}
-
-main .link_cont {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  bottom: -200px;
-  right: 60px;
-  z-index: 6;
-  font-size: 1.7rem;
-  font-weight: 500;
-  text-align: right;
-  transition: bottom 0.4s 0.8s;
-  pointer-events: all;
-}
-
-main .link_cont p {
-  margin-top: 10px;
-  padding-bottom: 3px;
-  color: #282828;
-}
-
-main .link_cont p:hover {
-  cursor: pointer;
-}
-
-main .link_cont p:hover + .underline {
-  height: 2px;
-  width: 100%;
-  background-color: #282828;
-  transition: width 0.2s;
-}
-
-main .underline {
-  height: 2px;
-  width: 0;
-  background-color: #282828;
-  transition: width 0.2s;
-  flex-shrink: 0;
-}
-
-/*******************************************************************************
-******************************** Logo ******************************************
-*******************************************************************************/
-
-.logo_cont_nohover {
-  pointer-events: all;
-  width: 100px;
-  height: 100px;
-  position: fixed;
-  top: 60px;
-  left: 60px;
-  z-index: 100;
-
-  -ms-transform: skewX(28deg); /* IE 9 */
-    -webkit-transform: skewX(28deg); /* Safari */
-    transform: skewX(28deg); /* Standard syntax */
-  transition: opacity 1s;
-  cursor: pointer;
-}
-
-.logo_cont {
-  pointer-events: all;
-  width: 100px;
-  height: 100px;
-  position: fixed;
-  top: 60px;
-  left: 60px;
-  z-index: 100;
-
-  -ms-transform: skewX(28deg); /* IE 9 */
-    -webkit-transform: skewX(28deg); /* Safari */
-    transform: skewX(28deg); /* Standard syntax */
-  transition: opacity 1s;
-  cursor: pointer;
-}
-
-.logo_cont:hover .logo_left_bar{
-  top: 40%;
-}
-.logo_cont:hover .logo_right_bar{
-  top: 10%;
-}
-
-.logo_bar {
-  position: absolute;
-  width: calc(100%/3.9);
-  background-color: white;
-  border-radius: 2px;
-}
-
-.logo_left_bar {
-  top: 50%;
-  left: 0;
-  height: 50%;
-  -webkit-transition: top 0.5s;
-  transition: top 0.5s;
-}
-.logo_right_bar {
-  top: 0;
-  right: 0;
-  height: 50%;
-  -webkit-transition: top 0.5s;
-  transition: top 0.5s;
-}
-
-.logo_center_bar {
-  left: calc((100%/2) - ((100%/4.1)/2));
-  height: 100%;
-}
-
-/*******************************************************************************
-******************************** Loader ****************************************
-*******************************************************************************/
-
-.loader_cont {
-  z-index: 100;
-  height: 100px;
-  width: 100px;
-  position: fixed;
-  top: calc((100%/2) - 50px);
-  left: calc((100%/2) - 50px);
-
-  -ms-transform: skewX(28deg); /* IE 9 */
-    -webkit-transform: skewX(28deg); /* Safari */
-    transform: skewX(28deg); /* Standard syntax */
-  transition: opacity 1s;
-}
-
-@keyframes move_left {
-  0% {top: 50%;}
-  30% {top: 0;}
-  100% {top: 50%;}
-}
-
-@keyframes move_right {
-  0% {top: 0;}
-  30% {top: 50%;}
-  100% {top: 0;}
-}
-
-.load_bar {
-  position: absolute;
-  width: calc(100%/3.9);
-  background-color: #282828;
-  border-radius: 2px;
-}
-
-.left_bar {
-  left: 0;
-  height: 50%;
-  -webkit-animation: move_left 2s infinite;
-  animation: move_left 2s infinite;
-}
-.right_bar {
-  right: 0;
-  height: 50%;
-  -webkit-animation: move_right 2s infinite;
-  animation: move_right 2s infinite;
-}
-
-.center_bar {
-  left: calc((100%/2) - ((100%/4.1)/2));
-  height: 100%;
-}
-
-/*******************************************************************************
-******************************** Description ***********************************
-*******************************************************************************/
-
-.desc_cont {
-  z-index: 50;
-  background-color: rgba(24, 24, 24, 0.9);
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-
-.desc_text_cont {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: 30px 0;
-}
-
-.desc_title {
-  text-align: center;
-  font-size: 3rem;
-  color: #ffcc00;
-}
-
-.desc_text {
-  width: 50%;
-  min-width: 500px;
-  text-align: justify;
-  color: white;
-  font-size: 1.3rem;
+canvas {
+    background-color: lightgrey;
+    cursor: pointer;
 }

@@ -1,136 +1,84 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Sam Kilgus</title>
-    <meta name="theme-color" content="#282828">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase-database.js"></script>
-    <script src="main.js" charset="utf-8"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <head>
+        <meta charset="utf-8">
+        <title>Sam Kilgus</title>
+        <meta name="theme-color" content="#282828">
+        <link href="https://fonts.googleapis.com/css?family=Muli:200,300,400|Roboto+Mono:100,300,400" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase-database.js"></script>
+        <script src="main.js" charset="utf-8"></script>
+        <link href="favicon.png" rel="icon" type="image/x-icon" />
+    </head>
 
-      ga('create', 'UA-73703405-1', 'auto');
-      ga('send', 'pageview');
-
-    </script>
-    <link href="favicon.png" rel="icon" type="image/x-icon" />
-  </head>
-
-  <!--
-      Hello,
-
-      Thank you for inspecting my website code. I really do appreciate it.
-
-      If you happen to find anything wrong or that could be improved, I'd love
-      to hear your thoughts.
-
-      If you happen to be impressed by my code/coding style and also happened to
-      be a potential employer, I would love to hear from you, as I am
-      always looking for job opportunities.
-
-      Either way, I would like to hear from you and would like to give you
-      this donut as a sign of appreciation:
-
-                    k;double sin()
-               ,cos();main(){float A=
-             0,B=0,i,j,z[1760];char b[
-           1760];printf("\x1b[2J");for(;;
-        ){memset(b,32,1760);memset(z,0,7040)
-        ;for(j=0;6.28>j;j+=0.07)for(i=0;6.28
-       >i;i+=0.02){float c=sin(i),d=cos(j),e=
-       sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c*
-       h*e+f*g+5),l=cos      (i),m=cos(B),n=s\
-      in(B),t=c*h*g-f*        e;int x=40+30*D*
-      (l*h*m-t*n),y=            12+15*D*(l*h*n
-      +t*m),o=x+80*y,          N=8*((f*e-c*d*g
-       )*m-c*d*e-f*g-l        *d*n);if(22>y&&
-       y>0&&x>0&&80>x&&D>z[o]){z[o]=D;;;b[o]=
-       ".,-~:;=!*#$@"[N>0?N:0];}}/*#****!!-*/
-        printf("\x1b[H");for(k=0;1761>k;k++)
-          putchar(k%80?b[k]:10);A+=0.04;B+=
-            0.02;}}/*****####*******!!=;:~
-              ~::==!!!**********!!!==::-
-                .,~~;;;========;;;:~-.
-                    ..,,,,,,,,,,*/
-
-      (source: https://www.a1k0n.net/2006/09/15/obfuscated-c-donut.html)
-
-      Thanks again,
-
-      ~~ Sam Kilgus
-
-    -->
-
-  <!--========================================================================
-  =========================================================================-->
-
-  <body>
-    <div id="loader" class="zoom loader_cont">
-      <div class="left_bar load_bar"></div>
-      <div class="center_bar load_bar"></div>
-      <div class="right_bar load_bar"></div>
-    </div>
-    <main class="zoom">
-      <div id="logo_cont" class="logo_cont">
-        <div class="logo_left_bar logo_bar"></div>
-        <div class="logo_center_bar logo_bar"></div>
-        <div class="logo_right_bar logo_bar"></div>
-      </div>
-      <div id="content" class="content">
-        <p class="title">Sam Kilgus</p>
-        <!-- I am dynamically filling in my email to avoid spam
-        from webcrawlers. More info in the js. -->
-        <p id="emael"></p>
-        <p>computer science junior</p>
-        <p><a href="http://www.rit.edu/">rochester institute of technology</a></p>
-      </div>
-      <div id="overlay" class="overlay"></div>
-      <div id="link_cont" class="link_cont">
-        <p onclick="go_to_link(this)">github</p>
-        <div class="underline"></div>
-        <p onclick="go_to_link(this)">resume</p>
-        <div class="underline"></div>
-        <p onclick="go_to_link(this)">linkedin</p>
-        <div class="underline"></div>
-        <p onclick="go_to_link(this)">instagram</p>
-        <div class="underline"></div>
-      </div>
-      <div class="zoom desc_cont" id="desc_cont">
-        <div class="desc_text_cont">
-          <p class="desc_title">What is all this?</p>
+    <body>
+        <div id="overlay" class="overlay">
+            <div class="mainCont" id="main_info">
+                <h1>Sam Kilgus</h1>
+                <p>Computer Science &#8226; 3rd Year</p>
+                <p>Rochester Institute of Technology</p>
+                <p id="openContact" class="button">Contact</p>
+            </div>
+            <div class="contactCont" id="contact_info">
+                <div id="contentBox" class="contentBox">
+                    <p><a href="https://github.com/returningsam">github</a></p>
+                    <p><a href="/resume.pdf">resume</a></p>
+                    <p><a href="https://www.linkedin.com/in/samkilgus/">linkedin</a></p>
+                    <p><a href="https://www.instagram.com/returningsam/">instagram</a></p>
+                    <p>samkilgus@gmail.com</p>
+                </div>
+            </div>
         </div>
-        <div class="desc_text_cont">
-          <p class="desc_text">
-            Thank you very much for visiting my website! If you are currently looking to fill an Internship/Co-op position and think my skills would match such a position, I would love to hear from you. If you are not, feel free to explore the site and/or say hi anyway!
-          </p>
-        </div>
-        <div class="desc_text_cont">
-          <p class="desc_text">
-            Along with providing you with a directory to any information you may need about me, this website shows the locations of all people who have viewed this site within the past 24 hours. The yellow circle on the map shows the location of Rochester Institute of Technology, where I am currently based.
-          </p>
-        </div>
-        <div class="desc_text_cont">
-          <p class="desc_text">
-            Each white circle shows the rough location of a group of visitors during a single hour in the past. If multiple people view the site within about 1 km of each other, their location circle will grow to reflect the number of people in that area and time. Over a 24 hour period of your location being marked on the map, your circle will fade (become more translucent). All location data is completely anonymous and will be stored and shown for the entire lifetime of this site.
-          </p>
-        </div>
-        <div class="desc_text_cont">
-          <p class="desc_text">
-            If your location is not shown on the map, you either did not grant the site the necessary permissions or your browser does not support the HTML5 Geolocation API. All latitude and longitude values are rounded to 2 decimal place on capture to make sure your specific location is secure.
-          </p>
-        </div>
-      </div>
-    </main>
-    <div id="map" class="map"></div>
+        <canvas id="canvas"></canvas>
+    </body>
 
-  </body>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg-eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q&callback=initMap"
-  async defer></script>
 </html>
+
+<!--
+    Hello,
+
+    Thank you for inspecting my website code. I really do appreciate it.
+
+    If you happen to find anything wrong or that could be improved, I'd love
+    to hear your thoughts.
+
+    If you happen to be impressed by my code/coding style and also happened to
+    be a potential employer, I would love to hear from you, as I am
+    always looking for job opportunities.
+
+    Either way, I would like to hear from you and would like to give you
+    this donut as a sign of appreciation:
+
+                  k;double sin()
+             ,cos();main(){float A=
+           0,B=0,i,j,z[1760];char b[
+         1760];printf("\x1b[2J");for(;;
+      ){memset(b,32,1760);memset(z,0,7040)
+      ;for(j=0;6.28>j;j+=0.07)for(i=0;6.28
+     >i;i+=0.02){float c=sin(i),d=cos(j),e=
+     sin(A),f=sin(j),g=cos(A),h=d+2,D=1/(c*
+     h*e+f*g+5),l=cos      (i),m=cos(B),n=s\
+    in(B),t=c*h*g-f*        e;int x=40+30*D*
+    (l*h*m-t*n),y=            12+15*D*(l*h*n
+    +t*m),o=x+80*y,          N=8*((f*e-c*d*g
+     )*m-c*d*e-f*g-l        *d*n);if(22>y&&
+     y>0&&x>0&&80>x&&D>z[o]){z[o]=D;;;b[o]=
+     ".,-~:;=!*#$@"[N>0?N:0];}}/*#****!!-*/
+      printf("\x1b[H");for(k=0;1761>k;k++)
+        putchar(k%80?b[k]:10);A+=0.04;B+=
+          0.02;}}/*****####*******!!=;:~
+            ~::==!!!**********!!!==::-
+              .,~~;;;========;;;:~-.
+                  ..,,,,,,,,,,*/
+
+    (source: https://www.a1k0n.net/2006/09/15/obfuscated-c-donut.html)
+
+    Thanks again,
+
+    ~~ Sam Kilgus
+
+  -->
+
+<!--========================================================================
+=========================================================================-->
