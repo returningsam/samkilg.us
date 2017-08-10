@@ -4,11 +4,10 @@
   },
   "hosting": {
     "public": "public",
-    "redirects": [
-      {
-        "source" : "/keybase.txt",
-        "destination" : "/keybase.txt",
-        "type" : 301
-      }]
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }
 }
