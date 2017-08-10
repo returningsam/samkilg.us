@@ -66,7 +66,6 @@ var redraw = () => {
     for (var i = 0; i < keyList.length; i++) {
         drawCircle(circles[keyList[i]].x,circles[keyList[i]].y,circles[keyList[i]].rad,toColorString(circles[keyList[i]].color));
     }
-    writeCircles();
 }
 
 var modCircle = () => {
@@ -80,6 +79,7 @@ var modCircle = () => {
         circles[drawingKey].x = mouseX;
         circles[drawingKey].y = mouseY;
         redraw();
+        setCircle(drawingKey);
     }
 }
 
@@ -139,6 +139,7 @@ var removeCircle = (ev) => {
             checkColor[1] == circles[key].color[1] &&
             checkColor[2] == circles[key].color[2]) {
             delete circles[key];
+            delCircle(key);
         }
     }
     redraw();
@@ -230,8 +231,12 @@ window.onresize = () => {
 ****************************** Firebase Shit ***********************************
 *******************************************************************************/
 
-function writeCircles() {
-  database.ref('circles/').set(circles);
+function setCircle(id) {
+  database.ref('circles/' + id).set(circles[id]);
+}
+
+function delCircle(id) {
+  database.ref('circles/' + id).set(null);
 }
 
 var config = {
