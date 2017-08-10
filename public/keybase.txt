@@ -1,0 +1,55 @@
+==================================================================
+https://keybase.io/returningsam
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://samkilg.us
+  * I am returningsam (https://keybase.io/returningsam) on keybase.
+  * I have a public key ASAu3c9Qz_fZh5PRXtjprXY58Hcj08djSVCZhK46GcnnSQo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120d82e27d186527c68a669cb8e3444a9f4ce9eb3cf525547f121a9afdc029d431e0a",
+      "host": "keybase.io",
+      "kid": "01202eddcf50cff7d98793d15ed8e9ad7639f07723d3c76349509984ae3a19c9e7490a",
+      "uid": "048831560f4097d301d22a7f9f3c4419",
+      "username": "returningsam"
+    },
+    "merkle_root": {
+      "ctime": 1502372068,
+      "hash": "c2db60a3c8747d423ab097432578abcece8bce859475e7905b015c98a56a64b90a64466bb706708e36789988853e75150ab1218d91e096bd9f07dea0006b1ac2",
+      "hash_meta": "d0af8994b0351a2bcfb8ddbdb5e5098984bc3e41d4e238de7cdd82fa5691d337",
+      "seqno": 1317626
+    },
+    "service": {
+      "hostname": "samkilg.us",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "1.0.27"
+  },
+  "ctime": 1502372194,
+  "expire_in": 504576000,
+  "prev": "191044c605336fd851c1d1a52dd14da7978a9a32a3b08e22dff58f23efe0ce03",
+  "seqno": 25,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgLt3PUM/32YeT0V7Y6a12OfB3I9PHY0lQmYSuOhnJ50kKp3BheWxvYWTFA0d7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwZDgyZTI3ZDE4NjUyN2M2OGE2NjljYjhlMzQ0NGE5ZjRjZTllYjNjZjUyNTU0N2YxMjFhOWFmZGMwMjlkNDMxZTBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwMmVkZGNmNTBjZmY3ZDk4NzkzZDE1ZWQ4ZTlhZDc2MzlmMDc3MjNkM2M3NjM0OTUwOTk4NGFlM2ExOWM5ZTc0OTBhIiwidWlkIjoiMDQ4ODMxNTYwZjQwOTdkMzAxZDIyYTdmOWYzYzQ0MTkiLCJ1c2VybmFtZSI6InJldHVybmluZ3NhbSJ9LCJtZXJrbGVfcm9vdCI6eyJjdGltZSI6MTUwMjM3MjA2OCwiaGFzaCI6ImMyZGI2MGEzYzg3NDdkNDIzYWIwOTc0MzI1NzhhYmNlY2U4YmNlODU5NDc1ZTc5MDViMDE1Yzk4YTU2YTY0YjkwYTY0NDY2YmI3MDY3MDhlMzY3ODk5ODg4NTNlNzUxNTBhYjEyMThkOTFlMDk2YmQ5ZjA3ZGVhMDAwNmIxYWMyIiwiaGFzaF9tZXRhIjoiZDBhZjg5OTRiMDM1MWEyYmNmYjhkZGJkYjVlNTA5ODk4NGJjM2U0MWQ0ZTIzOGRlN2NkZDgyZmE1NjkxZDMzNyIsInNlcW5vIjoxMzE3NjI2fSwic2VydmljZSI6eyJob3N0bmFtZSI6InNhbWtpbGcudXMiLCJwcm90b2NvbCI6Imh0dHBzOiJ9LCJ0eXBlIjoid2ViX3NlcnZpY2VfYmluZGluZyIsInZlcnNpb24iOjF9LCJjbGllbnQiOnsibmFtZSI6ImtleWJhc2UuaW8gZ28gY2xpZW50IiwidmVyc2lvbiI6IjEuMC4yNyJ9LCJjdGltZSI6MTUwMjM3MjE5NCwiZXhwaXJlX2luIjo1MDQ1NzYwMDAsInByZXYiOiIxOTEwNDRjNjA1MzM2ZmQ4NTFjMWQxYTUyZGQxNGRhNzk3OGE5YTMyYTNiMDhlMjJkZmY1OGYyM2VmZTBjZTAzIiwic2Vxbm8iOjI1LCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQNxsQns1KyY+TWQaK1A5hZ88MU1E6IHdyNe+WswI4jIXkO9nyk535R6q9FO0IeY40DT3q1G4gace7maAJ8V3dguoc2lnX3R5cGUgpGhhc2iCpHR5cGUIpXZhbHVlxCARb3hycfrQ3ucDyM5zDqdPxDh3n4iR9UP3DGcwzasstKN0YWfNAgKndmVyc2lvbgE=
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/returningsam
+
+==================================================================

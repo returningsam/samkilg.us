@@ -3,6 +3,12 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "public"
+    "public": "public",
+    "redirects": [
+      {
+        "source" : "/keybase.txt",
+        "destination" : "/keybase.txt",
+        "type" : 301
+      }]
   }
 }
