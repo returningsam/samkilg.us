@@ -8,12 +8,6 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**/keybase",
-        "destination": "/keybase.txt"
-      }
     ]
   }
 }
