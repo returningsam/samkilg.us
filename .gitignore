@@ -1,4 +1,4 @@
 .firebaserc
 firebase.json
 database.rules.json
-public/chance.min.js
+**/chance.min.js
