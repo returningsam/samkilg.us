@@ -47,7 +47,7 @@ function getDist(x1,y1,x2,y2) {
 
 const RATIO_MULT = 1.5;
 const MAX_DIFF = 5000;
-const NUM_PARTS = 300;
+var NUM_PARTS = 300;
 
 var canv;
 var ctx;
@@ -70,8 +70,8 @@ function getColorID(color) {
 function newPart(points) {
     return {
         points: points,
-        dx: chance.integer({min: -MAX_DIFF, max: MAX_DIFF}),
-        dy: chance.integer({min: -(MAX_DIFF*2), max: (MAX_DIFF*2)}),
+        dx: chance.integer({min: -window.innerWidth/1.5, max: window.innerWidth/1.5}),
+        dy: chance.integer({min: -window.innerHeight/1.5, max: window.innerHeight/1.5}),
     };
 }
 
@@ -133,6 +133,8 @@ function genParts() {
         }
     }
     else {
+        NUM_PARTS = 1000;
+        numPointsPerPart = allPoints.length / NUM_PARTS;
         shuffle(allPoints);
         while (allPoints.length > 0)
             allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
@@ -146,7 +148,7 @@ function genParts() {
 function drawParts(dist) {
     var noise = 1;
     var imgData = ctx.createImageData(canv.width,canv.height);
-    var distMult = Math.pow(1.0001,Math.max(dist,1))-1.0001;
+    var distMult = Math.pow(1.001,Math.max(dist,1))-1.001;
     for (var i = 0; i < allParts.length; i++) {
         var curPart = allParts[i];
         for (var j = 0; j < curPart.points.length; j++) {
@@ -182,14 +184,16 @@ function frame() {
 /*************************** CANVAS LOAD ANIMATION ****************************/
 /******************************************************************************/
 
+const MAX_LOAD_DIST = 500;
+
 var loadTimeout;
 var loadInterval;
 var loadDist = 2;
 
 function loadAnimation() {
-    loadDist += Math.min(Math.max(1,(200 - loadDist)/2),loadDist*2);
+    loadDist += Math.min(Math.max(1,(MAX_LOAD_DIST - loadDist)/2),loadDist*2);
     drawParts(loadDist);
-    if (loadDist >= 200 && loadInterval) {
+    if (loadDist >= MAX_LOAD_DIST && loadInterval) {
         clearInterval(loadInterval);
         loadInterval = null;
         loadDist = 2;
