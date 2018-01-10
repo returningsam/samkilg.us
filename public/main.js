@@ -1,351 +1,420 @@
-var map;
-var center;
+/******************************************************************************/
+/*************************** HELPERS ******************************************/
+/******************************************************************************/
 
-var my_id;
-var database;
-var db_ready;
-var my_loc = {lat:43.08,lng:-77.67}
-var locs;
-var overlay_hover = false;
-var desc_shown = false;
+var isMobile;
 
-var zoom_val = 3;
+function checkMobile () {
+  var check = false;
+  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+  return check;
+};
 
-var circles = [];
-
-var me_circle;
-
-var hours_to_decay = 48;
-
-var timedout = false;
-var page_shown = false;
-
-var defalut_style = [{"elementType":"geometry","stylers":[{"color":"#1c1c1c"}]},{"elementType":"labels","stylers":[{"visibility":"off"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#757575"},{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#9e9e9e"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#bdbdbd"}]},{"featureType":"administrative.neighborhood","stylers":[{"visibility":"off"}]},{"featureType":"poi","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#181818"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"color":"#1b1b1b"}]},{"featureType":"road","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#8a8a8a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#373737"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3c3c3c"}]},{"featureType":"road.highway.controlled_access","elementType":"geometry","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"water","stylers":[{"color":"#797979"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#3a3a3a"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#3d3d3d"}]}];
-
-
-/**
- * Returns a random integer between min (inclusive) and max (inclusive)
- */
-function r_in_r(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function gen_id() {
-    var ops = "abcdefghijklmnopqrstuvwxyz1234567890".split("");
-    var new_id;
-
-    do {
-        new_id = "";
-        for (var i = 0; i < r_in_r(5,15); i++) {
-            new_id += ops[r_in_r(0,ops.length-1)];
-        }
-    } while (locs[new_id]);
-
-    return new_id;
-}
-
-function set_cookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function get_cookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length,c.length);
-        }
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
     }
-    return false;
 }
 
-function make_map() {
-    center = my_loc;
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: center,
-        zoom: zoom_val,
-        disableDefaultUI: true,
-        styles: defalut_style,
-        backgroundColor: '#3A3A3A',
-        minZoom: 2
-    });
+/******************************************************************************/
+/*************************** CANVAS HELPERS ***********************************/
+/******************************************************************************/
 
-    google.maps.event.addListenerOnce(map, 'idle', show_page);
-    update_locs();
+function indToCoord(i) {
+    i = i/4;
+    var x = i%canv.width;
+    var y = (i-x)/canv.width;
+    return [x,y];
 }
 
-function initMap() {
-    try {
-        init_firebase();
-    } catch (e) {
-        console.log(e);
-    }
-    render_map();
+function coordToInd(x,y) {
+    return (((y*canv.width)+x)*4);
 }
 
-function get_date() {
-    var date = new Date();
-    return date.toUTCString().replace(" GMT","").replace(" 2016","").replace(" 2017","");
+function getDist(x1,y1,x2,y2) {
+    var a = x1 - x2;
+    var b = y1 - y2;
+    return Math.sqrt((a*a)+(b*b));
 }
 
-function capture_location(location) {
-    if (!locs) {
-        locs = {};
-    }
-    var new_loc = {
-        loc: {
-            // lat and long values are rounded to 2 decimals.
-            lat: parseFloat((location.coords.latitude).toFixed(2)),
-            lng: parseFloat((location.coords.longitude).toFixed(2))
-        },
-        count: 1,
-        decay: Math.round(Date.now()/3600000),
-        date: get_date()
+/******************************************************************************/
+/*************************** CANVAS ANIMATION *********************************/
+/******************************************************************************/
+
+const RATIO_MULT = 1.5;
+const MAX_DIFF = 5000;
+const NUM_PARTS = 300;
+
+var canv;
+var ctx;
+
+var mouseX;
+var mouseY;
+var mouseMoved = false;
+
+var canvUpdateInterval;
+
+var allParts;
+
+var usedColors;
+
+function getColorID(color) {
+    if (usedColors.indexOf(color) < 0) usedColors.push(color);
+    return usedColors.indexOf(color);
+}
+
+function newPart(points) {
+    return {
+        points: points,
+        dx: chance.integer({min: -MAX_DIFF, max: MAX_DIFF}),
+        dy: chance.integer({min: -(MAX_DIFF*2), max: (MAX_DIFF*2)}),
     };
-    var found = false;
-    for (var i = 0; i < Object.keys(locs).length; i++) {
-        var key = Object.keys(locs)[i];
-        if (locs[key] && locs[key].decay == locs[key].decay && locs[key].loc.lat == new_loc.loc.lat && locs[key].loc.lng == new_loc.loc.lng) {
-            found = true;
-            my_id = key;
-            break;
-        }
-    }
-    if (!found) {
-        // check cookie for id
-        if (get_cookie('samkilgussite') && locs[get_cookie('samkilgussite')]) {
-            my_id = get_cookie('samkilgussite');
-        }
-        else {
-            my_id = gen_id();
-            set_cookie('samkilgussite',my_id,1);
-        }
-
-        locs[my_id] = new_loc;
-    }
-    else {
-        if (get_cookie('samkilgussite') != my_id) {
-            locs[my_id].count += 1;
-        }
-        locs[my_id].decay = Math.round(Date.now()/3600000);
-    }
-    push_data();
-
-    update_locs();
 }
 
-function render_map() {
-    try {
-        make_map();
-        navigator.geolocation.getCurrentPosition(capture_location, update_locs);
-    }
-    catch (e) {
-        update_locs();
-    }
-}
+function genParts() {
+    var imageData = ctx.getImageData(0,0,canv.width,canv.height);
 
-function update_locs() {
-
-    for (var i = 0; i < circles.length; i++) {
-        if (circles[i]) {
-            circles[i].setMap(null)
-            delete circles[i];
+    var allPoints = [];
+    usedColors = [];
+    for (var i = 0; i < imageData.data.length; i+=4) {
+        if (imageData.data[i+3] > 0) {
+            var c = imageData.data[i] + "," + imageData.data[i+1] + "," + imageData.data[i+2] + "," + imageData.data[i+3];
+            allPoints.push([indToCoord(i),getColorID(c)]);
         }
     }
-    if (me_circle) {
-        me_circle.setMap(null);
-        me_circle = null;
-    }
-    me_circle = new google.maps.Circle({
-        strokeColor: "#ffcc00",
-        strokeOpacity: 0.85,
-        strokeWeight: 2,
-        fillColor: "#ffcc00",
-        fillOpacity: 0.4,
-        map: map,
-        center: my_loc,
-        radius: 100000,
-        clickable: false
-    });
 
-    if (locs) {
-        for (var i = 0; i < Object.keys(locs).length; i++) {
-            var key = Object.keys(locs)[i];
-            if (locs[key]) {
-                var num_hours = Math.round(Date.now()/3600000)
-                var op_mult = (1.0 - (((num_hours - locs[key].decay)/hours_to_decay)));
-                op_mult = Math.max(0.4,op_mult);
-                var radius = 50000 * locs[key].count;
-                var new_circle = new google.maps.Circle({
-                    strokeColor: "#eeeeee",
-                    strokeOpacity: 0.85 * op_mult,
-                    strokeWeight: 2,
-                    fillColor: "#eeeeee",
-                    fillOpacity: 0.4 * op_mult,
-                    map: map,
-                    center: locs[key].loc,
-                    radius: radius,
-                    clickable: false
+    console.log("points processed...");
+
+    if (allPoints.length < 1) {
+        initContent();
+        setTimeout(function () {
+            genParts();
+        }, 10);
+        return;
+    }
+
+    var numPointsPerPart = allPoints.length / NUM_PARTS;
+    allParts = [];
+
+
+    /**************************************************************************/
+
+    if (chance.bool()) {
+        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
+        allPoints.sort(function(a, b) {
+            var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
+            var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
+            return distA - distB;
+        });
+
+        while (allParts.length < NUM_PARTS && allPoints.length > 1) {
+            var numLeft = allPoints.length;
+            var partPoints = [];
+
+            var subset = allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length));
+
+            partPoints = partPoints.concat(subset);
+
+            allParts.push(newPart(partPoints));
+            // console.log("allParts length: " + allParts.length);
+
+            if (chance.integer({min: 0, max: 15}) == 0 && allPoints.length > 1) {
+                var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
+                allPoints.sort(function(a, b) {
+                    var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
+                    var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
+                    return distA - distB;
                 });
-
-                circles.push(new_circle);
             }
         }
     }
+    else {
+        shuffle(allPoints);
+        while (allPoints.length > 0)
+            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+    }
+
+    console.log("parts generated...");
+
+    /**************************************************************************/
 }
 
-function go_to_link(element) {
-    var links = {
-        'linkedin': 'https://www.linkedin.com/in/samkilgus',
-        'github': 'https://github.com/returningsam',
-        'instagram': 'https://www.instagram.com/returningsam/',
-        'resume': 'resume.pdf'
-    }
-    window.open(links[element.innerHTML],'_blank');
-}
-
-
-/**
- * This is to fill in my email after the page loads to hopefully avoid some spam
- * that would come from webcrawlers finding my email in plain text in the source
- * files.
- */
-function fill_emael() {
-    if (document.getElementById('emael').innerHTML.length < 1) {
-        var username = 'samkilgus';
-        var hostname = 'gmail.com';
-        var mailtext = username + '@' + hostname ;
-        var link_ele = document.createElement('a');
-        link_ele.href = 'mailto:' + mailtext;
-        link_ele.innerHTML = mailtext;
-        document.getElementById('emael').appendChild(link_ele);
-    }
-}
-
-var ratio;
-
-function resize_overlay(extra) {
-    ratio = window.innerHeight/window.innerWidth;
-    if (ratio > 1.5) {
-        ratio = 1.50;
-    }
-    if (ratio < 0.6) {
-        ratio = 0.6;
-    }
-
-    if (extra) {
-        ratio += 0.05;
-    }
-
-    var footer = document.getElementById('overlay');
-    var border_left = Math.round((window.innerHeight * ratio));
-    var border_bottom = Math.round((window.innerWidth * (1/ratio))-300);
-
-    var shape_ratio = Math.min(border_left/border_bottom,border_bottom/border_left);
-    shape_ratio = Math.max(0,shape_ratio);
-
-    border_left = border_left - (300 * shape_ratio);
-    border_bottom = border_bottom - (300 * shape_ratio);
-
-    if (border_left < document.getElementById('link_cont').clientWidth + 120) {
-        border_left = document.getElementById('link_cont').clientWidth + 120;
-    }
-    if (border_bottom < document.getElementById('link_cont').clientHeight + 120) {
-        border_bottom = document.getElementById('link_cont').clientHeight + 120;
-    }
-
-    footer.style.borderBottom = border_bottom.toString() + "px solid white";
-    footer.style.borderLeft = border_left.toString() + "px solid transparent";
-}
-
-function reposition_desc() {
-    var desc = document.getElementById('content');
-    desc.style.bottom = Math.max(60,60*Math.pow(ratio+.4,3)).toString() + "px";
-}
-
-function fix_hover() {
-    document.getElementById('logo_cont').className = "logo_cont_nohover";
-    setTimeout(function () {
-        document.getElementById('logo_cont').className = "logo_cont";
-    }, 10);
-    resize_overlay();
-    reposition_desc();
-}
-
-function push_data() {
-    console.log(locs[my_id]);
-    firebase.database().ref('locs/'+ my_id + "/").set(locs[my_id]);
-}
-
-function show_page() {
-    if (page_shown) {
-        return;
-    }
-    page_shown = true;
-    setInterval(update_locs, 1800000);
-
-    document.getElementById('loader').style.opacity = 0;
-    setTimeout(function () {
-        document.getElementById('loader').style.display = "none";
-    }, 1100);
-    document.getElementById('content').style.opacity = "1";
-    document.getElementById('link_cont').style.bottom = "60px";
-    document.getElementsByTagName('main')[0].style.backgroundColor = "rgba(0,0,0,0)";
-    document.getElementById('link_cont').addEventListener('mouseover', function () {
-        if (!overlay_hover) {
-            resize_overlay(true);
-            overlay_hover = true;
+function drawParts(dist) {
+    var noise = 1;
+    var imgData = ctx.createImageData(canv.width,canv.height);
+    var distMult = Math.pow(1.0001,Math.max(dist,1))-1.0001;
+    for (var i = 0; i < allParts.length; i++) {
+        var curPart = allParts[i];
+        for (var j = 0; j < curPart.points.length; j++) {
+            var curPoint = curPart.points[j];
+            var ind = coordToInd(
+                curPoint[0][0] + Math.floor(curPart.dx*distMult),
+                curPoint[0][1] + Math.floor(curPart.dy*distMult)
+            );
+            var c = usedColors[curPoint[1]].split(",")
+            imgData.data[ind]   = parseInt(c[0]);
+            imgData.data[ind+1] = parseInt(c[1]);
+            imgData.data[ind+2] = parseInt(c[2]);
+            imgData.data[ind+3] = parseInt(c[3]);
         }
-    });
+    }
+    ctx.clearRect(0,0,canv.width,canv.height);
+    ctx.putImageData(imgData,0,0);
+}
 
-    document.getElementById('link_cont').addEventListener('mouseout', function () {
-        if (overlay_hover) {
-            resize_overlay();
-            overlay_hover = false;
-        }
-    });
+function frame() {
+    if (mouseMoved) {
+        if (loadTimeout) clearTimeout(loadTimeout);
+        if (loadInterval) clearInterval(loadInterval);
+        mouseMoved = false;
+        var dist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
+        if (dist <= focusPoint.r/2) dist = 0;
+        else dist = Math.abs(dist - (focusPoint.r/2));
+        drawParts(dist);
+    }
+}
 
-    document.getElementById('logo_cont').addEventListener("mouseup", function () {
-        if (desc_shown) {
-            document.getElementById('desc_cont').style.opacity = 0;
-            document.getElementById('desc_cont').style.pointerEvents = "none";
-            desc_shown = false;
+/******************************************************************************/
+/*************************** CANVAS LOAD ANIMATION ****************************/
+/******************************************************************************/
+
+var loadTimeout;
+var loadInterval;
+var loadDist = 2;
+
+function loadAnimation() {
+    loadDist += Math.min(Math.max(1,(200 - loadDist)/2),loadDist*2);
+    drawParts(loadDist);
+    if (loadDist >= 200 && loadInterval) {
+        clearInterval(loadInterval);
+        loadInterval = null;
+        loadDist = 2;
+    }
+}
+
+/******************************************************************************/
+/*************************** FOCUS POINT **************************************/
+/******************************************************************************/
+
+var focusPoint;
+
+var hintMessages = ["hey", "yo", "click", "psst", "boo", "ahem"];
+var curHintMessage = 0;
+var hintTextInterval;
+
+function drawFocusPoint() {
+    var focusPointEl = document.getElementById("focusPoint");
+    focusPointEl.style.width  = focusPoint.r + "px";
+    focusPointEl.style.height = focusPoint.r + "px";
+    focusPointEl.style.left = (focusPoint.x - (focusPoint.r/2)) + "px";
+    focusPointEl.style.top  = (focusPoint.y - (focusPoint.r/2)) + "px";
+    focusPointEl.addEventListener("click",openMenu);
+}
+
+function genFocusPoint() {
+    var padding = 100;
+    focusPoint = {
+        x: chance.integer({min: padding, max: window.innerWidth  - padding}),
+        y: chance.integer({min: padding, max: window.innerHeight - padding}),
+        r: chance.integer({min: 75, max: 125})
+    }
+}
+
+/******************************************************************************/
+/*************************** MENU STUFF ***************************************/
+/******************************************************************************/
+
+var menuOpen = false;
+
+function openMenu() {
+    menuOpen = true;
+    clearInterval(canvUpdateInterval);
+    clearInterval(hintTextInterval);
+    document.getElementById("canvas").style.opacity = 0;
+    var focusPointEl = document.getElementById("focusPoint");
+    focusPointEl.removeEventListener("click",openMenu);
+    focusPointEl.addEventListener("click",closeMenu);
+    focusPointEl.style.width  = window.innerWidth + "px";
+    focusPointEl.style.height = window.innerHeight + "px";
+    focusPointEl.style.left = 0;
+    focusPointEl.style.top  = 0;
+    focusPointEl.style.borderRadius = 0;
+    focusPointEl.className = focusPointEl.className + " closeMenu";
+    var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
+    hintText.style.display = "none";
+    document.getElementById("menuCont").style.display = "flex";
+    if (isMobile) document.getElementById("mobileMenuClose").style.display = "flex";
+
+    setTimeout(function () {
+        document.getElementById("menuCont").style.opacity = "1";
+        if (isMobile) document.getElementById("mobileMenuClose").style.opacity = "1";
+    }, 300);
+}
+
+function closeMenu() {
+    menuOpen = false;
+    document.getElementById("menuCont").style.opacity = null;
+    if (isMobile) document.getElementById("mobileMenuClose").style.opacity = null;
+    setTimeout(function () {
+        if (isMobile) document.getElementById("mobileMenuClose").style.display = null;
+        document.getElementById("menuCont").style.display = null;
+        document.getElementById("canvas").style.opacity = 1;
+        var focusPointEl = document.getElementById("focusPoint");
+        focusPointEl.className = focusPointEl.className.replace(" closeMenu", "");
+        focusPointEl.removeEventListener("click",closeMenu);
+        focusPointEl.addEventListener("click",openMenu);
+        focusPointEl.style = null;
+        genFocusPoint();
+        if (isMobile) {
+            lastBeta = null;
+            lastGamma = null;
+            mouseX = focusPoint.x;
+            mouseY = focusPoint.y;
+            moveMobileFocusPoint();
         }
         else {
-            document.getElementById('desc_cont').style.opacity = 1;
-            document.getElementById('desc_cont').style.pointerEvents = "all";
-            desc_shown = true;
+            mouseMoved = true;
+            frame();
         }
-        fix_hover();
-    });
-    document.getElementById('desc_cont').addEventListener("mouseup",function (click_ev) {
-        if (click_ev.target.localName == "div") {
-            document.getElementById('desc_cont').style.opacity = 0;
-            document.getElementById('desc_cont').style.pointerEvents = "none";
-            desc_shown = false;
-            fix_hover();
-        }
-    });
-    resize_overlay();
-    reposition_desc();
-    fill_emael();
-    window.onresize = function () {
-        resize_overlay();
-        reposition_desc();
-    }
-    if (fixOverlayInterval) {
-        clearInterval(fixOverlayInterval);
-    }
-    fixOverlayInterval = setInterval(resize_overlay, 1000);
+        drawFocusPoint();
+
+        setTimeout(function () {
+            canvUpdateInterval = setInterval(frame, 10);
+        }, 200);
+    }, 100);
 }
 
-var fixOverlayInterval;
+/******************************************************************************/
+/*************************** EVENT HANDLERS ***********************************/
+/******************************************************************************/
 
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('0 m(){n 8={o:"p-l",k:"g://f-h.i.j",};2.q(8);1=2.1();2.1().A(\'7/\').B(\'x\',0(a){7=a.s();t()})}3.u=0(){6.5(\'9\').d.C=(3.y*4).e()+"b c z";6.5(\'9\').d.r=(3.v*4).e()+"b c w"}',39,39,'function|database|firebase|window||getElementById|document|locs|config|overlay|snapshot|px|solid|style|toString|samkilgus|https|49192|firebaseio|com|databaseURL|eB0gnzkRUCEe5ZpdAzP8rgQW_SYE8Q|init_firebase|var|apiKey|AIzaSyCg|initializeApp|borderLeft|val|update_locs|onload|innerHeight|transparent|value|innerWidth|white|ref|on|borderBottom'.split('|'),0,{}))
+var lastBeta;
+var lastGamma;
+
+function updateMousePos(ev) {
+    if (mouseX != ev.clientX || mouseY != ev.clientY) {
+        mouseX = ev.clientX;
+        mouseY = ev.clientY;
+        mouseMoved = true;
+    }
+}
+
+function moveMobileFocusPoint() {
+    var mobilePoint = document.getElementById("mobilePoint");
+    mobilePoint.style.left = (mouseX-50) + "px";
+    mobilePoint.style.top  = (mouseY-50) + "px";
+}
+
+function updateOrientation(ev) {
+    var curBeta = (-5 * ev.beta);
+    var curGamma = (-5 * ev.gamma);
+    if (!lastBeta || !lastGamma) {
+        mouseX = focusPoint.x;
+        mouseY = focusPoint.y;
+        lastBeta  = curBeta;
+        lastGamma = curGamma;
+        mouseMoved = true;
+        var mobilePoint = document.getElementById("mobilePoint");
+        if (!mobilePoint) {
+            mobilePoint = document.createElement("div");
+        }
+        mobilePoint.className  = "mobilePoint";
+        mobilePoint.id         = "mobilePoint";
+        if (!document.getElementById("mobilePoint")) {
+            document.body.appendChild(mobilePoint);
+        }
+        moveMobileFocusPoint();
+    }
+    else if (lastBeta != curBeta || lastGamma != curGamma) {
+        var dx = lastGamma - curGamma;
+        var dy = lastBeta - curBeta;
+        lastBeta  = curBeta;
+        lastGamma = curGamma;
+        mouseMoved = true;
+        mouseX = Math.max(0,Math.min(window.innerWidth,mouseX + dx));
+        mouseY = Math.max(0,Math.min(window.innerHeight,mouseY + dy));
+        moveMobileFocusPoint();
+    }
+}
+
+/******************************************************************************/
+/*************************** RESIZING *****************************************/
+/******************************************************************************/
+
+var resizeTimeout;
+
+function resize() {
+    if (menuOpen) {
+        var focusPointEl = document.getElementById("focusPoint");
+        focusPointEl.style.width  = window.innerWidth + "px";
+        focusPointEl.style.height = window.innerHeight + "px";
+    }
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+        canv.width  = window.innerWidth  * RATIO_MULT;
+        canv.height = window.innerHeight * RATIO_MULT;
+        ctx.clearRect(0,0,canv.width,canv.height);
+        if (!menuOpen) {
+            genFocusPoint();
+            drawFocusPoint();
+        }
+        initContent();
+        genParts();
+        mouseMoved = true;
+        frame();
+    }, 100);
+}
+
+window.onresize = resize;
+
+/******************************************************************************/
+/*************************** INITIALIZATION ***********************************/
+/******************************************************************************/
+
+function initContent() {
+    ctx.fillStyle = "black";
+    ctx.font = "bolder " + (75*RATIO_MULT) + "pt Inter UI, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
+}
+
+function initCanv() {
+    canv = document.getElementById("canvas");
+    ctx  = canv.getContext("2d");
+    canv.width  = window.innerWidth  * RATIO_MULT;
+    canv.height = window.innerHeight * RATIO_MULT;
+}
+
+function init() {
+    isMobile = checkMobile();
+    initCanv();
+    genFocusPoint();
+    drawFocusPoint();
+    initContent();
+    genParts();
+
+    loadTimeout = setTimeout(function () {
+        loadInterval = setInterval(loadAnimation, 50);
+    }, 1000);
+    canvUpdateInterval = setInterval(frame, 10);
+
+    if (isMobile) {
+        window.addEventListener("deviceorientation", updateOrientation, true);
+        var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
+        hintText.style = null;
+        hintTextInterval = setInterval(function () {
+            curHintMessage++;
+            if (curHintMessage >= hintMessages.length) curHintMessage = 0;
+            document.getElementById("focusPoint").getElementsByTagName("p")[0].innerHTML = hintMessages[curHintMessage];
+        }, 4000);
+    }
+    else {
+        document.body.addEventListener("mousemove",updateMousePos);
+    }
+}
+
+window.onload = init;

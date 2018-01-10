@@ -1,7 +1,4 @@
 {
-  "database": {
-    "rules": "database.rules.json"
-  },
   "hosting": {
     "public": "public",
     "ignore": [
@@ -11,8 +8,8 @@
     ],
     "rewrites": [
       {
-        "source": "**/keybase",
-        "destination": "/keybase.txt"
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   }
