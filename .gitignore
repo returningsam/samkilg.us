@@ -1,5 +1,4 @@
-
-# Elastic Beanstalk Files
 .firebaserc
 firebase.json
 database.rules.json
+public/chance.min.js
