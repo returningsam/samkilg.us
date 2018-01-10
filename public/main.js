@@ -264,6 +264,10 @@ function openMenu() {
     setTimeout(function () {
         document.getElementById("menuCont").style.opacity = "1";
         if (isMobile) document.getElementById("mobileMenuClose").style.opacity = "1";
+        setTimeout(function () {
+            initContent();
+            genParts();
+        }, 10);
     }, 300);
 }
 
@@ -388,6 +392,7 @@ window.onresize = resize;
 /******************************************************************************/
 
 function initContent() {
+    ctx.clearRect(0,0,canv.width,canv.height);
     ctx.fillStyle = "black";
     ctx.font = "bolder " + (75*RATIO_MULT) + "pt Inter UI, sans-serif";
     ctx.textAlign = "center";
