@@ -99,7 +99,9 @@ function genParts() {
     allParts = [];
 
     /**************************************************************************/
-    var choice = chance.integer({min: 0,max: 2});
+
+    // var choice = chance.integer({min: 4,max: 5});
+    var choice = 5;
 
     if (choice == 0) {
         var numParts = 400;
@@ -133,7 +135,7 @@ function genParts() {
         while (allPoints.length > 0)
             allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
     }
-    else {
+    else if (choice == 2) {
         var numParts = 500;
         numPointsPerPart = allPoints.length / numParts;
 
@@ -146,6 +148,61 @@ function genParts() {
 
         while (allParts.length < numParts && allPoints.length > 1)
             allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+    }
+    else if (choice == 3) {
+        var numParts = 500;
+        numPointsPerPart = allPoints.length / numParts;
+
+        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
+        var xDiff = chance.floating({min: -2, max: 2});
+        var yDiff = chance.floating({min: -2, max: 2});
+        allPoints.sort(function(a, b) {
+            return ((xDiff*a[0][0])*(yDiff*a[0][1])) - ((xDiff*b[0][0])*(yDiff*b[0][1]));
+        });
+
+        while (allParts.length < numParts && allPoints.length > 1)
+            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+    }
+    else if (choice == 4) {
+        var numParts = 500;
+        numPointsPerPart = allPoints.length / numParts;
+
+        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
+        var xDiff = chance.floating({min: -2, max: 2});
+        var yDiff = chance.floating({min: -2, max: 2});
+        allPoints.sort(function(a, b) {
+            return ((xDiff*a[0][0])/(yDiff*a[0][1])) - ((xDiff*b[0][0])/(yDiff*b[0][1]));
+        });
+
+        while (allParts.length < numParts && allPoints.length > 1)
+            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+    }
+
+    else if (choice == 5) {
+        var numParts = 500;
+        numPointsPerPart = allPoints.length / numParts;
+
+        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
+        var xDiff = chance.floating({min: -2, max: 2});
+        var yDiff = chance.floating({min: -2, max: 2});
+        var sortByX = function(a, b) {
+            return ((xDiff*a[0][0])) - ((xDiff*b[0][0]));
+        }
+        var sortByY = function(a, b) {
+            return ((xDiff*a[0][1])) - ((xDiff*b[0][1]));
+        }
+        var curSort = chance.bool();
+        if (curSort) allPoints.sort(sortByX);
+        else allPoints.sort(sortByY);
+
+        while (allParts.length < numParts && allPoints.length > 1) {
+            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+            if (chance.bool({likelihood: 10})) {
+                curSort = !curSort;
+                if (curSort) allPoints.sort(sortByX);
+                else allPoints.sort(sortByY);
+            }
+        }
     }
 
     console.log("parts generated...");
