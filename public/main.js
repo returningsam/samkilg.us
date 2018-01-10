@@ -100,8 +100,8 @@ function genParts() {
 
     /**************************************************************************/
 
-    // var choice = chance.integer({min: 4,max: 5});
-    var choice = 5;
+    var choice = chance.integer({min: 0,max: 5});
+    // var choice = 5;
 
     if (choice == 0) {
         var numParts = 400;
