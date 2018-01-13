@@ -261,13 +261,33 @@ function loadAnimation() {
 /******************************************************************************/
 
 var focusPoint;
+var focusPointEl;
 
 var hintMessages = ["hey", "yo", "click", "psst", "boo", "ahem"];
 var curHintMessage = 0;
 var hintTextInterval;
 
+function expandFocusPoint() {
+    focusPointEl.removeEventListener("click",openMenu);
+    focusPointEl.addEventListener("click",closeMenu);
+    focusPointEl.style.width  = window.innerWidth + "px";
+    focusPointEl.style.height = window.innerHeight + "px";
+    focusPointEl.style.left = 0;
+    focusPointEl.style.top  = 0;
+    focusPointEl.style.borderRadius = 0;
+    focusPointEl.style.backgroundColor = "black";
+    focusPointEl.className = focusPointEl.className + " closeMenu";
+}
+
+function collapseFocusPoint() {
+    focusPointEl.className = focusPointEl.className.replace(" closeMenu", "");
+    focusPointEl.removeEventListener("click",closeMenu);
+    focusPointEl.addEventListener("click",openMenu);
+    focusPointEl.style = null;
+}
+
 function drawFocusPoint() {
-    var focusPointEl = document.getElementById("focusPoint");
+    focusPointEl = document.getElementById("focusPoint");
     focusPointEl.style.width  = focusPoint.r + "px";
     focusPointEl.style.height = focusPoint.r + "px";
     focusPointEl.style.left = (focusPoint.x - (focusPoint.r/2)) + "px";
@@ -295,16 +315,7 @@ function openMenu() {
     clearInterval(canvUpdateInterval);
     clearInterval(hintTextInterval);
     document.getElementById("canvas").style.opacity = 0;
-    var focusPointEl = document.getElementById("focusPoint");
-    focusPointEl.removeEventListener("click",openMenu);
-    focusPointEl.addEventListener("click",closeMenu);
-    focusPointEl.style.width  = window.innerWidth + "px";
-    focusPointEl.style.height = window.innerHeight + "px";
-    focusPointEl.style.left = 0;
-    focusPointEl.style.top  = 0;
-    focusPointEl.style.borderRadius = 0;
-    focusPointEl.style.backgroundColor = "black";
-    focusPointEl.className = focusPointEl.className + " closeMenu";
+    expandFocusPoint();
     var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
     hintText.style.display = "none";
     document.getElementById("menuCont").style.display = "flex";
@@ -316,8 +327,8 @@ function openMenu() {
         setTimeout(function () {
             initContent();
             genParts();
-        }, 300);
-    }, 300);
+        }, 500);
+    }, 250);
 }
 
 function closeMenu() {
@@ -328,11 +339,7 @@ function closeMenu() {
         if (isMobile) document.getElementById("mobileMenuClose").style.display = null;
         document.getElementById("menuCont").style.display = null;
         document.getElementById("canvas").style.opacity = 1;
-        var focusPointEl = document.getElementById("focusPoint");
-        focusPointEl.className = focusPointEl.className.replace(" closeMenu", "");
-        focusPointEl.removeEventListener("click",closeMenu);
-        focusPointEl.addEventListener("click",openMenu);
-        focusPointEl.style = null;
+        collapseFocusPoint();
         genFocusPoint();
         if (isMobile) {
             lastBeta = null;

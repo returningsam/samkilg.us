@@ -89,7 +89,7 @@ a:hover {
     border-radius: 50%;
     background-color: blue;
     z-index: 1;
-    transition: border-radius 0.3s, background-color 0.3s, left 0.3s, top 0.3s, width 0.3s, height 0.3s;
+    transition: border-radius 0.2s ease-in, background-color 0.3s, left 0.2s ease-in, top 0.2s ease-in, width 0.2s ease-in, height 0.2s ease-in;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -114,7 +114,7 @@ a:hover {
     height: 100%;
     flex-direction: column;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
     pointer-events: none;
     color: white;
     z-index: 3;
