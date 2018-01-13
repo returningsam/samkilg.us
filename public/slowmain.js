@@ -224,15 +224,20 @@ function drawParts(dist) {
     ctx.putImageData(imgData,0,0);
 }
 
+var frameTimeout;
+
 function frame() {
     if (mouseMoved) {
-        if (loadTimeout) clearTimeout(loadTimeout);
-        if (loadInterval) clearInterval(loadInterval);
-        mouseMoved = false;
-        var dist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
-        if (dist <= focusPoint.r/2) dist = 0;
-        else dist = Math.abs(dist - (focusPoint.r/2));
-        drawParts(dist);
+        if (frameTimeout) clearTimeout(frameTimeout);
+        frameTimeout = setTimeout(function () {
+            if (loadTimeout) clearTimeout(loadTimeout);
+            if (smoothAnimInterval) clearInterval(smoothAnimInterval);
+            mouseMoved = false;
+            targAnimDist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
+            if (targAnimDist <= focusPoint.r/2) targAnimDist = 0;
+            else targAnimDist = Math.abs(targAnimDist - (focusPoint.r/2));
+            smoothAnimInterval = setInterval(smoothAnimate, 50);
+        }, 10);
     }
 }
 
@@ -240,19 +245,24 @@ function frame() {
 /*************************** CANVAS LOAD ANIMATION ****************************/
 /******************************************************************************/
 
-const MAX_LOAD_DIST = 500;
+var targAnimDist = 500;
 
 var loadTimeout;
-var loadInterval;
-var loadDist = 2;
+var smoothAnimInterval;
+var curAnimDist = 2;
 
-function loadAnimation() {
-    loadDist += Math.min(Math.max(1,(MAX_LOAD_DIST - loadDist)/2),loadDist*2);
-    drawParts(loadDist);
-    if (loadDist >= MAX_LOAD_DIST && loadInterval) {
-        clearInterval(loadInterval);
-        loadInterval = null;
-        loadDist = 2;
+function smoothAnimate() {
+    console.log("target: " + targAnimDist);
+    console.log("curr:   " + curAnimDist);
+    if (targAnimDist - curAnimDist < 0)
+        curAnimDist -= Math.max(1,Math.abs(targAnimDist - curAnimDist)/2);
+    else
+        curAnimDist += Math.max(1,Math.abs(targAnimDist - curAnimDist)/2);
+
+    drawParts(curAnimDist);
+    if (Math.abs(curAnimDist - targAnimDist) < 1 && smoothAnimInterval) {
+        clearInterval(smoothAnimInterval);
+        smoothAnimInterval = null;
     }
 }
 
@@ -303,7 +313,6 @@ function openMenu() {
     focusPointEl.style.left = 0;
     focusPointEl.style.top  = 0;
     focusPointEl.style.borderRadius = 0;
-    focusPointEl.style.backgroundColor = "black";
     focusPointEl.className = focusPointEl.className + " closeMenu";
     var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
     hintText.style.display = "none";
@@ -316,7 +325,7 @@ function openMenu() {
         setTimeout(function () {
             initContent();
             genParts();
-        }, 300);
+        }, 10);
     }, 300);
 }
 
@@ -464,7 +473,7 @@ function init() {
     genParts();
 
     loadTimeout = setTimeout(function () {
-        loadInterval = setInterval(loadAnimation, 50);
+        smoothAnimInterval = setInterval(smoothAnimate, 50);
     }, 1000);
     canvUpdateInterval = setInterval(frame, 10);
 
