@@ -148,8 +148,9 @@ a:hover {
 }
 
 .links a {
-    margin-right: 30px;
-    margin-bottom: 30px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    padding: 5px;
 }
 
 .mobilePoint {
