@@ -61,14 +61,27 @@ var allParts;
 
 var usedColors;
 
+var animCenter;
+
 function getColorID(color) {
     if (usedColors.indexOf(color) < 0) usedColors.push(color);
     return usedColors.indexOf(color);
 }
 
 function newPart(points) {
+    var cx = 0;
+    var cy = 0;
+    for (var i = 0; i < points.length; i++) {
+        cx += points[i][0][0];
+        cy += points[i][0][1];
+    }
+    cx = cx / points.length;
+    cy = cy / points.length;
+    var cDist = getDist(cx,cy,animCenter[0][0],animCenter[0][1]);
+
     return {
         points: points,
+        cDist: cDist,
         dx: chance.integer({min: -window.innerWidth/1.5, max: window.innerWidth/1.5}),
         dy: chance.integer({min: -window.innerHeight/1.5, max: window.innerHeight/1.5}),
     };
@@ -96,12 +109,13 @@ function genParts() {
         return;
     }
 
+    animCenter = allPoints[chance.integer({min: 0,max: allPoints.length-1})];
     allParts = [];
 
     /**************************************************************************/
 
-    var choice = chance.integer({min: 0,max: 5});
-    // var choice = 3;
+    var choice = chance.integer({min: 0,max: 3});
+    // var choice = 2;
 
     if (choice == 0) {
         var numParts = chance.integer({min: 400, max: 600});
@@ -142,20 +156,6 @@ function genParts() {
         var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
         var xDiff = chance.floating({min: -2, max: 2});
         var yDiff = chance.floating({min: -2, max: 2});
-        allPoints.sort(function(a, b) {
-            return ((xDiff*a[0][1])+(yDiff*a[0][0])) - ((xDiff*b[0][1])+(yDiff*b[0][0]));
-        });
-
-        while (allParts.length < numParts && allPoints.length > 1)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-    }
-    else if (choice == 3) {
-        var numParts = chance.integer({min: 500, max: 700});
-        numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
         var sortMult = function(a, b) {
             return ((xDiff*a[0][0])*(yDiff*a[0][1])) - ((xDiff*b[0][0])*(yDiff*b[0][1]));
         }
@@ -169,33 +169,7 @@ function genParts() {
         while (allParts.length < numParts && allPoints.length > 1)
             allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
     }
-    else if (choice == 4) {
-        var numParts = chance.integer({min: 500, max: 1000});
-        numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
-        var sortByX = function(a, b) {
-            return ((xDiff*a[0][0])) - ((xDiff*b[0][0]));
-        }
-        var sortByY = function(a, b) {
-            return ((xDiff*a[0][1])) - ((xDiff*b[0][1]));
-        }
-        var curSort = chance.bool();
-        if (curSort) allPoints.sort(sortByX);
-        else allPoints.sort(sortByY);
-
-        while (allParts.length < numParts && allPoints.length > 1) {
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-            if (chance.bool({likelihood: 10})) {
-                curSort = !curSort;
-                if (curSort) allPoints.sort(sortByX);
-                else allPoints.sort(sortByY);
-            }
-        }
-    }
-    else if (choice == 5) {
+    else if (choice == 3) {
         var numParts = chance.integer({min: 500, max: 1000});
         numPointsPerPart = allPoints.length / numParts;
 
@@ -231,9 +205,9 @@ function genParts() {
 function drawParts(dist) {
     var noise = 1;
     var imgData = ctx.createImageData(canv.width,canv.height);
-    var distMult = Math.pow(1.001,Math.max(dist,1))-1.001;
     for (var i = 0; i < allParts.length; i++) {
         var curPart = allParts[i];
+        var distMult = Math.pow(1.001,Math.max(-1*((curPart.cDist/2) - dist),1))-1.001;
         for (var j = 0; j < curPart.points.length; j++) {
             var curPoint = curPart.points[j];
             var ind = coordToInd(
@@ -297,11 +271,12 @@ var hintTextInterval;
 function expandFocusPoint() {
     focusPointEl.removeEventListener("click",openMenu);
     focusPointEl.addEventListener("click",closeMenu);
-    focusPointEl.style.width  = window.innerWidth + "px";
-    focusPointEl.style.height = window.innerHeight + "px";
-    focusPointEl.style.left = 0;
-    focusPointEl.style.top  = 0;
-    focusPointEl.style.borderRadius = 0;
+    var newDim = Math.max(window.innerWidth,window.innerHeight);
+    focusPointEl.style.width  = (newDim*2) + "px";
+    focusPointEl.style.height = (newDim*2) + "px";
+    focusPointEl.style.left = (-newDim/2) + "px";
+    focusPointEl.style.top  = (-newDim/2) + "px";
+    // focusPointEl.style.borderRadius = 0;
     focusPointEl.style.backgroundColor = "black";
     focusPointEl.className = focusPointEl.className + " closeMenu";
 }
@@ -339,7 +314,6 @@ var menuOpen = false;
 var redrawTimeout;
 
 function openMenu() {
-    document.getElementById("playgroundMenu").style.zIndex = 0;
     menuOpen = true;
     clearInterval(canvUpdateInterval);
     clearInterval(hintTextInterval);
@@ -385,113 +359,8 @@ function closeMenu() {
         drawFocusPoint();
         setTimeout(function () {
             canvUpdateInterval = setInterval(frame, 10);
-            document.getElementById("playgroundMenu").style.zIndex = null;
         }, 200);
     }, 100);
-}
-
-/******************************************************************************/
-/*************************** PLAYGROUND MENU **********************************/
-/******************************************************************************/
-
-var projects = [
-    {
-        date: "05.01.18",
-        title: "static_lines",
-        mobile: false
-    },
-    {
-        date: "13.05.16",
-        title: "circles",
-        mobile: true
-    },
-    {
-        date: "04.01.18",
-        title: "glitch_cursor",
-        mobile: false
-    },
-    {
-        date: "15.04.17",
-        title: "glitch_word",
-        mobile: false
-    },
-    {
-        date: "10.04.16",
-        title: "sunflares",
-        mobile: true
-    }
-];
-
-var activeProj = 0;
-
-var playgroundMenuEl;
-var playgroundMenuTab;
-var playgroundMenuOpen = false;
-
-function sortProjects(a,b) {
-    var dateAToks = a.date.split(".");
-    var dateBToks = b.date.split(".");
-    var dateA = new Date(parseInt(dateAToks[2]),parseInt(dateAToks[1]),parseInt(dateAToks[0]));
-    var dateB = new Date(parseInt(dateBToks[2]),parseInt(dateBToks[1]),parseInt(dateBToks[0]));
-    return dateB - dateA;
-}
-
-function openThisProject(ev) {
-    var targ = ev.target;
-    while (targ.className.indexOf("playgroundMenuOption") < 0) {
-        targ = targ.parentNode;
-    }
-    var proj = projects[parseInt(targ.id.split("_")[1])];
-    window.open("/playground/" + proj.title + "/index.html" ,"_blank");
-}
-
-function openPlaygroundMenu() {
-    playgroundMenuEl.style.left = null;
-    playgroundMenuTab.style.cursor = "w-resize";
-    document.getElementById("canvas").addEventListener("click",closePlaygroundMenu);
-}
-
-function closePlaygroundMenu() {
-    playgroundMenuEl.style.left = (-(playgroundMenuOptionsCont.clientWidth + playgroundMenuOptionsCont.offsetLeft)) + "px";
-    playgroundMenuTab.style.cursor = null;
-    document.getElementById("canvas").removeEventListener("click",closePlaygroundMenu);
-}
-
-function togglePlaygroundMenu() {
-    if (playgroundMenuOpen) closePlaygroundMenu();
-    else openPlaygroundMenu();
-    playgroundMenuOpen = !playgroundMenuOpen;
-}
-
-function initMenu() {
-    projects.sort(sortProjects);
-    playgroundMenuEl = document.getElementById("playgroundMenu");
-    playgroundMenuTab = document.getElementById("playgroundMenuTab");
-    playgroundMenuTab.addEventListener("click",togglePlaygroundMenu);
-    setTimeout(closePlaygroundMenu, 500);
-
-    var playgroundMenuOptionsCont = document.getElementById("playgroundMenuOptionsCont");
-
-    for (var i = 0; i < projects.length; i++) {
-        if (!isMobile || projects[i].mobile) {
-            var menuOption = document.createElement("div");
-            menuOption.id = "playgroundMenuOption_" + i;
-            menuOption.className = "playgroundMenuOption";
-            menuOption.addEventListener("click",openThisProject);
-
-            var menuOptionDate = document.createElement("p");
-            menuOptionDate.className = "playgroundMenuOptionDate";
-            menuOptionDate.innerHTML = projects[i].date;
-
-            var menuOptionTitle = document.createElement("p");
-            menuOptionTitle.innerHTML = projects[i].title;
-
-            menuOption.appendChild(menuOptionDate);
-            menuOption.appendChild(menuOptionTitle);
-
-            playgroundMenuOptionsCont.appendChild(menuOption);
-        }
-    }
 }
 
 /******************************************************************************/
@@ -606,7 +475,7 @@ window.onresize = resize;
 function initContent() {
     ctx.clearRect(0,0,canv.width,canv.height);
     ctx.fillStyle = "black";
-    ctx.font = "bolder " + (75*RATIO_MULT) + "pt Inter UI, sans-serif";
+    ctx.font = "bolder " + (7*RATIO_MULT) + "rem Inter UI, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
 }
@@ -621,7 +490,6 @@ function initCanv() {
 function init() {
     isMobile = checkMobile();
     initGrain();
-    initMenu();
     initCanv();
     genFocusPoint();
     drawFocusPoint();
