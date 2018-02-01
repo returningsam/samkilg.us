@@ -19,7 +19,7 @@ var pgData = {
         description: "My 'from-scratch' attempt at some very simple 2d physics with disks. You can move your mouse around to bounce the disks or click to redraw and toggle colors."
     },
     "color_averages": {
-        date: "19.10.2016",
+        date: "29.01.2016",
         tags: ["simple","canvas"],
         mobile: false,
         description: "Draws a pallet of colors, then 'blurs' the colors together by placing small colored colors at random spots."
@@ -47,13 +47,13 @@ var pgData = {
         date: "17.10.2017",
         tags: ["interactive","canvas"],
         mobile: false,
-        description: "A tool to create cool paterns and custom gradients. Uses a randomly pruned DFS to fill the screen with colors then blurs the image to create a gradient. Click and move the mouse to draw. I suggest this order: draw -> fill -> blur."
+        description: "This started as a tool to create custom paterns and gradients. Uses a randomly pruned DFS to fill the screen with colors then blurs the image to create a gradient. Click and move the mouse to draw. I suggest this order: draw -> fill -> blur."
     },
     "phonetic_typer": {
         date: "03.08.2017",
         tags: ["interactive","API","text"],
         mobile: true,
-        description: "Type English words into the left panel and see how you would pronounce them in real time. Uses the <a href='https://www.wordsapi.com/docs' target='_blank'>Words API</a>.",
+        description: "Type English words into the left panel and see how you would pronounce them in real time. Uses the <a href='https://www.wordsapi.com' target='_blank'>Words API</a>.",
         bgPos: "top left"
     },
     "sunflares": {
@@ -81,7 +81,7 @@ var pgData = {
         mobile: false,
         description: "Draws a random zig-zag line that goes around the mouse and connects at the other side."
     },
-    "layered_text": {
+    "3D_text": {
         date: "20.01.2018",
         tags: ["interactive","text","3D"],
         mobile: false,
@@ -125,7 +125,7 @@ var curSearch = {
 
 function filterByTitle(pgDataKey) {
     var show = false;
-    if (curSearch["title"].value.length == 0 || pgDataKey.indexOf(curSearch["title"].value) > -1)
+    if (curSearch["title"].value.length == 0 || pgDataKey.toLowerCase().indexOf(curSearch["title"].value.toLowerCase()) > -1)
         show = true;
     return show;
 }
@@ -133,7 +133,7 @@ function filterByTitle(pgDataKey) {
 function filterByTags(pgDataKey) {
     var curCheckVal = document.getElementById("tags_" + pgDataKey).innerHTML;
     var show = false;
-    if (curSearch["tags"].value.length == 0 || curCheckVal.indexOf(curSearch["tags"].value) > -1)
+    if (curSearch["tags"].value.length == 0 || curCheckVal.toLowerCase().indexOf(curSearch["tags"].value.toLowerCase()) > -1)
         show = true;
     return show;
 }
@@ -387,7 +387,7 @@ function showPreview(tag) {
         previewHold = false;
         // titleEl.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
         hidePreview();
-    }, 10);
+    }, 50);
 }
 
 function removePreviews() {
@@ -411,7 +411,7 @@ function removePreviews() {
         }
         setTimeout(function () {
             previewHold = false;
-        }, 10);
+        }, 1);
     }, 300);
 }
 

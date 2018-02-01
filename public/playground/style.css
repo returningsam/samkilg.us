@@ -118,6 +118,10 @@ input:focus {
     outline: none;
 }
 
+.listCol {
+    overflow: hidden;
+}
+
 .listCol p {
     border-bottom: 2px solid black;
 
@@ -157,10 +161,16 @@ input:focus {
     white-space: nowrap;
 }
 
+#listCol_tags .previewDescription {
+    padding-right: 17px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 #listCol_tags .previewDescription p {
+    white-space: normal;
     overflow-x: hidden;
     overflow-y: scroll;
-    white-space: normal;
 }
 
 #listCol_date {
@@ -202,8 +212,6 @@ input:focus {
 }
 
 .previewEl {
-    border-bottom: 2px solid black;
-
     height: 0;
     min-height: 0;
     width: auto;
@@ -218,6 +226,7 @@ input:focus {
     min-height: calc((60px * 4) - 2px);
     width: auto;
     transition: height 0.3s, min-height 0.3s;
+    border-bottom: 2px solid black;
 }
 
 .previewImage {
