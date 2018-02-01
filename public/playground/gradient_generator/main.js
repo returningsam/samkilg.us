@@ -52,13 +52,13 @@ function hexToRgb(hex) {
 }
 
 function eventFire(el, etype){
-  if (el.fireEvent) {
-    el.fireEvent('on' + etype);
-  } else {
-    var evObj = document.createEvent('Events');
-    evObj.initEvent(etype, true, false);
-    el.dispatchEvent(evObj);
-  }
+    if (el.fireEvent)
+        el.fireEvent('on' + etype);
+    else {
+        var evObj = document.createEvent('Events');
+        evObj.initEvent(etype, true, false);
+        el.dispatchEvent(evObj);
+    }
 }
 
 /******************************************************************************/
@@ -85,8 +85,15 @@ function updateCanvas() {
 /*************************** Blur to Gradient *********************************/
 /******************************************************************************/
 
-function doBlur(radius) {
-    pixelData = StackBlur.imageDataRGBA(pixelData, 0, 0, canvWidth, canvHeight, radius);
+var curBlur = 0;
+var unbluredPixelData;
+
+function doBlur() {
+    curBlur += 10;
+    curBlur = Math.min(curBlur,170);
+    console.log(curBlur);
+    if (!unbluredPixelData) unbluredPixelData = pixelData;
+    pixelData = StackBlur.imageDataRGBA(unbluredPixelData, 0, 0, canvWidth, canvHeight, curBlur);
     updateCanvas();
 }
 
@@ -475,6 +482,7 @@ function randDrawColor() {
 function setDrawColor(c) {
     ctx.fillStyle = "rgb(" + hexToRgb(c) + ")";
     curDrawColor = c;
+    document.getElementById("draw_color").style.backgroundColor = "#" + curDrawColor;
 }
 
 function flattenColor(c) {
@@ -524,7 +532,7 @@ function startDrawing() {
 
     //////////////////////////
 
-    setDrawColor(DEF_DRAW_COLOR);
+    // setDrawColor(DEF_DRAW_COLOR);
     setDrawRadius(DEF_DRAW_RAD);
 
     //////////////////////////
@@ -534,6 +542,25 @@ function startDrawing() {
     canv.addEventListener('mouseup',endDrawHandler);
 
     buildPixelData();
+}
+
+/******************************************************************************/
+/*************************** Controls *****************************************/
+/******************************************************************************/
+
+function initControls() {
+    document.getElementById("draw_color").addEventListener("click", function () {
+        randDrawColor();
+    });
+
+    document.getElementById("fill").addEventListener("click", startFill);
+
+    document.getElementById("blur").addEventListener("click", function () {
+        doBlur();
+        document.getElementById("blur").innerHTML = "blur more";
+    });
+
+    document.getElementById("reset").addEventListener("click",newGradient);
 }
 
 /******************************************************************************/
@@ -567,6 +594,7 @@ function downloadCanvas() {
 
 function init() {
     newGradient();
+    initControls();
 }
 
 window.onload = init;

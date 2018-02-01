@@ -6,7 +6,7 @@ var pgData = {
         description: "Mouse tracking animation with arms coming from the sides of the screen to find the mouse. Try to avoid the arms or click to toggle colors."
     },
     "box_fill": {
-        date: "12.01.2018",
+        date: "14.01.2018",
         tags: ["canvas","random"],
         mobile: true,
         description: "Fills the screen in a way that resembles the <a href='https://en.wikipedia.org/wiki/Golden_ratio' target='_blank'>golden ratio</a>. If your window has the same ratio as the golden ratio, the resulting image will also be the golden ratio. Click or resize the window to redraw.",
@@ -31,7 +31,7 @@ var pgData = {
         description: "A canvas based 'Conway's Game of Life' with randomized life rules. Move your mouse around to draw new life, click to clear the screen, and if you're feeling adventurous, check out the developer console for a few more instructions (sorry for the temporary lack of UI)."
     },
     "glitch_cursor": {
-        date: "12.05.2017",
+        date: "05.12.2017",
         tags: ["simple","interactive","canvas"],
         mobile: false,
         description: "Very simple page that draws the mouse to the canvas as you move it."
@@ -47,7 +47,7 @@ var pgData = {
         date: "17.10.2017",
         tags: ["interactive","canvas"],
         mobile: false,
-        description: "A tool to create cool paterns and custom gradients. Uses a randomly pruned DFS to fill the screen with colors then blurs the image to create a gradient. The instructions are hidden in the developer console (Sorry for the lack temporary of a UI)."
+        description: "A tool to create cool paterns and custom gradients. Uses a randomly pruned DFS to fill the screen with colors then blurs the image to create a gradient. Click and move the mouse to draw. I suggest this order: draw -> fill -> blur."
     },
     "phonetic_typer": {
         date: "03.08.2017",
@@ -76,7 +76,7 @@ var pgData = {
         bgPos: "bottom center"
     },
     "static_lines": {
-        date: "14.01.2018",
+        date: "12.01.2018",
         tags: ["simple","canvas"],
         mobile: false,
         description: "Draws a random zig-zag line that goes around the mouse and connects at the other side."
@@ -194,7 +194,7 @@ function parseDate(date) {
     var tokens = date.split(".");
     var dateObj = new Date();
     dateObj.setDate(parseInt(tokens[0]));
-    dateObj.setMonth(parseInt(tokens[1]));
+    dateObj.setMonth(parseInt(tokens[1])-1);
     dateObj.setFullYear(parseInt(tokens[2]));
     return dateObj;
 }

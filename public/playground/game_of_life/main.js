@@ -44,8 +44,8 @@ var dotSize;
 var canv;
 var ctx;
 
-var SURVIVES = [3, 5, 6, 4, 1];
-var CREATES = [3];
+var SURVIVES = [8,1];
+var CREATES = [6,2,5];
 
 var drawInterval;
 
@@ -59,24 +59,24 @@ var curColor = [r_in_r(10,240),r_in_r(10,240),r_in_r(10,240)];
 var MAX_CHANGE = 20;
 
 function randomLife() {
-  SURVIVES = [];
-  CREATES = [];
-  for (var i = 0; i < r_in_r(1,8); i++) {
-    var newInt = r_in_r(1,8);
-    while (SURVIVES.indexOf(newInt) > -1) {
-      newInt = r_in_r(1,8);
+    SURVIVES = [];
+    CREATES = [];
+    for (var i = 0; i < r_in_r(1,8); i++) {
+        var newInt = r_in_r(1,8);
+        while (SURVIVES.indexOf(newInt) > -1) {
+            newInt = r_in_r(1,8);
+        }
+        SURVIVES.push(newInt);
     }
-    SURVIVES.push(newInt);
-  }
-  for (var i = 0; i < r_in_r(1,8); i++) {
-    var newInt = r_in_r(1,8);
-    while (CREATES.indexOf(newInt) > -1) {
-      newInt = r_in_r(1,8);
+    for (var i = 0; i < r_in_r(1,8); i++) {
+        var newInt = r_in_r(1,8);
+        while (CREATES.indexOf(newInt) > -1) {
+            newInt = r_in_r(1,8);
+        }
+        CREATES.push(newInt);
     }
-    CREATES.push(newInt);
-  }
-  // console.log(SURVIVES);
-  // console.log(CREATES);
+    console.log("SURVIVES: " + SURVIVES);
+    console.log("CREATES:  " + CREATES);
 }
 
 /**
@@ -257,7 +257,7 @@ function initX() {
   }
 }
 
-function init_plus() {
+function initPlus() {
   for (var i = 1; i < 100; i++) {
     var ch = i;
     putDot(Math.round(grid.length/2),Math.round(grid[0].length/2)+ch);
@@ -288,25 +288,30 @@ function resetCanvas() {
  * Initializes the canvas and the simulation in a whole.
  */
 function initCanv() {
-  maxWidth = window.innerWidth;
-  maxHeight = window.innerHeight;
+    maxWidth = window.innerWidth;
+    maxHeight = window.innerHeight;
 
-  canv = document.getElementById('canvas');
-  canv.width = maxWidth * RATIO_MULT;
-  canv.height = maxHeight * RATIO_MULT;
-  ctx = canv.getContext('2d');
-  ctx.fillStyle = "black";
-  ctx.fillRect(0,0,maxWidth * RATIO_MULT,maxHeight * RATIO_MULT);
+    canv = document.getElementById('canvas');
+    canv.width = maxWidth * RATIO_MULT;
+    canv.height = maxHeight * RATIO_MULT;
+    ctx = canv.getContext('2d');
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0,maxWidth * RATIO_MULT,maxHeight * RATIO_MULT);
 
-  dotSize = (maxWidth/1000);
-  initGrid();
+    dotSize = (maxWidth/1000);
+    initGrid();
 
-  canv.addEventListener('mousemove',canvMouseEventListener);
-  canv.addEventListener('click',resetCanvas);
-  console.log("You can draw on that black box over there by hoving your mouse over it. Click anywhere in the black box to reset the canvas. To randomize the pattern being drawn, just run this function: 'randomLife()'. Then just draw some more!");
+    canv.addEventListener('mousemove',canvMouseEventListener);
+    canv.addEventListener('click',resetCanvas);
 
-  initX();
-  //setInterval(nextColor,100)
+    initX();
+
+    console.log("You can draw on that black box over there by hoving your mouse over it. Click anywhere in the black box to reset the canvas. To randomize the pattern being drawn, just run this function: 'randomLife()'. Then just draw some more!");
+    console.log("Other functions you can play with inclue: 'initX()', 'initPlus()', 'resetCanvas()'.");
+    console.log();
+    console.log("You are also able to set the rules manually. The current rules are: ");
+    console.log("SURVIVES: " + SURVIVES);
+    console.log("CREATES:  " + CREATES);
 }
 
 function downloadCanvas() {
