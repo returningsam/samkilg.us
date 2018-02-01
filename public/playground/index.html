@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Samuel Kilgus | Playground</title>
+        <link rel="icon" href="../favicon.png">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <script src="../chance.min.js" charset="utf-8"></script>
+        <script src="main.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <canvas class="grainCanv" id="grainCanv"></canvas>
+        <main>
+            <header>
+                <h1>Playground</h1>
+            </header>
+            <div id="mainTop" class="mainTop">
+                <h2>Hello, my name is <a id="nameLink" href="https://samkilg.us">Samuel Kilgus</a>.</h2>
+                <p>This is where I show many the web-based experiments that I create during my free time. Some of them are interactive, some are meant to be simply looked at, but I encourage you to explore each project as the functionalities may not be explicit or obvious. Not all projects are guaranteed to be done or finished.</p>
+            </div>
+            <div class="mainBottom" id="mainList">
+                <div id="listCol_title" class="listCol listCol_title">
+                    <!-- <p class="title">TITLE</p> -->
+                    <input id="title_search" type="text" placeholder="Title">
+                </div>
+                <div id="listCol_tags" class="listCol">
+                    <!-- <p class="title">TAGS</p> -->
+                    <input id="tags_search" type="text" placeholder="Tags">
+                </div>
+                <div id="listCol_date" class="listCol lastCol">
+                    <!-- <p class="title">DATE</p> -->
+                    <div class="filterToggle_date">
+                        <p class="active" id="filterToggle_date_newest">newest</p>
+                        <p id="filterToggle_date_oldest">oldest</p>
+                    </div>
+                </div>
+            </div>
+            <div class="blueDotCont">
+                <div id="blueDot" class="blueDot"></div>
+            </div>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0 !important;
+  font-family: 'Raleway', sans-serif;
+  transition: opacity 0.6s;
+  opacity: 1;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
