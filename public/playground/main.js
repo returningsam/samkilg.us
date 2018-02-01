@@ -1,7 +1,3 @@
-var numItems = 100;
-
-var tempDescription = "No description for this one yet. Sorry about that!";
-
 var pgData = {
     "arm_thing": {
         date: "23.05.2017",
@@ -13,7 +9,7 @@ var pgData = {
         date: "12.01.2018",
         tags: ["canvas","random"],
         mobile: true,
-        description: "Fills the screen in a way that resembles the <a href='https://en.wikipedia.org/wiki/Golden_ratio'>golden ratio</a>. If your window has the same ratio as the golden ratio, the resulting image will also be the golden ratio. Click or resize the window to redraw.",
+        description: "Fills the screen in a way that resembles the <a href='https://en.wikipedia.org/wiki/Golden_ratio' target='_blank'>golden ratio</a>. If your window has the same ratio as the golden ratio, the resulting image will also be the golden ratio. Click or resize the window to redraw.",
         bgPos: "right bottom"
     },
     "circles": {
@@ -57,7 +53,7 @@ var pgData = {
         date: "03.08.2017",
         tags: ["interactive","API","text"],
         mobile: true,
-        description: "Type English words into the left panel and see how you would pronounce them in real time. Uses the <a href='https://www.wordsapi.com/docs'>Words API</a>.",
+        description: "Type English words into the left panel and see how you would pronounce them in real time. Uses the <a href='https://www.wordsapi.com/docs' target='_blank'>Words API</a>.",
         bgPos: "top left"
     },
     "sunflares": {
@@ -92,6 +88,9 @@ var pgData = {
         description: "3D text using html text elements, css transforms, and some vanilla javascript (no 3D graphics libraries). Click to get new text."
     },
 }
+
+const BASE_GITHUB_LINK = "https://github.com/returningsam/website-of-mine/tree/master/public/playground/";
+
 var pgDataArr;
 
 var colTags = ["title","tags","date"];
@@ -327,7 +326,7 @@ function showPreview(tag) {
     previewImage.style.order = titleOrder + 1;
     previewImage.style.backgroundImage = "url('/playground/previews/" + tag + ".gif')";
     previewImage.style.backgroundPosition = pgData[tag].bgPos;
-    previewImage.addEventListener("click",viewButtonHandler);
+    previewImage.addEventListener("click",previewButtonHandler);
     insertAfter(titleEl,previewImage);
 
     var tagsEl = document.getElementById("tags_" + tag);
@@ -357,11 +356,12 @@ function showPreview(tag) {
     var viewPreviewButton = document.createElement("p");
     viewPreviewButton.id = "previewButton_view"
     viewPreviewButton.innerHTML = "view";
-    viewPreviewButton.addEventListener("click",viewButtonHandler);
+    viewPreviewButton.addEventListener("click",previewButtonHandler);
 
     var codePreviewButton = document.createElement("p");
     codePreviewButton.id = "previewButton_code"
     codePreviewButton.innerHTML = "source code";
+    codePreviewButton.addEventListener("click",previewButtonHandler);
 
     var nextPreviewButton = document.createElement("p");
     nextPreviewButton.id = "previewButton_next"
@@ -450,8 +450,12 @@ function handleTogglePreview(ev) {
 /*************************** PREVIEW NAVIGATION *******************************/
 /******************************************************************************/
 
-function viewButtonHandler() {
-    window.open("/playground/" + curPreview,"_blank");
+function previewButtonHandler(ev) {
+    var targToks = ev.target.id.split("_");
+    if (targToks[targToks.length-1] == "view" || targToks[0] == "previewImage")
+        window.open("/playground/" + curPreview,"_blank");
+    else
+        window.open(BASE_GITHUB_LINK + curPreview,"_blank");
 }
 
 function previousPreview() {
