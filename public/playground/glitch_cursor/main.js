@@ -36,7 +36,7 @@ function initCanv() {
 function init() {
     document.body.addEventListener("mousemove",updateMousePos);
     initCanv();
-    setInterval(checkMousePos, 1);
+    setInterval(checkMousePos, 5);
 }
 
 window.onload = init;

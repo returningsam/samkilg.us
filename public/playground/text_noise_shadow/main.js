@@ -79,9 +79,9 @@ function init() {
     canvas.width = window.innerWidth * 2;
     canvas.height = window.innerHeight * 2;
 
-    ctx.font="bold 500px Arial";
+    ctx.font="normal 400px Arial";
     ctx.textAlign="center";
-    ctx.fillText("NOISE",canvas.width/2,canvas.height/2);
+    ctx.fillText("SUBMIT",canvas.width/2,canvas.height/2);
 
     points = getPoints();
 

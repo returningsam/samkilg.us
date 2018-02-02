@@ -22,32 +22,32 @@ var pgData = {
         date: "29.01.2016",
         tags: ["simple","canvas"],
         mobile: false,
-        description: "Draws a pallet of colors, then 'blurs' the colors together by placing small colored colors at random spots."
+        description: "Draws a pallete of colors, then 'blurs' the colors together by placing small colored colors at random spots."
     },
     "game_of_life": {
         date: "20.04.2017",
         tags: ["interactive","canvas"],
         mobile: false,
-        description: "A canvas based 'Conway's Game of Life' with randomized life rules. Move your mouse around to draw new life, click to clear the screen, and if you're feeling adventurous, check out the developer console for a few more instructions (sorry for the temporary lack of UI)."
+        description: "A canvas based 'Conway's Game of Life' with randomized life rules. Move your mouse around to draw new life, click to clear the screen, and if you're feeling adventurous, check out the developer console for a few more instructions."
     },
     "glitch_cursor": {
         date: "05.12.2017",
         tags: ["simple","interactive","canvas"],
         mobile: false,
-        description: "Very simple page that draws the mouse to the canvas as you move it."
+        description: "Draws the mouse to the canvas as you move it."
     },
     "glitch_word": {
         date: "12.05.2016",
         tags: ["interactive","text"],
         mobile: false,
-        description: "A text animtion that 'glitches' the text in waves as your mouse moves over it.",
+        description: "A text animation that 'glitches' the text in waves as your mouse moves over it.",
         bgPos: "top center"
     },
     "gradient_generator": {
         date: "17.10.2017",
         tags: ["interactive","canvas"],
         mobile: false,
-        description: "This started as a tool to create custom paterns and gradients. Uses a randomly pruned DFS to fill the screen with colors then blurs the image to create a gradient. Click and move the mouse to draw. I suggest this order: draw -> fill -> blur."
+        description: "This started as a tool to create custom patterns and gradients. Uses a randomly pruned DFS to fill the screen with colors, then blurs the image to create a gradient. Click and move the mouse to draw. I suggest this order: draw -> fill -> blur."
     },
     "phonetic_typer": {
         date: "03.08.2017",
@@ -72,7 +72,7 @@ var pgData = {
         date: "11.02.2015",
         tags: ["simple","canvas"],
         mobile: false,
-        description: "One of my earlier experiments. Draws random 'stick-figure' trees with shading to attempt a sense of depth.",
+        description: "One of my earlier experiments. Draws random 'stick-figure' trees with shading to create a sense of depth.",
         bgPos: "bottom center"
     },
     "static_lines": {
@@ -87,9 +87,13 @@ var pgData = {
         mobile: false,
         description: "3D text using html text elements, css transforms, and some vanilla javascript (no 3D graphics libraries). Click to get new text."
     },
+    "corner_site": {
+        date: "01.02.2018",
+        tags: ["interactive","3D"],
+        mobile: false,
+        description: "A website in a corner. Move the mouse around to view the two sides of the corner."
+    }
 }
-
-const BASE_GITHUB_LINK = "https://github.com/returningsam/website-of-mine/tree/master/public/playground/";
 
 var pgDataArr;
 
@@ -118,8 +122,7 @@ var curSearch = {
         searchFunc: filterByMobile
     },
     "date": {
-        value: "",
-        searchFunc: filterByDate
+        value: ""
     }
 };
 
@@ -142,10 +145,6 @@ function filterByMobile(pgDataKey) {
     return pgData[pgDataKey].mobile;
 }
 
-function filterByDate() {
-    return true;
-}
-
 function filterOptions() {
     lastPreview = curPreview;
     curPreview = null;
@@ -157,7 +156,8 @@ function filterOptions() {
 
         var show = true;
         for (var j = 0; j < colTags.length; j++)
-            show = show && curSearch[colTags[j]].searchFunc(curDataKey);
+            if (curSearch[colTags[j]].searchFunc)
+                show = show && curSearch[colTags[j]].searchFunc(curDataKey);
 
         if (mobileCheck() && !filterByMobile(curDataKey)) show = false;
 
@@ -450,6 +450,8 @@ function handleTogglePreview(ev) {
 /*************************** PREVIEW NAVIGATION *******************************/
 /******************************************************************************/
 
+const BASE_GITHUB_LINK = "https://github.com/returningsam/website-of-mine/tree/master/public/playground/";
+
 function previewButtonHandler(ev) {
     var targToks = ev.target.id.split("_");
     if (targToks[targToks.length-1] == "view" || targToks[0] == "previewImage")
@@ -478,19 +480,19 @@ function nextPreview() {
         curOrder++;
         nextTag = pgDataArr[curOrder+1].title;
     }
-    console.log(nextTag);
+    // console.log(nextTag);
     if(curOrder < pgDataArr.length-1) togglePreview(nextTag);
 }
 
 function handlePreviewNav(ev) {
     var direction = ev.target.id.split("_")[1];
-    console.log(direction);
+    // console.log(direction);
     if (direction == "next") nextPreview();
     else previousPreview();
 }
 
 function handleArrowClick(ev) {
-    console.log(ev);
+    // console.log(ev);
     if (curPreview) {
         if (ev.keyCode == 40) {
             nextPreview();
@@ -523,7 +525,7 @@ function initGrain() {
         imgData.data[i+3] = chance.integer({min: 0, max: 25});
     }
     gCtx.putImageData(imgData, 0, 0);
-    console.log("grain done");
+    // console.log("grain done");
 }
 
 /******************************************************************************/
@@ -574,7 +576,7 @@ function initData() {
         obj.title = allKeys[i];
         pgDataArr.push(obj);
     }
-    console.log(pgDataArr);
+    // console.log(pgDataArr);
 }
 
 function init() {
