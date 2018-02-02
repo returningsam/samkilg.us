@@ -349,6 +349,7 @@ function showPreview(tag) {
     previewDate.style.order = titleOrder + 1;
 
     var previousPreviewButton = document.createElement("p");
+    previousPreviewButton.className = "previewNavButton";
     previousPreviewButton.id = "previewButton_previous"
     previousPreviewButton.innerHTML = "previous";
     previousPreviewButton.addEventListener("click",handlePreviewNav);
@@ -359,11 +360,12 @@ function showPreview(tag) {
     viewPreviewButton.addEventListener("click",previewButtonHandler);
 
     var codePreviewButton = document.createElement("p");
-    codePreviewButton.id = "previewButton_code"
+    codePreviewButton.id = "previewButton_code";
     codePreviewButton.innerHTML = "source code";
     codePreviewButton.addEventListener("click",previewButtonHandler);
 
     var nextPreviewButton = document.createElement("p");
+    nextPreviewButton.className = "previewNavButton";
     nextPreviewButton.id = "previewButton_next"
     nextPreviewButton.innerHTML = "next";
     nextPreviewButton.addEventListener("click",handlePreviewNav);

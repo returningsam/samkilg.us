@@ -29,13 +29,13 @@ p {
 
 a {
     color: white;
-    text-decoration: none;
+    text-decoration: underline;
     pointer-events: all;
     height: auto;
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: underline dotted;
 }
 
 @media screen and (min-height: 901px), screen and (min-width: 901px) {
@@ -86,20 +86,30 @@ a:hover {
 .focusPoint {
     -webkit-backface-visibility:hidden;
     position: fixed;
+
+    top: 30%;
+    left: 60%;
+
+    width: 100px;
+    height: 100px;
+
     border-radius: 50%;
     background-color: blue;
     z-index: 1;
-    transition: border-radius 0.2s ease-in, background-color 0.2s 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
+    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
+
     -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
 }
 
 .focusPoint:hover {
+    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
+    background-color: black;
     cursor: pointer;
 }
 
@@ -137,6 +147,14 @@ a:hover {
 
 .description p {
     padding: 20px 0;
+}
+
+.description a {
+    text-decoration: none;
+}
+
+.description a:hover {
+    text-decoration: underline;
 }
 
 .links {

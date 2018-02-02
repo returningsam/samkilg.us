@@ -285,13 +285,11 @@ function collapseFocusPoint() {
     focusPointEl.className = focusPointEl.className.replace(" closeMenu", "");
     focusPointEl.removeEventListener("click",closeMenu);
     focusPointEl.addEventListener("click",openMenu);
-    focusPointEl.style = null;
+    focusPointEl.removeAttribute("style");
 }
 
 function drawFocusPoint() {
     focusPointEl = document.getElementById("focusPoint");
-    focusPointEl.style.width  = focusPoint.r + "px";
-    focusPointEl.style.height = focusPoint.r + "px";
     focusPointEl.style.left = (focusPoint.x - (focusPoint.r/2)) + "px";
     focusPointEl.style.top  = (focusPoint.y - (focusPoint.r/2)) + "px";
     focusPointEl.addEventListener("click",openMenu);
@@ -302,7 +300,7 @@ function genFocusPoint() {
     focusPoint = {
         x: chance.integer({min: padding, max: window.innerWidth  - padding}),
         y: chance.integer({min: padding, max: window.innerHeight - padding}),
-        r: chance.integer({min: 75, max: 125})
+        r: 100
     }
 }
 
@@ -446,8 +444,10 @@ var resizeTimeout;
 function resize() {
     if (menuOpen) {
         var focusPointEl = document.getElementById("focusPoint");
-        focusPointEl.style.width  = window.innerWidth + "px";
-        focusPointEl.style.height = window.innerHeight + "px";
+        focusPointEl.style.width  = window.innerWidth*2 + "px";
+        focusPointEl.style.height = window.innerHeight*2 + "px";
+        focusPointEl.style.top    = (-window.innerHeight/2) + "px";
+        focusPointEl.style.left   = (-window.innerWidth/2) + "px";
     }
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
