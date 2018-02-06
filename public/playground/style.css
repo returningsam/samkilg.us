@@ -268,13 +268,39 @@ input:focus {
     text-decoration: underline;
 }
 
-.blueDotCont {
+footer {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
     height: auto;
     padding: 50px 0;
+}
+
+.footerText {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+footer p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    color: grey;
+    margin: 0;
+    padding: 0;
+    transition: opacity 0.2s;
+    opacity: 0;
+}
+
+footer:hover p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    color: grey;
+    margin: 0;
+    padding: 0;
+    transition: opacity 0.2s;
+    opacity: 1;
 }
 
 .blueDot {

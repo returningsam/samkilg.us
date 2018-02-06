@@ -143,6 +143,7 @@ a:hover {
     flex-direction: column;
     max-width: 80%;
     height: auto;
+    font-weight: lighter;
 }
 
 .description p {
