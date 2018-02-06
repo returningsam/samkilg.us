@@ -113,18 +113,6 @@ function drawCirc(x,y) {
     ctx.closePath();
 }
 
-function initCanv() {
-    canv = document.getElementById("canvas");
-    ctx = canv.getContext("2d");
-    canv.width  = window.innerWidth  * RATIO_MULT;
-    canv.height = window.innerHeight * RATIO_MULT;
-
-    if (!mouseX || !mouseY) {
-        mouseX = canv.width/2;
-        mouseY = canv.height/2;
-    }
-}
-
 function frame(points) {
     ctx.clearRect(0,0,canv.width,canv.height);
     var numLayers = 50;
@@ -174,6 +162,18 @@ function updatePointsBuffer() {
         var newPoints = genPoints();
         for (var i = 0; i < 20; i++) smoothPoints(newPoints,2);
         pointsBuffer.push(newPoints);
+    }
+}
+
+function initCanv() {
+    canv = document.getElementById("canvas");
+    ctx = canv.getContext("2d");
+    canv.width  = window.innerWidth  * RATIO_MULT;
+    canv.height = window.innerHeight * RATIO_MULT;
+
+    if (!mouseX || !mouseY) {
+        mouseX = canv.width/2;
+        mouseY = canv.height/2;
     }
 }
 

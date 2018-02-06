@@ -7,7 +7,7 @@ var pgData = {
     },
     "box_fill": {
         date: "14.01.2018",
-        tags: ["canvas","random"],
+        tags: ["canvas","random","lines"],
         mobile: true,
         description: "Fills the screen in a way that resembles the <a href='https://en.wikipedia.org/wiki/Golden_ratio' target='_blank'>golden ratio</a>. If your window has the same ratio as the golden ratio, the resulting image will also be the golden ratio. Click or resize the window to redraw.",
         bgPos: "right bottom"
@@ -58,7 +58,7 @@ var pgData = {
     },
     "sunflares": {
         date: "23.02.2017",
-        tags: ["canvas"],
+        tags: ["canvas","lines"],
         mobile: true,
         description: "Creates an image that looks like a star. Places random bezier curves that are tangent to the circumference of the circle, then moves them around randomly. Click to redraw with new colors."
     },
@@ -70,14 +70,14 @@ var pgData = {
     },
     "trees": {
         date: "11.02.2015",
-        tags: ["simple","canvas"],
+        tags: ["simple","canvas","lines"],
         mobile: false,
         description: "One of my earlier experiments. Draws random 'stick-figure' trees with shading to create a sense of depth.",
         bgPos: "bottom center"
     },
     "static_lines": {
         date: "12.01.2018",
-        tags: ["simple","canvas"],
+        tags: ["simple","canvas","lines"],
         mobile: false,
         description: "Draws a random zig-zag line that goes around the mouse and connects at the other side."
     },
@@ -98,7 +98,13 @@ var pgData = {
         tags: ["interactive","canvas"],
         mobile: true,
         description: "Draws a ungulating blob around the mouse."
-    }
+    },
+    // "doodle_bot": {
+    //     date: "06.02.2018",
+    //     tags: ["interactive","canvas","lines"],
+    //     mobile: true,
+    //     description: "Draws really long line while filling in some parts to create a random doodle."
+    // }
 }
 
 var pgDataArr;
