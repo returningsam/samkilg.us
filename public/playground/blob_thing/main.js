@@ -125,7 +125,8 @@ function frame(points) {
 }
 
 function animStep() {
-    curAnimStep++;
+    // console.log((Math.abs((MAX_ANIM_STEP/2)-curAnimStep)/9));
+    curAnimStep += (Math.abs((MAX_ANIM_STEP/2)-curAnimStep+8)/9) + 0.1;
 
     var animPoints = [];
     for (var i = 0; i < curPoints.length; i++) {

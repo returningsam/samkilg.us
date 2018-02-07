@@ -168,7 +168,7 @@ input:focus {
 }
 
 #listCol_tags .previewDescription p {
-    white-space: normal;
+    /* white-space: normal; */
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -310,6 +310,8 @@ footer:hover p {
     border-radius: 50%;
     z-index: 100;
     transition: background-color 0.3s;
+    flex-shrink: 0;
+    margin-left: 50px;
 }
 
 .blueDot:hover {
