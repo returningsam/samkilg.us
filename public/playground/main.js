@@ -94,7 +94,7 @@ var pgData = {
         description: "A website in a corner. Move the mouse around to view the two sides of the corner."
     },
     "blob_thing": {
-        date: "06.02.2018",
+        date: "07.02.2018",
         tags: ["interactive","canvas"],
         mobile: true,
         description: "Draws a ungulating blob around the mouse."

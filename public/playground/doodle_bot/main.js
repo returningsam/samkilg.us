@@ -175,7 +175,7 @@ function init() {
         }, 3000);
     }
     else {
-        document.getElementById("instructions").style.display = 0;
+        document.getElementById("instructions").style.display = "none";
     }
 }
 
