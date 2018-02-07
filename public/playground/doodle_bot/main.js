@@ -18,7 +18,7 @@ var curVect;
 var curDist;
 var distLeft;
 
-var fill = true;
+var fill = false;
 var stroke = true;
 var pause = false;
 

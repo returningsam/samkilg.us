@@ -99,12 +99,12 @@ var pgData = {
         mobile: true,
         description: "Draws a ungulating blob around the mouse."
     },
-    // "doodle_bot": {
-    //     date: "06.02.2018",
-    //     tags: ["interactive","canvas","lines"],
-    //     mobile: true,
-    //     description: "Draws really long line while filling in some parts to create a random doodle."
-    // }
+    "doodle_bot": {
+        date: "07.02.2018",
+        tags: ["interactive","canvas","lines"],
+        mobile: true,
+        description: "Draws really long random line while (optionally) filling in some parts to create a random doodle."
+    }
 }
 
 var pgDataArr;
