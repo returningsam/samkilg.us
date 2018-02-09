@@ -100,10 +100,10 @@ var pgData = {
         description: "Draws a ungulating blob around the mouse."
     },
     "doodle_bot": {
-        date: "06.02.2018",
+        date: "08.02.2018",
         tags: ["interactive","canvas","lines"],
         mobile: true,
-        description: "Draws really long random line while (optionally) filling in some parts to create a random doodle."
+        description: "Draws really long random line while (optionally) filling in some parts to create a random doodle. Variables that control the behavior of the line are randomized when you click."
     }
 }
 

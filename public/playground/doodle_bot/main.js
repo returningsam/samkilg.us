@@ -1,14 +1,14 @@
 const RATIO_MULT = 2;
 
-const MAX_VECT = 20;
-const MAX_RAND_VECT_DIFF = 8;
-const MAX_FIND_VECT_DIFF = 10;
-
 const BORDER_MARGIN = (Math.min(window.innerHeight,window.innerWidth)*0.15) * RATIO_MULT;
-const NEAR_DIST = 10;
+const NEAR_DIST = 100;
 
 var canv;
 var ctx;
+
+var MAX_VECT = randInt(10,25);
+var MAX_RAND_VECT_DIFF = randInt(4,12);
+var MAX_FIND_VECT_DIFF = randInt(2,10);
 
 var points;
 var curPoint;
@@ -49,7 +49,7 @@ function updateVect() {
     // console.log(percRandom);
 
     var randDiff = [randFloat(-MAX_RAND_VECT_DIFF,MAX_RAND_VECT_DIFF),
-                    randFloat(-MAX_RAND_VECT_DIFF,MAX_RAND_VECT_DIFF)];
+                    randFloat(-MAX_RAND_VECT_DIFF,MAX_RAND_VECT_DIFF*2)];
 
 
     var diffx = points[curPoint+1][0] - curPos[0];
@@ -124,6 +124,9 @@ function restartDraw() {
     ctx.clearRect(0,0,canv.width,canv.height);
     clearInterval(frameInterval);
     pause = false;
+    MAX_VECT = randInt(10,25);
+    MAX_RAND_VECT_DIFF = randInt(4,12);
+    MAX_FIND_VECT_DIFF = randInt(2,10);
     initPoints();
     startLine();
 }

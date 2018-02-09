@@ -168,7 +168,7 @@ input:focus {
 }
 
 #listCol_tags .previewDescription p {
-    /* white-space: normal; */
+    white-space: normal;
     overflow-x: hidden;
     overflow-y: scroll;
 }
