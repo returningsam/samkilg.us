@@ -254,6 +254,7 @@ function loadAnimation() {
         clearInterval(loadInterval);
         loadInterval = null;
         loadDist = 2;
+        if (!isMobile) document.body.addEventListener("mousemove",updateMousePos);
     }
 }
 
@@ -512,9 +513,6 @@ function init() {
                 document.getElementById("focusPoint").getElementsByTagName("p")[0].innerHTML = hintMessages[curHintMessage];
             }, 4000);
         }, 10000);
-    }
-    else {
-        document.body.addEventListener("mousemove",updateMousePos);
     }
 }
 
