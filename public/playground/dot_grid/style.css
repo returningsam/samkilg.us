@@ -1,0 +1,42 @@
+html {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    padding: 0;
+    margin: 0;
+}
+
+.screen {
+    display: flex;
+    height: calc(45% - 2px);
+    width: calc(80% - 2px);
+    margin: 2.5% 10%;
+    border: 1px solid rgb(60, 60, 60);
+    border-radius: 10px;
+}
+
+.dotCont {
+    height: 50%;
+    width: 80%;
+    padding: 0 10%;
+}
+
+.dot {
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    transition: color 0.1s;
+}
+
+.dot.active {
+    background-color: rgb(20, 20, 20);
+    transition: color 0.1s;
+}
