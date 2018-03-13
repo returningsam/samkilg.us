@@ -1,6 +1,4 @@
 .firebaserc
 firebase.json
 database.rules.json
-**/chance.min.js
 public/resume.pdf
-public/playground/previews/*
