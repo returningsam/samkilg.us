@@ -266,6 +266,7 @@ function openMenu() {
                 if (closeMenuStaged) closeMenu();
                 focusPointEl.removeEventListener("click",stageCloseMenu);
                 focusPointEl.addEventListener("click",closeMenu);
+                closeMenuStaged = false;
             });
         }, 500);
     }, 250);
