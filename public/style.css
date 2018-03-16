@@ -34,10 +34,8 @@ a {
     height: auto;
 }
 
-@media (hover: hover) {
-    a:hover {
-        text-decoration: underline dotted;
-    }
+.hasHover a:hover {
+    text-decoration: underline dotted;
 }
 
 @media screen and (min-height: 901px), screen and (min-width: 901px) {
@@ -109,16 +107,14 @@ a {
                                     supported by Chrome and Opera */
 }
 
-@media (hover: hover) {
-    .focusPoint:hover {
-        transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
-        background-color: black;
-        cursor: pointer;
-    }
+.hasHover .focusPoint:hover {
+    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
+    background-color: black;
+    cursor: pointer;
+}
 
-    .closeMenu:hover {
-        cursor: url('close.png'), pointer;
-    }
+.hasHover .closeMenu:hover {
+    cursor: url('close.png'), pointer;
 }
 
 .menuCont {
@@ -158,10 +154,8 @@ a {
     text-decoration: none;
 }
 
-@media (hover: hover) {
-    .description a:hover {
-        text-decoration: underline;
-    }
+.hasHover .description a:hover {
+    text-decoration: underline;
 }
 
 .links {
@@ -240,8 +234,6 @@ a {
 }
 
 
-@media (hover: hover) {
-    #friendButton:hover {
-        cursor: pointer;
-    }
+.hasHover #friendButton:hover {
+    cursor: pointer;
 }
