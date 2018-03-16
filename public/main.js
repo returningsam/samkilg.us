@@ -182,7 +182,9 @@ function loadAnimation() {
         loadInterval = null;
         curDist = loadDist;
         loadDist = 2;
-        if (!isMobile) document.body.addEventListener("mousemove",updateMousePos);
+        if (!isMobile)
+            document.body.addEventListener("mousemove",updateMousePos);
+        else window.addEventListener("deviceorientation", updateOrientation, true);
     }
 }
 
@@ -270,6 +272,7 @@ function openMenu() {
         if (isMobile) document.getElementById("mobileMenuClose").style.opacity = "1";
         setTimeout(function () {
             document.body.removeEventListener("mousemove",updateMousePos);
+            window.removeEventListener("deviceorientation", updateOrientation, true);
             mouseMoved = false;
             initContent();
             genPartsAsync(function () {
@@ -469,7 +472,6 @@ function init() {
         startLoadAnimation();
 
         if (isMobile) {
-            window.addEventListener("deviceorientation", updateOrientation, true);
             var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
             setTimeout(function () {
                 hintText.style = null;
