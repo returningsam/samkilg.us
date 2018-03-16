@@ -396,31 +396,6 @@ function updateOrientation(ev) {
 }
 
 /******************************************************************************/
-/*************************** FRIENDS ******************************************/
-/******************************************************************************/
-
-var friends = [
-    "https://dasha.design",
-    "http://cole.works",
-    "https://izzyb.net/",
-    "http://lukaschulz.com/",
-    "http://calebpayne.xyz/",
-    "http://www.tatenewfield.com/"
-];
-
-var viewed = [];
-
-function handleFriendClick(ev) {
-    if (friends.length == 0) {
-        friends = viewed;
-        viewed = [];
-    }
-    var fLink = friends.splice(chance.integer({min:0,max:friends.length-1}),1);
-    viewed.push(fLink);
-    this.href = fLink;
-}
-
-/******************************************************************************/
 /*************************** RESIZING *****************************************/
 /******************************************************************************/
 
