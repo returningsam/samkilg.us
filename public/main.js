@@ -155,7 +155,7 @@ function frame() {
         var distCh = Math.abs(newDist-curDist);
         var distChDir = (newDist-curDist)/Math.abs(newDist-curDist);
         if (distCh > 1)
-            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.6) * distChDir).toFixed(1));
+            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.7) * distChDir).toFixed(1));
         else mouseMoved = false;
 
         curDist += distCh;
