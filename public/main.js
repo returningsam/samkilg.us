@@ -477,7 +477,6 @@ function init() {
     genFocusPoint();
     drawFocusPoint();
     initContent();
-    document.getElementById("friendButton").addEventListener("click",handleFriendClick);
 
     genPartsWorker = new Worker('genPartsWorker.js');
 

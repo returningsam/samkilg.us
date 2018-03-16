@@ -1,0 +1,26 @@
+[debug] [2018-03-16T19:14:54.720Z] ----------------------------------------------------------------------
+[debug] [2018-03-16T19:14:54.722Z] Command:       /usr/local/Cellar/node/9.7.1/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-03-16T19:14:54.722Z] CLI Version:   3.17.6
+[debug] [2018-03-16T19:14:54.723Z] Platform:      darwin
+[debug] [2018-03-16T19:14:54.723Z] Node Version:  v9.7.1
+[debug] [2018-03-16T19:14:54.723Z] Time:          Fri Mar 16 2018 15:14:54 GMT-0400 (EDT)
+[debug] [2018-03-16T19:14:54.723Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-16T19:14:54.733Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-16T19:14:54.734Z] > authorizing via signed-in user
+[debug] [2018-03-16T19:14:54.735Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/samkilgus-49192  
+  
+ Fri Mar 16 2018 15:14:54 GMT-0400 (EDT)
+[debug] [2018-03-16T19:14:55.222Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-16T19:14:55.223Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/samkilgus-49192/tokens  
+  
+ Fri Mar 16 2018 15:14:55 GMT-0400 (EDT)
+[debug] [2018-03-16T19:14:55.568Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'samkilgus-49192'...
+[info] 
+[info] i  deploying hosting
+[info] i  hosting: preparing public directory for upload...
+[debug] [2018-03-16T19:15:04.134Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/samkilgus-49192/uploads/-L7kE7QdC-WyEeB8ae4B?fileCount=18208&message=  
+  
+ Fri Mar 16 2018 15:15:04 GMT-0400 (EDT)
