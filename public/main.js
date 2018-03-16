@@ -423,7 +423,7 @@ window.onresize = resize;
 function initContent() {
     ctx.clearRect(0,0,canv.width,canv.height);
     ctx.fillStyle = "black";
-    ctx.font = "bolder " + (7*RATIO_MULT) + "rem Inter UI, sans-serif";
+    ctx.font = "bolder " + (10*RATIO_MULT) + "vmin Inter UI, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
 }
