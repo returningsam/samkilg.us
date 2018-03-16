@@ -1,0 +1,113 @@
+@import url('https://rsms.me/inter/inter-ui.css');
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: 'Inter UI', sans-serif;
+    font-size: 4rem;
+    font-weight: bolder;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+.titleText {
+    position: fixed;
+    font-size: 5rem;
+    transition: top 0.2s, left 0.2s;
+}
+
+.titleTextButton {
+    position: fixed;
+    font-size: 5rem;
+    transition: top 0.2s, left 0.2s, color 0.2s;
+}
+
+.titleTextButton:hover {
+    color: red;
+    transition: top 0.2s, left 0.2s, color 0.2s;
+    cursor: pointer;
+}
+
+.titleTextButton:active {
+    color: green;
+    cursor: pointer;
+}
+
+.titleTextButtonOn {
+    color: blue;
+    position: fixed;
+    font-size: 5rem;
+    transition: top 0.2s, left 0.2s;
+}
+
+.titleTextButtonOn:hover {
+    cursor: pointer;
+}
+
+.titleTextButtonOn:active {
+    color: green;
+    cursor: pointer;
+}
+
+.titleTextNoTrans {
+    position: fixed;
+    font-size: 5rem;
+}
+
+.initialPosDIG {
+    right: 50%;
+    bottom: 50%;
+}
+.initialPosSIG {
+    right: 50%;
+    top: 50%;
+}
+.initialPosITAL {
+    left: 50%;
+    bottom: 50%;
+}
+.initialPosNATURES {
+    left: 50%;
+    top: 50%;
+}
+
+.menuImg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-height: 15%;
+    max-width: 15%;
+}
+
+.menuImgHidden {
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.menuButtonCanvas:hover {
+    cursor: pointer;
+}
+
+.menuButtonCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}

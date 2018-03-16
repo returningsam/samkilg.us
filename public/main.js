@@ -63,6 +63,8 @@ var usedColors;
 
 var animCenter;
 
+var genPartsWorker;
+
 function getColorID(color) {
     if (usedColors.indexOf(color) < 0) usedColors.push(color);
     return usedColors.indexOf(color);
@@ -87,119 +89,35 @@ function newPart(points) {
     };
 }
 
-function genParts() {
-    var imageData = ctx.getImageData(0,0,canv.width,canv.height);
+var genPartsWorkerCallback;
 
-    var allPoints = [];
-    usedColors = [];
+function genPartsAsync(callback) {
+    genPartsWorkerCallback = callback;
+    var imageData = ctx.getImageData(0,0,canv.width,canv.height);
+    var drawn = false;
     for (var i = 0; i < imageData.data.length; i+=4) {
         if (imageData.data[i+3] > 0) {
-            var c = imageData.data[i] + "," + imageData.data[i+1] + "," + imageData.data[i+2] + "," + imageData.data[i+3];
-            allPoints.push([indToCoord(i),getColorID(c)]);
+            drawn = true;
+            break;
         }
     }
-
-    console.log("points processed...");
-
-    if (allPoints.length < 1) {
+    if (!drawn) {
         initContent();
         setTimeout(function () {
-            genParts();
+            genPartsAsync(callback);
         }, 10);
         return;
     }
 
-    animCenter = allPoints[chance.integer({min: 0,max: allPoints.length-1})];
-    allParts = [];
-
-    /**************************************************************************/
-
-    var choice = chance.integer({min: 0,max: 3});
-    // var choice = 2;
-
-    if (choice == 0) {
-        var numParts = chance.integer({min: 400, max: 600});
-        var numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        allPoints.sort(function(a, b) {
-            var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
-            var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
-            return distA - distB;
-        });
-
-        while (allParts.length < numParts && allPoints.length > 1) {
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-            // console.log("allParts length: " + allParts.length);
-
-            if (chance.bool({likelihood: 10}) && allPoints.length > 1) {
-                var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-                allPoints.sort(function(a, b) {
-                    var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
-                    var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
-                    return distA - distB;
-                });
-            }
+    genPartsWorker.postMessage({
+        'cmd': 'gen',
+        'msg': {
+            imageData: imageData,
+            canvWidth: canv.width,
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight
         }
-    }
-    else if (choice == 1) {
-        var numParts = chance.integer({min: 1000, max: 1200});
-        numPointsPerPart = allPoints.length / numParts;
-        shuffle(allPoints);
-        while (allPoints.length > 0)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-    }
-    else if (choice == 2) {
-        var numParts = chance.integer({min: 500, max: 700});
-        numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
-        var sortMult = function(a, b) {
-            return ((xDiff*a[0][0])*(yDiff*a[0][1])) - ((xDiff*b[0][0])*(yDiff*b[0][1]));
-        }
-        var sortDiv = function(a, b) {
-            return ((xDiff*a[0][0])/(yDiff*a[0][1])) - ((xDiff*b[0][0])/(yDiff*b[0][1]));
-        }
-
-        if (chance.bool()) allPoints.sort(sortMult);
-        else allPoints.sort(sortDiv);
-
-        while (allParts.length < numParts && allPoints.length > 1)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-    }
-    else if (choice == 3) {
-        var numParts = chance.integer({min: 500, max: 1000});
-        numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
-        var sortByX = function(a, b) {
-            return ((xDiff*a[0][0])) - ((xDiff*b[0][0]));
-        }
-        var sortByY = function(a, b) {
-            return ((xDiff*a[0][1])) - ((xDiff*b[0][1]));
-        }
-        var curSort = chance.bool();
-        if (curSort) allPoints.sort(sortByX);
-        else allPoints.sort(sortByY);
-
-        while (allPoints.length > 1) {
-            var stPoint = chance.integer({min: 0, max: allPoints.length-1});
-            allParts.push(newPart(allPoints.splice(stPoint,Math.min(numPointsPerPart+1,allPoints.length-stPoint+1))));
-            if (chance.bool({likelihood: 10})) {
-                curSort = !curSort;
-                if (curSort) allPoints.sort(sortByX);
-                else allPoints.sort(sortByY);
-            }
-        }
-    }
-
-    console.log("parts generated...");
-
-    /**************************************************************************/
+    });
 }
 
 function drawParts(dist) {
@@ -258,6 +176,13 @@ function loadAnimation() {
     }
 }
 
+function startLoadAnimation() {
+    loadTimeout = setTimeout(function () {
+        loadInterval = setInterval(loadAnimation, 50);
+    }, 500);
+    canvUpdateInterval = setInterval(frame, 10);
+}
+
 /******************************************************************************/
 /*************************** FOCUS POINT **************************************/
 /******************************************************************************/
@@ -271,7 +196,9 @@ var hintTextInterval;
 
 function expandFocusPoint() {
     focusPointEl.removeEventListener("click",openMenu);
-    focusPointEl.addEventListener("click",closeMenu);
+    setTimeout(function () {
+        focusPointEl.addEventListener("click",stageCloseMenu);
+    }, 10);
     var newDim = Math.max(window.innerWidth,window.innerHeight);
     focusPointEl.style.width  = (newDim*2) + "px";
     focusPointEl.style.height = (newDim*2) + "px";
@@ -311,6 +238,11 @@ function genFocusPoint() {
 
 var menuOpen = false;
 var redrawTimeout;
+var closeMenuStaged = false;
+
+function stageCloseMenu() {
+    closeMenuStaged = true;
+}
 
 function openMenu() {
     menuOpen = true;
@@ -327,8 +259,14 @@ function openMenu() {
         document.getElementById("menuCont").style.opacity = "1";
         if (isMobile) document.getElementById("mobileMenuClose").style.opacity = "1";
         setTimeout(function () {
+            document.body.removeEventListener("mousemove",updateMousePos);
+            mouseMoved = false;
             initContent();
-            genParts();
+            genPartsAsync(function () {
+                if (closeMenuStaged) closeMenu();
+                focusPointEl.removeEventListener("click",stageCloseMenu);
+                focusPointEl.addEventListener("click",closeMenu);
+            });
         }, 500);
     }, 250);
 }
@@ -351,13 +289,9 @@ function closeMenu() {
             mouseY = focusPoint.y;
             moveMobileFocusPoint();
         }
-        else {
-            mouseMoved = true;
-            frame();
-        }
         drawFocusPoint();
         setTimeout(function () {
-            canvUpdateInterval = setInterval(frame, 10);
+            startLoadAnimation();
         }, 200);
     }, 100);
 }
@@ -416,6 +350,17 @@ function updateOrientation(ev) {
 }
 
 /******************************************************************************/
+/*************************** FRIENDS ******************************************/
+/******************************************************************************/
+
+const FRIENDS = ["https://dasha.design","http://cole.works","https://izzyb.net/","http://lukaschulz.com/","http://calebpayne.xyz/","http://www.tatenewfield.com/"];
+
+function handleFriendClick(ev) {
+    var fLink = FRIENDS[chance.integer({min:0,max:FRIENDS.length-1})];
+    this.href = fLink;
+}
+
+/******************************************************************************/
 /*************************** RESIZING *****************************************/
 /******************************************************************************/
 
@@ -461,9 +406,10 @@ function resize() {
             drawFocusPoint();
         }
         initContent();
-        genParts();
-        mouseMoved = true;
-        frame();
+        genPartsAsync(function () {
+            mouseMoved = true;
+            frame();
+        });
     }, 100);
 }
 
@@ -495,25 +441,35 @@ function init() {
     genFocusPoint();
     drawFocusPoint();
     initContent();
-    genParts();
+    document.getElementById("friendButton").addEventListener("click",handleFriendClick);
 
-    loadTimeout = setTimeout(function () {
-        loadInterval = setInterval(loadAnimation, 50);
-    }, 1000);
-    canvUpdateInterval = setInterval(frame, 10);
+    genPartsWorker = new Worker('genPartsWorker.js');
 
-    if (isMobile) {
-        window.addEventListener("deviceorientation", updateOrientation, true);
-        var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
-        setTimeout(function () {
-            hintText.style = null;
-            hintTextInterval = setInterval(function () {
-                curHintMessage++;
-                if (curHintMessage >= hintMessages.length) curHintMessage = 0;
-                document.getElementById("focusPoint").getElementsByTagName("p")[0].innerHTML = hintMessages[curHintMessage];
-            }, 4000);
-        }, 10000);
-    }
+    genPartsWorker.addEventListener('message', function(e) {
+        var data = e.data;
+        animCenter = data.animCenter;
+        allParts = data.allParts;
+        usedColors = data.usedColors;
+        frame();
+        if (genPartsWorkerCallback) genPartsWorkerCallback();
+    }, false);
+
+    genPartsAsync(function () {
+        startLoadAnimation();
+
+        if (isMobile) {
+            window.addEventListener("deviceorientation", updateOrientation, true);
+            var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
+            setTimeout(function () {
+                hintText.style = null;
+                hintTextInterval = setInterval(function () {
+                    curHintMessage++;
+                    if (curHintMessage >= hintMessages.length) curHintMessage = 0;
+                    document.getElementById("focusPoint").getElementsByTagName("p")[0].innerHTML = hintMessages[curHintMessage];
+                }, 4000);
+            }, 10000);
+        }
+    });
 }
 
 window.onload = init;

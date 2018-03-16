@@ -40,10 +40,10 @@ a:hover {
 
 @media screen and (min-height: 901px), screen and (min-width: 901px) {
     p, a {
-        font-size: 2rem;
+        font-size: 1.7rem;
     }
     .links a {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     .description {
         margin: 50px 50px 0 50px;
@@ -55,10 +55,10 @@ a:hover {
 
 @media screen and (max-height: 900px), screen and (max-width: 900px) {
     p, a {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     .links a {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .description {
         margin: 30px 50px 0 50px;
@@ -70,10 +70,10 @@ a:hover {
 
 @media screen and (max-height: 700px), screen and (max-width: 500px) {
     p, a {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     .links a {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     .description {
         margin: 20px 50px 0 50px;
@@ -141,7 +141,7 @@ a:hover {
 .description {
     display: flex;
     flex-direction: column;
-    max-width: 80%;
+    max-width: 900px;
     height: auto;
     font-weight: lighter;
 }
@@ -231,4 +231,8 @@ a:hover {
     max-height: 54px;
     min-width: 54px;
     min-height: 54px;
+}
+
+#friendButton:hover {
+    cursor: pointer;
 }
