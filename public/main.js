@@ -54,6 +54,7 @@ var ctx;
 var mouseX;
 var mouseY;
 var mouseMoved = false;
+var curDist;
 
 var canvUpdateInterval;
 
@@ -147,11 +148,19 @@ function frame() {
     if (mouseMoved) {
         if (loadTimeout) clearTimeout(loadTimeout);
         if (loadInterval) clearInterval(loadInterval);
-        mouseMoved = false;
-        var dist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
-        if (dist <= focusPoint.r/2) dist = 0;
-        else dist = Math.abs(dist - (focusPoint.r/2));
-        drawParts(dist);
+        var newDist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
+        if (newDist <= focusPoint.r/2) newDist = 0;
+        else newDist = Math.abs(newDist - (focusPoint.r/2));
+
+        var distCh = Math.abs(newDist-curDist);
+        var distChDir = (newDist-curDist)/Math.abs(newDist-curDist);
+        if (distCh > 1)
+            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.6) * distChDir).toFixed(1));
+        else mouseMoved = false;
+
+        curDist += distCh;
+
+        drawParts(curDist);
     }
 }
 
@@ -171,6 +180,7 @@ function loadAnimation() {
     if (loadDist >= MAX_LOAD_DIST && loadInterval) {
         clearInterval(loadInterval);
         loadInterval = null;
+        curDist = loadDist;
         loadDist = 2;
         if (!isMobile) document.body.addEventListener("mousemove",updateMousePos);
     }
