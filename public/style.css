@@ -162,6 +162,7 @@ a {
     width: auto;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     flex-shrink: 1;
     height: 100%;
 }
@@ -174,7 +175,7 @@ a {
 }
 
 .links a {
-    margin-right: 50px;
+    margin-right: 25px;
     margin-bottom: 25px;
     padding: 5px;
 }
