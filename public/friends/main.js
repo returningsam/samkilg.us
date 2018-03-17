@@ -75,13 +75,19 @@ function newDelButton() {
     return del;
 }
 
+const placeholders = [
+    "https://myfriend.rocks",
+    "https://friendsarethe.best",
+    "https://thisfriendis.cool"
+];
+
 function newListItem() {
     var listItem = document.createElement("div");
     listItem.classList.add("listItem");
 
     var inp = document.createElement("input");
     inp.type = "text";
-    inp.placeholder = "https://linktoafriendsweb.site";
+    inp.placeholder = placeholders[chance.integer({min:0,max:placeholders.length-1})];
     inp.addEventListener("input",handleInputType);
     inp.addEventListener("keypress",function (ev) {
         console.log(ev.key == "Enter");
