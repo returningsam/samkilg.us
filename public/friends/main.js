@@ -24,8 +24,10 @@ function checkInputs() {
     var inputs = document.getElementsByTagName("input");
     var validLinks = [];
     for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].value.length < 1 && inputs[i] !== document.activeElement)
+        if (inputs[i].value.length < 1 && inputs[i] !== document.activeElement) {
             inputs[i].parentNode.parentNode.removeChild(inputs[i].parentNode);
+            i--;
+        }
         else {
             if (validURL(inputs[i].value) && validLinks.indexOf(inputs[i].value) < 0) {
                 validLinks.push(inputs[i].value);
