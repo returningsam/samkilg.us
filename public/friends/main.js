@@ -22,6 +22,9 @@ var handleInputTypeTimeout;
 
 function checkInputs() {
     var inputs = document.getElementsByTagName("input");
+    if (inputs.length > 0)
+        document.getElementById("clearButton").classList.remove("hidden");
+    else document.getElementById("clearButton").classList.add("hidden");
     var validLinks = [];
     for (var i = 0; i < inputs.length; i++) {
         if (inputs[i].value.length < 1 && inputs[i] !== document.activeElement) {
@@ -37,8 +40,8 @@ function checkInputs() {
         }
     }
     if (validLinks.length > 0)
-        document.getElementsByClassName("buttons")[0].classList.remove("hidden");
-    else document.getElementsByClassName("buttons")[0].classList.add("hidden");
+        document.getElementById("createButton").classList.remove("hidden");
+    else document.getElementById("createButton").classList.add("hidden");
 
     return validLinks;
 }
@@ -59,6 +62,7 @@ function handleAddListItem() {
     var newLI = newListItem()
     list.appendChild(newLI);
     newLI.getElementsByTagName("input")[0].focus();
+    checkInputs()
 }
 
 function clearListItems() {

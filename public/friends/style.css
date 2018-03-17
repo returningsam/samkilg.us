@@ -190,7 +190,12 @@ input {
     text-decoration: underline;
 }
 
-.buttons.hidden {
+#createButton.hidden {
+    color: grey;
+    pointer-events: none;
+}
+
+#clearButton.hidden {
     color: grey;
     pointer-events: none;
 }
