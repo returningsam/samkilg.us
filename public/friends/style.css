@@ -32,12 +32,13 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: 50px calc(calc(100% - 190px) / 2) 5px calc(calc(100% - 190px) / 2) 50px;
+    grid-template-columns: 50px calc(calc(100% - 140px) / 2) 5px calc(calc(100% - 140px) / 2) 50px;
     grid-template-rows: 150px 100px auto 100px;
     grid-gap: 10px;
     align-items: stretch;
     justify-content: stretch;
     height: auto;
+    width: 100%;
 }
 
 header {

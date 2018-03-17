@@ -1,26 +1,26 @@
-[debug] [2018-03-17T19:39:25.409Z] ----------------------------------------------------------------------
-[debug] [2018-03-17T19:39:25.411Z] Command:       /usr/local/Cellar/node/9.7.1/bin/node /usr/local/bin/firebase deploy
-[debug] [2018-03-17T19:39:25.411Z] CLI Version:   3.17.6
-[debug] [2018-03-17T19:39:25.411Z] Platform:      darwin
-[debug] [2018-03-17T19:39:25.411Z] Node Version:  v9.7.1
-[debug] [2018-03-17T19:39:25.412Z] Time:          Sat Mar 17 2018 15:39:25 GMT-0400 (EDT)
-[debug] [2018-03-17T19:39:25.412Z] ----------------------------------------------------------------------
+[debug] [2018-03-17T19:48:06.130Z] ----------------------------------------------------------------------
+[debug] [2018-03-17T19:48:06.132Z] Command:       /usr/local/Cellar/node/9.7.1/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-03-17T19:48:06.132Z] CLI Version:   3.17.6
+[debug] [2018-03-17T19:48:06.132Z] Platform:      darwin
+[debug] [2018-03-17T19:48:06.132Z] Node Version:  v9.7.1
+[debug] [2018-03-17T19:48:06.133Z] Time:          Sat Mar 17 2018 15:48:06 GMT-0400 (EDT)
+[debug] [2018-03-17T19:48:06.133Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-03-17T19:39:25.424Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-17T19:39:25.425Z] > authorizing via signed-in user
-[debug] [2018-03-17T19:39:25.426Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/samkilgus-49192  
+[debug] [2018-03-17T19:48:06.144Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-17T19:48:06.144Z] > authorizing via signed-in user
+[debug] [2018-03-17T19:48:06.146Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/samkilgus-49192  
   
- Sat Mar 17 2018 15:39:25 GMT-0400 (EDT)
-[debug] [2018-03-17T19:39:25.857Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-17T19:39:25.858Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/samkilgus-49192/tokens  
+ Sat Mar 17 2018 15:48:06 GMT-0400 (EDT)
+[debug] [2018-03-17T19:48:06.811Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-17T19:48:06.812Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/samkilgus-49192/tokens  
   
- Sat Mar 17 2018 15:39:25 GMT-0400 (EDT)
-[debug] [2018-03-17T19:39:26.339Z] <<< HTTP RESPONSE 200
+ Sat Mar 17 2018 15:48:06 GMT-0400 (EDT)
+[debug] [2018-03-17T19:48:07.329Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Deploying to 'samkilgus-49192'...
 [info] 
 [info] i  deploying hosting
 [info] i  hosting: preparing public directory for upload...
-[debug] [2018-03-17T19:39:35.338Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/samkilgus-49192/uploads/-L7pTKGKrwunkgaGINso?fileCount=18210&message=  
+[debug] [2018-03-17T19:48:15.589Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/samkilgus-49192/uploads/-L7pVJRRgrUQVhvIpBIf?fileCount=18210&message=  
   
- Sat Mar 17 2018 15:39:35 GMT-0400 (EDT)
+ Sat Mar 17 2018 15:48:15 GMT-0400 (EDT)
