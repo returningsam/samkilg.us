@@ -246,8 +246,8 @@ function expandFocusPoint() {
     var newDim = Math.max(window.innerWidth,window.innerHeight);
     focusPointEl.style.width  = (newDim*2) + "px";
     focusPointEl.style.height = (newDim*2) + "px";
-    focusPointEl.style.left = (newDim/2) + "px";
-    focusPointEl.style.top  = (newDim/2) + "px";
+    focusPointEl.style.left = (-newDim/2) + "px";
+    focusPointEl.style.top  = (-newDim/2) + "px";
     // focusPointEl.style.borderRadius = 0;
     focusPointEl.style.backgroundColor = "black";
     focusPointEl.className = focusPointEl.className + " closeMenu";
