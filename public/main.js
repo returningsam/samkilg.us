@@ -246,8 +246,8 @@ function expandFocusPoint() {
     var newDim = Math.max(window.innerWidth,window.innerHeight);
     focusPointEl.style.width  = (newDim*2) + "px";
     focusPointEl.style.height = (newDim*2) + "px";
-    focusPointEl.style.left = (-newDim/2) + "px";
-    focusPointEl.style.top  = (-newDim/2) + "px";
+    focusPointEl.style.left = (window.innerWidth/2) + "px";
+    focusPointEl.style.top  = (window.innerHeight/2) + "px";
     // focusPointEl.style.borderRadius = 0;
     focusPointEl.style.backgroundColor = "black";
     focusPointEl.className = focusPointEl.className + " closeMenu";
@@ -262,8 +262,8 @@ function collapseFocusPoint() {
 
 function drawFocusPoint() {
     focusPointEl = document.getElementById("focusPoint");
-    focusPointEl.style.left = (focusPoint.x - (focusPoint.r/2)) + "px";
-    focusPointEl.style.top  = (focusPoint.y - (focusPoint.r/2)) + "px";
+    focusPointEl.style.left = (focusPoint.x) + "px";
+    focusPointEl.style.top  = (focusPoint.y) + "px";
     focusPointEl.addEventListener("click",openMenu);
 }
 
@@ -470,6 +470,7 @@ function initCanv() {
 }
 
 function init() {
+    document.getElementById("focusPoint").classList.remove("loading");
     isMobile = checkMobile();
     watchForHover();
     initGrain();
