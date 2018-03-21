@@ -321,7 +321,7 @@ function openMenu() {
 }
 
 function closeMenu(ev) {
-    if (ev.target.tagName != "P" && ev.target.tagName != "A") {
+    if (!ev || (ev.target.tagName != "P" && ev.target.tagName != "A")) {
         document.getElementById("menuCont").removeEventListener("click",closeMenu);
         document.body.backgroundColor = null;
         clearTimeout(redrawTimeout);
