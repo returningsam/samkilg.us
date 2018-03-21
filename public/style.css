@@ -32,6 +32,10 @@ a {
     cursor: default;
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 .hasHover a:hover {
     text-decoration: underline dotted;
 }
@@ -49,6 +53,9 @@ a {
     .linksCont {
         margin: 0 50px 0 50px;
     }
+    .links {
+        min-width: 200px;
+    }
 }
 
 @media screen and (max-width: 900px) {
@@ -64,6 +71,9 @@ a {
     .linksCont {
         margin: 0 50px 0 50px;
     }
+    .links {
+        min-width: 150px;
+    }
 }
 
 @media screen and (max-width: 500px) {
@@ -78,6 +88,9 @@ a {
     }
     .linksCont {
         margin: 0 50px 0 50px;
+    }
+    .links {
+        min-width: 100px;
     }
 }
 
@@ -176,10 +189,17 @@ a {
     height: auto;
 }
 
+.links p {
+    margin-right: 25px;
+    margin-bottom: 25px;
+    padding: 0;
+    font-weight: bold;
+}
+
 .links a {
     margin-right: 25px;
     margin-bottom: 25px;
-    padding: 5px;
+    padding: 0;
 }
 
 .hasHover #friendButton:hover {
