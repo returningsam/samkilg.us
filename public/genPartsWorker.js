@@ -1,4 +1,4 @@
-importScripts('chance.min.js');
+importScripts('/assets/chance.min.js');
 
 var windowWidth;
 var windowHeight;

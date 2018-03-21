@@ -161,15 +161,16 @@ function drawParts(dist) {
         var distMult = Math.pow(1.001,Math.max(-1*((curPart.cDist/2) - dist),1))-1.001;
         for (var j = 0; j < curPart.points.length; j++) {
             var curPoint = curPart.points[j];
-            var ind = coordToInd(
-                curPoint[0][0] + Math.floor(curPart.dx*distMult),
-                curPoint[0][1] + Math.floor(curPart.dy*distMult)
-            );
-            var c = usedColors[curPoint[1]].split(",")
-            imgData.data[ind]   = parseInt(c[0]);
-            imgData.data[ind+1] = parseInt(c[1]);
-            imgData.data[ind+2] = parseInt(c[2]);
-            imgData.data[ind+3] = parseInt(c[3]);
+            var newX = curPoint[0][0] + Math.floor(curPart.dx*distMult);
+            var newY = curPoint[0][1] + Math.floor(curPart.dy*distMult);
+            if (newX > 0 && newX < canv.width && newY > 0 && newY < canv.height) {
+                var ind = coordToInd(newX,newY);
+                var c = usedColors[curPoint[1]];
+                imgData.data[ind]   = c[0];
+                imgData.data[ind+1] = c[1];
+                imgData.data[ind+2] = c[2];
+                imgData.data[ind+3] = c[3];
+            }
         }
     }
     ctx.clearRect(0,0,canv.width,canv.height);
@@ -187,7 +188,7 @@ function frame() {
         var distCh = Math.abs(newDist-curDist);
         var distChDir = (newDist-curDist)/Math.abs(newDist-curDist);
         if (distCh > 1)
-            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.7) * distChDir).toFixed(1));
+            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.6) * distChDir).toFixed(1));
         else mouseMoved = false;
 
         curDist += distCh;
@@ -205,6 +206,7 @@ const MAX_LOAD_DIST = 500;
 var loadTimeout;
 var loadInterval;
 var loadDist = 2;
+var loadCallback;
 
 function loadAnimation() {
     loadDist += Math.min(Math.max(1,Math.pow(MAX_LOAD_DIST - loadDist,0.8)),loadDist*2);
@@ -216,11 +218,15 @@ function loadAnimation() {
         loadDist = 2;
         if (!isMobile)
             document.body.addEventListener("mousemove",updateMousePos);
-        else window.addEventListener("deviceorientation", updateOrientation, true);
+        else if (typeof loadCallback == "function") {
+            loadCallback();
+            loadCallback = null;
+        }
     }
 }
 
-function startLoadAnimation() {
+function startLoadAnimation(callback) {
+    loadCallback = callback;
     loadTimeout = setTimeout(function () {
         loadInterval = setInterval(loadAnimation, 50);
     }, 500);
@@ -239,15 +245,15 @@ var curHintMessage = 0;
 var hintTextInterval;
 
 function expandFocusPoint() {
-    focusPointEl.removeEventListener("click",openMenu);
+    document.getElementById("menuCont").removeEventListener("click",openMenu);
     setTimeout(function () {
-        focusPointEl.addEventListener("click",stageCloseMenu);
+        document.getElementById("menuCont").addEventListener("click",stageCloseMenu);
     }, 10);
     var newDim = Math.max(window.innerWidth,window.innerHeight);
     focusPointEl.style.width  = (newDim*2) + "px";
     focusPointEl.style.height = (newDim*2) + "px";
-    focusPointEl.style.left = (-newDim/2) + "px";
-    focusPointEl.style.top  = (-newDim/2) + "px";
+    focusPointEl.style.left = (window.innerWidth/2) + "px";
+    focusPointEl.style.top  = (window.innerHeight/2) + "px";
     // focusPointEl.style.borderRadius = 0;
     focusPointEl.style.backgroundColor = "black";
     focusPointEl.className = focusPointEl.className + " closeMenu";
@@ -262,8 +268,8 @@ function collapseFocusPoint() {
 
 function drawFocusPoint() {
     focusPointEl = document.getElementById("focusPoint");
-    focusPointEl.style.left = (focusPoint.x - (focusPoint.r/2)) + "px";
-    focusPointEl.style.top  = (focusPoint.y - (focusPoint.r/2)) + "px";
+    focusPointEl.style.left = (focusPoint.x) + "px";
+    focusPointEl.style.top  = (focusPoint.y) + "px";
     focusPointEl.addEventListener("click",openMenu);
 }
 
@@ -297,49 +303,41 @@ function openMenu() {
     var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
     hintText.style.display = "none";
     document.getElementById("menuCont").style.display = "flex";
-    if (isMobile) document.getElementById("mobileMenuClose").style.display = "flex";
-
     redrawTimeout = setTimeout(function () {
         document.getElementById("menuCont").style.opacity = "1";
-        if (isMobile) document.getElementById("mobileMenuClose").style.opacity = "1";
         setTimeout(function () {
             document.body.removeEventListener("mousemove",updateMousePos);
-            window.removeEventListener("deviceorientation", updateOrientation, true);
             mouseMoved = false;
             initContent();
-            genPartsAsync(function () {
+            if (!isMobile) genPartsAsync(function () {
                 if (closeMenuStaged) closeMenu();
-                focusPointEl.removeEventListener("click",stageCloseMenu);
-                focusPointEl.addEventListener("click",closeMenu);
+                document.getElementById("menuCont").removeEventListener("click",stageCloseMenu);
+                document.getElementById("menuCont").addEventListener("click",closeMenu);
                 closeMenuStaged = false;
             });
+            document.body.backgroundColor = "black";
         }, 500);
     }, 250);
 }
 
-function closeMenu() {
-    clearTimeout(redrawTimeout);
-    menuOpen = false;
-    document.getElementById("menuCont").style.opacity = null;
-    if (isMobile) document.getElementById("mobileMenuClose").style.opacity = null;
-    setTimeout(function () {
-        if (isMobile) document.getElementById("mobileMenuClose").style.display = null;
-        document.getElementById("menuCont").style.display = null;
-        document.getElementById("canvas").style.opacity = 1;
-        collapseFocusPoint();
-        genFocusPoint();
-        if (isMobile) {
-            lastBeta = null;
-            lastGamma = null;
-            mouseX = focusPoint.x;
-            mouseY = focusPoint.y;
-            moveMobileFocusPoint();
-        }
-        drawFocusPoint();
+function closeMenu(ev) {
+    if (ev.target.tagName != "P" && ev.target.tagName != "A") {
+        document.getElementById("menuCont").removeEventListener("click",closeMenu);
+        document.body.backgroundColor = null;
+        clearTimeout(redrawTimeout);
+        menuOpen = false;
+        document.getElementById("menuCont").style.opacity = null;
         setTimeout(function () {
-            startLoadAnimation();
-        }, 200);
-    }, 100);
+            document.getElementById("menuCont").style.display = null;
+            document.getElementById("canvas").style.opacity = 1;
+            collapseFocusPoint();
+            genFocusPoint();
+            drawFocusPoint();
+            setTimeout(function () {
+                startLoadAnimation();
+            }, 200);
+        }, 100);
+    }
 }
 
 /******************************************************************************/
@@ -361,38 +359,6 @@ function moveMobileFocusPoint() {
     var mobilePoint = document.getElementById("mobilePoint");
     mobilePoint.style.left = (mouseX-50) + "px";
     mobilePoint.style.top  = (mouseY-50) + "px";
-}
-
-function updateOrientation(ev) {
-    var curBeta = (-5 * ev.beta);
-    var curGamma = (-5 * ev.gamma);
-    if (!lastBeta || !lastGamma) {
-        mouseX = focusPoint.x;
-        mouseY = focusPoint.y;
-        lastBeta  = curBeta;
-        lastGamma = curGamma;
-        mouseMoved = true;
-        var mobilePoint = document.getElementById("mobilePoint");
-        if (!mobilePoint) {
-            mobilePoint = document.createElement("div");
-        }
-        mobilePoint.className  = "mobilePoint";
-        mobilePoint.id         = "mobilePoint";
-        if (!document.getElementById("mobilePoint")) {
-            document.body.appendChild(mobilePoint);
-        }
-        moveMobileFocusPoint();
-    }
-    else if (lastBeta != curBeta || lastGamma != curGamma) {
-        var dx = lastGamma - curGamma;
-        var dy = lastBeta - curBeta;
-        lastBeta  = curBeta;
-        lastGamma = curGamma;
-        mouseMoved = true;
-        mouseX = Math.max(0,Math.min(window.innerWidth,mouseX + dx));
-        mouseY = Math.max(0,Math.min(window.innerHeight,mouseY + dy));
-        moveMobileFocusPoint();
-    }
 }
 
 /******************************************************************************/
@@ -427,8 +393,8 @@ function resize() {
         var focusPointEl = document.getElementById("focusPoint");
         focusPointEl.style.width  = window.innerWidth*2 + "px";
         focusPointEl.style.height = window.innerHeight*2 + "px";
-        focusPointEl.style.top    = (-window.innerHeight/2) + "px";
-        focusPointEl.style.left   = (-window.innerWidth/2) + "px";
+        focusPointEl.style.top    = (window.innerHeight/2) + "px";
+        focusPointEl.style.left   = (window.innerWidth/2) + "px";
     }
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
@@ -445,7 +411,7 @@ function resize() {
             mouseMoved = true;
             frame();
         });
-    }, 100);
+    }, 200);
 }
 
 window.onresize = resize;
@@ -470,15 +436,15 @@ function initCanv() {
 }
 
 function init() {
-    document.getElementById("focusPoint").classList.remove("loading");
     isMobile = checkMobile();
     watchForHover();
-    initGrain();
+    if (!isMobile) initGrain();
     initCanv();
     genFocusPoint();
     drawFocusPoint();
     initContent();
 
+    document.getElementById("focusPoint").classList.add("anim");
     genPartsWorker = new Worker('genPartsWorker.js');
 
     genPartsWorker.addEventListener('message', function(e) {
@@ -486,24 +452,18 @@ function init() {
         animCenter = data.animCenter;
         allParts = data.allParts;
         usedColors = data.usedColors;
+        for (var i = 0; i < usedColors.length; i++) {
+            usedColors[i] = usedColors[i].split(',').map(function(item) {
+                return parseInt(item, 10);
+            });
+        }
         frame();
         if (genPartsWorkerCallback) genPartsWorkerCallback();
     }, false);
 
     genPartsAsync(function () {
-        startLoadAnimation();
-
-        if (isMobile) {
-            var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
-            setTimeout(function () {
-                hintText.style = null;
-                hintTextInterval = setInterval(function () {
-                    curHintMessage++;
-                    if (curHintMessage >= hintMessages.length) curHintMessage = 0;
-                    document.getElementById("focusPoint").getElementsByTagName("p")[0].innerHTML = hintMessages[curHintMessage];
-                }, 4000);
-            }, 10000);
-        }
+        if (isMobile) startLoadAnimation(openMenu);
+        else startLoadAnimation();
     });
 }
 
