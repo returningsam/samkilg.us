@@ -216,20 +216,20 @@ function loadAnimation() {
         loadInterval = null;
         curDist = loadDist;
         loadDist = 2;
-        if (!isMobile)
-            document.body.addEventListener("mousemove",updateMousePos);
-        else if (typeof loadCallback == "function") {
-            loadCallback();
-            loadCallback = null;
+        document.body.addEventListener("mousemove",updateMousePos);
+        if (typeof loadCallback == "function") {
+            setTimeout(function () {
+                loadCallback();
+                loadCallback = null;
+            }, 500);
         }
     }
 }
 
 function startLoadAnimation(callback) {
     loadCallback = callback;
-    loadTimeout = setTimeout(function () {
-        loadInterval = setInterval(loadAnimation, 50);
-    }, 500);
+    loadInterval = setInterval(loadAnimation, 50);
+    if (canvUpdateInterval) clearInterval(canvUpdateInterval);
     canvUpdateInterval = setInterval(frame, 10);
 }
 
@@ -258,6 +258,7 @@ function genFocusPoint() {
 function initFocusPoint() {
     genFocusPoint();
     drawFocusPoint();
+    focusPointEl.removeEventListener("click",blueDotClickHandler);
     focusPointEl.addEventListener("click",blueDotClickHandler);
 }
 
@@ -279,7 +280,7 @@ function blueDotClickHandler(ev) {
 }
 
 function exitInfoHandler(ev) {
-    if (ev.target.tagName != "P" || ev.target.tagName != "A") {
+    if (ev.target.tagName != "P" && ev.target.tagName != "A") {
         var paddingEl = document.getElementById("paddingEl");
         paddingEl.scrollIntoView({behavior:"smooth", block: "start"});
     }
@@ -317,13 +318,15 @@ function resize() {
     document.getElementById("paddingEl").style.minHeight = window.innerHeight + "px";
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
-        initGrain();
+        initFocusPoint();
         initCanv();
-        initContent();
-        genPartsAsync(function () {
-            mouseMoved = true;
-            frame();
-        });
+        setTimeout(function () {
+            initContent();
+            genPartsAsync(function () {
+                mouseMoved = true;
+                frame();
+            });
+        }, 10);
     }, 200);
 }
 
@@ -336,7 +339,7 @@ window.onresize = resize;
 function initContent() {
     ctx.clearRect(0,0,canv.width,canv.height);
     ctx.fillStyle = "black";
-    ctx.font = "bolder " + (10*RATIO_MULT) + "vmin Inter UI, sans-serif";
+    ctx.font = "bolder " + (Math.pow(canv.width,0.6)*RATIO_MULT) + "px Inter UI, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
     ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
@@ -381,7 +384,13 @@ function init() {
         document.body.classList.remove("loading");
         initFocusPoint();
         document.getElementById("focusPoint").classList.add("anim");
-        startLoadAnimation();
+
+        if (isMobile) {
+            setTimeout(function () {
+                startLoadAnimation(blueDotClickHandler);
+            }, 700);
+        }
+        else setTimeout(startLoadAnimation,700);
     });
 }
 
