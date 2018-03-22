@@ -81,10 +81,16 @@ function genParts(imageData) {
 
     /**************************************************************************/
 
-    var choice = chance.integer({min: 0,max: 3});
-    // var choice = 2;
+    var choice = chance.integer({min: 1,max: 3});
 
     if (choice == 0) {
+        var numParts = chance.integer({min: 1000, max: 1200});
+        numPointsPerPart = allPoints.length / numParts;
+        shuffle(allPoints);
+        while (allPoints.length > 0)
+            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
+    }
+    else if (choice == 1) {
         var numParts = chance.integer({min: 400, max: 600});
         var numPointsPerPart = allPoints.length / numParts;
 
@@ -107,13 +113,6 @@ function genParts(imageData) {
                 });
             }
         }
-    }
-    else if (choice == 1) {
-        var numParts = chance.integer({min: 1000, max: 1200});
-        numPointsPerPart = allPoints.length / numParts;
-        shuffle(allPoints);
-        while (allPoints.length > 0)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
     }
     else if (choice == 2) {
         var numParts = chance.integer({min: 500, max: 700});

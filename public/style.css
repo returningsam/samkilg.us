@@ -13,18 +13,100 @@ html, body {
     padding: 0;
     overflow: hidden;
     font-family: Inter UI, sans-serif;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    background-color: white;
+    transition: background-color 0.5s;
+}
+
+body.loading {
+    background-color: black;
+    transition: background-color 0.5s;
+}
+
+.loading canvas, .loading main {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+@keyframes loadTextAnim {
+    0% {content: "loading"}
+    10% {content: "lo0ading"}
+    20% {content: "lo0a&ding"}
+    30% {content: "lÒo0a&ding"}
+    40% {content: "lÒo0a&diÒ◊ng"}
+    50% {content: "lÒo0a&dÆiÒ◊ng"}
+    60% {content: "lÒo0a&diÒ◊ng"}
+    70% {content: "lÒo0a&ding"}
+    80% {content: "lo0a&ding"}
+    90% {content: "lo0ading"}
+    100% {content: "loading"}
+}
+
+@-webkit-keyframes loadTextAnim {
+    0% {content: "loading"}
+    10% {content: "lo0ading"}
+    20% {content: "lo0a&ding"}
+    30% {content: "lÒo0a&ding"}
+    40% {content: "lÒo0a&diﬁ◊ng"}
+    50% {content: "lÒo0a&dÆiÒ◊ng"}
+    60% {content: "lÒo0a&diﬁ◊ng"}
+    70% {content: "lÒo0a&ding"}
+    80% {content: "lo0a&ding"}
+    90% {content: "lo0ading"}
+    100% {content: "loading"}
+}
+
+#loadingText{
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    cursor: progress;
+}
+
+.loading #loadingText {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#loadingText::before {
+    content: "loading";
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    animation: loadTextAnim 1s infinite linear;
+    -webkit-animation: loadTextAnim 1s infinite linear;
+}
+
+main {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.5s;
 }
 
 canvas {
     position: fixed;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0;
     z-index: 1;
     pointer-events: none;
     opacity: 1;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
 }
 
 p {
@@ -117,7 +199,7 @@ a:hover {
 
     border-radius: 50%;
     background-color: blue;
-    z-index: 1;
+    z-index: 2;
 
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -132,70 +214,31 @@ a:hover {
     transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
 }
 
-@keyframes 'infoSlide' {
-    0% {
-        left: 0;
-    }
-    20% {
-        left: -100%;
-    }
-    40%, 100% {
-        left: 0;
-    }
-}
-
-@-webkit-keyframes 'infoSlide' {
-    0% {
-        left: 0;
-    }
-    20% {
-        left: -100%;
-    }
-    40%, 100% {
-        left: 0;
-    }
-}
-
-/* .focusPoint p {
-    color: black;
-    font-size: 1rem;
-    position: absolute;
-
-    animation: infoSlide 5s ease-in-out;
-    -moz-animation: infoSlide 5s ease-in-out;
-    -webkit-animation: infoSlide 5s ease-in-out;
-    animation-iteration-count: infinite;
-    z-index: -1;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center; */
-    /* transform: translate(50%, 50%); */
-    /* -moz-transform: translate(50%, 50%); */
-    /* -webkit-transform: translate(50%, 50%); */
-/*}*/
-
 .hasHover .focusPoint:hover {
     transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
     background-color: black;
-    cursor: pointer;
+    cursor: url('/assets/down.png'), pointer;
+}
+
+.paddingEl {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0);
 }
 
 .menuCont {
-    position: fixed;
-    display: none;
+    display: flex;
     width: 100%;
     height: 100%;
     flex-direction: column;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.5s;
     color: white;
     z-index: 3;
     overflow: hidden;
     overflow-y: scroll;
-    cursor: url('/assets/close.png'), pointer;
+    cursor: url('/assets/up.png'), pointer;
+    background-color: black;
 }
 
 .menuInnerCont {

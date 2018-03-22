@@ -52,56 +52,58 @@
                     ~~ Sam Kilgus
 -->
 
-    <body>
+    <body class="loading">
+        <p id="loadingText"></p>
         <canvas class="grainCanv" id="grainCanv"></canvas>
         <canvas id="canvas"></canvas>
-        <div class="focusPoint loading" id="focusPoint">
-            <!-- <p>info</p> -->
-        </div>
-        <div id="menuCont" class="menuCont">
-            <div class="menuInnerCont">
-                <div class="description">
-                    <p style="font-weight: bold">
-                        Hey, thanks for visiting my website!
-                    </p>
-                    <p>
-                        My name is Samuel Kilgus and I am a creative developer studying Computer Science at
-                        <a href="https://www.cs.rit.edu/">Rochester Institute of Technology</a>.
-                        Over the past five years, I have been expanding and honing
-                        my technical acumen as a developer, as well as drawing
-                        inspiration from art and design. I always strive to
-                        bridge the two discrete disciplines in my work.
-                    </p>
-                    <p>
-                        If you think I would make a good addition to your team,
-                        I would love to hear from you. I am always looking for
-                        new opportunities to exercise my abilities and grow,
-                        both technically and creatively.
-                    </p>
-                    <p>
-                        I will be graduating in May 2019 and am currently seeking internship or Co-Op positions.
-                    </p>
+        <main>
+            <div class="focusPoint loading" id="focusPoint"></div>
+            <div class="paddingEl" id="paddingEl"></div>
+            <div id="menuCont" class="menuCont">
+                <div class="menuInnerCont">
+                    <div class="description">
+                        <p style="font-weight: bold">
+                            Hey, thanks for visiting my website!
+                        </p>
+                        <p>
+                            My name is Samuel Kilgus and I am a creative developer studying Computer Science at
+                            <a href="https://www.cs.rit.edu/">Rochester Institute of Technology</a>.
+                            Over the past five years, I have been expanding and honing
+                            my technical acumen as a developer, as well as drawing
+                            inspiration from art and design. I always strive to
+                            bridge the two discrete disciplines in my work.
+                        </p>
+                        <p>
+                            If you think I would make a good addition to your team,
+                            I would love to hear from you. I am always looking for
+                            new opportunities to exercise my abilities and grow,
+                            both technically and creatively.
+                        </p>
+                        <p>
+                            I will be graduating in May 2019 and am currently seeking internship or Co-Op positions.
+                        </p>
+                    </div>
+                </div>
+                <div class="linksCont">
+                    <div class="links">
+                        <p>work</p>
+                        <a href="/playground" rel="prerender" class="menuLink">playground</a>
+                        <a href="https://github.com/returningsam" class="menuLink" target="_blank">github</a>
+                    </div>
+                    <div class="links">
+                        <p>contact</p>
+                        <a href="mailto:samkilgus@gmail.com" class="menuLink">email</a>
+                        <a href="/assets/resume.pdf" class="menuLink" target="_blank">resumé</a>
+                    </div>
+                    <div class="links">
+                        <p>social</p>
+                        <a href="https://www.linkedin.com/in/samkilgus/" class="menuLink" target="_blank">linkedin</a>
+                        <a href="https://www.instagram.com/returningsam" class="menuLink" target="_blank">instagram</a>
+                        <a href="/friends/?links=https%3A%2F%2Fdasha.design,http%3A%2F%2Flukaschulz.com%2F,http%3A%2F%2Fcalebpayne.xyz%2F,http%3A%2F%2Fwww.tatenewfield.com%2F" target="_blank">visit a random friend</a>
+                    </div>
                 </div>
             </div>
-            <div class="linksCont">
-                <div class="links">
-                    <p>work</p>
-                    <a href="/playground" rel="prerender" class="menuLink">playground</a>
-                    <a href="https://github.com/returningsam" class="menuLink" target="_blank">github</a>
-                </div>
-                <div class="links">
-                    <p>contact</p>
-                    <a href="mailto:samkilgus@gmail.com" class="menuLink">email</a>
-                    <a href="/assets/resume.pdf" class="menuLink" target="_blank">resumé</a>
-                </div>
-                <div class="links">
-                    <p>social</p>
-                    <a href="https://www.linkedin.com/in/samkilgus/" class="menuLink" target="_blank">linkedin</a>
-                    <a href="https://www.instagram.com/returningsam" class="menuLink" target="_blank">instagram</a>
-                    <a href="/friends/?links=https%3A%2F%2Fdasha.design,http%3A%2F%2Flukaschulz.com%2F,http%3A%2F%2Fcalebpayne.xyz%2F,http%3A%2F%2Fwww.tatenewfield.com%2F" target="_blank">visit a random friend</a>
-                </div>
-            </div>
-        </div>
+        </main>
     </body>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73703405-1"></script>
     <script>

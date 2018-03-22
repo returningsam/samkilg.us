@@ -240,33 +240,10 @@ function startLoadAnimation(callback) {
 var focusPoint;
 var focusPointEl;
 
-function expandFocusPoint() {
-    document.getElementById("menuCont").removeEventListener("click",openMenu);
-    setTimeout(function () {
-        document.getElementById("menuCont").addEventListener("click",stageCloseMenu);
-    }, 10);
-    var newDim = Math.max(window.innerWidth,window.innerHeight);
-    focusPointEl.style.width  = (newDim*2) + "px";
-    focusPointEl.style.height = (newDim*2) + "px";
-    focusPointEl.style.left = (window.innerWidth/2) + "px";
-    focusPointEl.style.top  = (window.innerHeight/2) + "px";
-    // focusPointEl.style.borderRadius = 0;
-    focusPointEl.style.backgroundColor = "black";
-    focusPointEl.className = focusPointEl.className + " closeMenu";
-}
-
-function collapseFocusPoint() {
-    focusPointEl.className = focusPointEl.className.replace(" closeMenu", "");
-    focusPointEl.removeEventListener("click",closeMenu);
-    focusPointEl.addEventListener("click",openMenu);
-    focusPointEl.removeAttribute("style");
-}
-
 function drawFocusPoint() {
     focusPointEl = document.getElementById("focusPoint");
     focusPointEl.style.left = (focusPoint.x) + "px";
     focusPointEl.style.top  = (focusPoint.y) + "px";
-    focusPointEl.addEventListener("click",openMenu);
 }
 
 function genFocusPoint() {
@@ -278,59 +255,10 @@ function genFocusPoint() {
     }
 }
 
-/******************************************************************************/
-/*************************** MENU STUFF ***************************************/
-/******************************************************************************/
-
-var menuOpen = false;
-var redrawTimeout;
-var closeMenuStaged = false;
-
-function stageCloseMenu() {
-    closeMenuStaged = true;
-}
-
-function openMenu() {
-    menuOpen = true;
-    clearInterval(canvUpdateInterval);
-    document.getElementById("canvas").style.opacity = 0;
-    expandFocusPoint();
-    document.getElementById("menuCont").style.display = "flex";
-    redrawTimeout = setTimeout(function () {
-        document.getElementById("menuCont").style.opacity = "1";
-        setTimeout(function () {
-            document.body.removeEventListener("mousemove",updateMousePos);
-            mouseMoved = false;
-            initContent();
-            if (!isMobile) genPartsAsync(function () {
-                if (closeMenuStaged) closeMenu();
-                document.getElementById("menuCont").removeEventListener("click",stageCloseMenu);
-                document.getElementById("menuCont").addEventListener("click",closeMenu);
-                closeMenuStaged = false;
-            });
-            document.body.backgroundColor = "black";
-        }, 500);
-    }, 250);
-}
-
-function closeMenu(ev) {
-    if (!ev || (ev.target.tagName != "P" && ev.target.tagName != "A")) {
-        document.getElementById("menuCont").removeEventListener("click",closeMenu);
-        document.body.backgroundColor = null;
-        clearTimeout(redrawTimeout);
-        menuOpen = false;
-        document.getElementById("menuCont").style.opacity = null;
-        setTimeout(function () {
-            document.getElementById("menuCont").style.display = null;
-            document.getElementById("canvas").style.opacity = 1;
-            collapseFocusPoint();
-            genFocusPoint();
-            drawFocusPoint();
-            setTimeout(function () {
-                startLoadAnimation();
-            }, 200);
-        }, 100);
-    }
+function initFocusPoint() {
+    genFocusPoint();
+    drawFocusPoint();
+    focusPointEl.addEventListener("click",blueDotClickHandler);
 }
 
 /******************************************************************************/
@@ -342,6 +270,18 @@ function updateMousePos(ev) {
         mouseX = ev.clientX;
         mouseY = ev.clientY;
         mouseMoved = true;
+    }
+}
+
+function blueDotClickHandler(ev) {
+    var menuEl = document.getElementById("menuCont");
+    menuEl.scrollIntoView({behavior:"smooth", block: "start"});
+}
+
+function exitInfoHandler(ev) {
+    if (ev.target.tagName != "P" || ev.target.tagName != "A") {
+        var paddingEl = document.getElementById("paddingEl");
+        paddingEl.scrollIntoView({behavior:"smooth", block: "start"});
     }
 }
 
@@ -373,23 +313,12 @@ function initGrain() {
 var resizeTimeout;
 
 function resize() {
-    if (menuOpen) {
-        var focusPointEl = document.getElementById("focusPoint");
-        focusPointEl.style.width  = window.innerWidth*2 + "px";
-        focusPointEl.style.height = window.innerHeight*2 + "px";
-        focusPointEl.style.top    = (window.innerHeight/2) + "px";
-        focusPointEl.style.left   = (window.innerWidth/2) + "px";
-    }
+    document.getElementById("menuCont").style.minHeight = window.innerHeight + "px";
+    document.getElementById("paddingEl").style.minHeight = window.innerHeight + "px";
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         initGrain();
-        canv.width  = window.innerWidth  * RATIO_MULT;
-        canv.height = window.innerHeight * RATIO_MULT;
-        ctx.clearRect(0,0,canv.width,canv.height);
-        if (!menuOpen) {
-            genFocusPoint();
-            drawFocusPoint();
-        }
+        initCanv();
         initContent();
         genPartsAsync(function () {
             mouseMoved = true;
@@ -410,11 +339,14 @@ function initContent() {
     ctx.font = "bolder " + (10*RATIO_MULT) + "vmin Inter UI, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
+    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
 }
 
 function initCanv() {
     canv = document.getElementById("canvas");
     ctx  = canv.getContext("2d");
+    canv.style.width  = window.innerWidth  + "px";
+    canv.style.height = window.innerHeight + "px";
     canv.width  = window.innerWidth  * RATIO_MULT;
     canv.height = window.innerHeight * RATIO_MULT;
 }
@@ -422,13 +354,13 @@ function initCanv() {
 function init() {
     isMobile = checkMobile();
     watchForHover();
-    if (!isMobile) initGrain();
     initCanv();
-    genFocusPoint();
-    drawFocusPoint();
     initContent();
+    var menuCont = document.getElementById("menuCont");
+    menuCont.style.minHeight = window.innerHeight + "px";
+    menuCont.addEventListener("click",exitInfoHandler);
+    document.getElementById("paddingEl").style.minHeight = window.innerHeight + "px";
 
-    document.getElementById("focusPoint").classList.add("anim");
     genPartsWorker = new Worker('genPartsWorker.js');
 
     genPartsWorker.addEventListener('message', function(e) {
@@ -446,8 +378,10 @@ function init() {
     }, false);
 
     genPartsAsync(function () {
-        if (isMobile) startLoadAnimation(openMenu);
-        else startLoadAnimation();
+        document.body.classList.remove("loading");
+        initFocusPoint();
+        document.getElementById("focusPoint").classList.add("anim");
+        startLoadAnimation();
     });
 }
 
