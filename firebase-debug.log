@@ -1,0 +1,41 @@
+[debug] [2018-03-22T02:32:11.148Z] ----------------------------------------------------------------------
+[debug] [2018-03-22T02:32:11.150Z] Command:       /usr/local/Cellar/node/9.8.0/bin/node /usr/local/bin/firebase serve
+[debug] [2018-03-22T02:32:11.150Z] CLI Version:   3.17.7
+[debug] [2018-03-22T02:32:11.151Z] Platform:      darwin
+[debug] [2018-03-22T02:32:11.151Z] Node Version:  v9.8.0
+[debug] [2018-03-22T02:32:11.151Z] Time:          Wed Mar 21 2018 22:32:11 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:11.151Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-22T02:32:11.159Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-22T02:32:11.160Z] > authorizing via signed-in user
+[debug] [2018-03-22T02:32:11.161Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-03-22T02:32:11.162Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/aMW3iE0e8LLxsRX4poRa9bUemAdAHqAJ9gd1e3SGQnL2Dujcdp3HGX7X4QK90Mq3',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Mar 21 2018 22:32:11 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:12.434Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-22T02:32:12.448Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/samkilgus-49192  
+  
+ Wed Mar 21 2018 22:32:12 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:12.889Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-22T02:32:12.889Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/samkilgus-49192/tokens  
+  
+ Wed Mar 21 2018 22:32:12 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:13.452Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-22T02:32:13.453Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/samkilgus-49192  
+  
+ Wed Mar 21 2018 22:32:13 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:13.805Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/samkilgus/sync/personal_projects/coding/web/personal-site'...
+[info] 
+[debug] [2018-03-22T02:32:13.807Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/549623584176/clients/_:getWebAppConfig  
+  
+ Wed Mar 21 2018 22:32:13 GMT-0400 (EDT)
+[debug] [2018-03-22T02:32:14.879Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+

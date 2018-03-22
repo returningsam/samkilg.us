@@ -240,10 +240,6 @@ function startLoadAnimation(callback) {
 var focusPoint;
 var focusPointEl;
 
-var hintMessages = ["hey", "yo", "click", "psst", "boo", "ahem"];
-var curHintMessage = 0;
-var hintTextInterval;
-
 function expandFocusPoint() {
     document.getElementById("menuCont").removeEventListener("click",openMenu);
     setTimeout(function () {
@@ -297,11 +293,8 @@ function stageCloseMenu() {
 function openMenu() {
     menuOpen = true;
     clearInterval(canvUpdateInterval);
-    clearInterval(hintTextInterval);
     document.getElementById("canvas").style.opacity = 0;
     expandFocusPoint();
-    var hintText = document.getElementById("focusPoint").getElementsByTagName("p")[0];
-    hintText.style.display = "none";
     document.getElementById("menuCont").style.display = "flex";
     redrawTimeout = setTimeout(function () {
         document.getElementById("menuCont").style.opacity = "1";
@@ -344,21 +337,12 @@ function closeMenu(ev) {
 /*************************** EVENT HANDLERS ***********************************/
 /******************************************************************************/
 
-var lastBeta;
-var lastGamma;
-
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
         mouseX = ev.clientX;
         mouseY = ev.clientY;
         mouseMoved = true;
     }
-}
-
-function moveMobileFocusPoint() {
-    var mobilePoint = document.getElementById("mobilePoint");
-    mobilePoint.style.left = (mouseX-50) + "px";
-    mobilePoint.style.top  = (mouseY-50) + "px";
 }
 
 /******************************************************************************/
