@@ -200,6 +200,7 @@ a:hover {
     border-radius: 50%;
     background-color: blue;
     z-index: 2;
+    cursor: url('/assets/down.png'), pointer;
 
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -217,7 +218,6 @@ a:hover {
 .hasHover .focusPoint:hover {
     transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
     background-color: black;
-    cursor: url('/assets/down.png'), pointer;
 }
 
 .paddingEl {
