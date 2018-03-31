@@ -81,18 +81,12 @@ function genParts(imageData) {
 
     /**************************************************************************/
 
-    var choice = chance.integer({min: 1,max: 3});
-
+    var choice = chance.integer({min: 0,max: 1});
+    var numParts;
+    var numPointsPerPart;
     if (choice == 0) {
-        var numParts = chance.integer({min: 1000, max: 1200});
+        numParts = chance.integer({min:500, max: 700});
         numPointsPerPart = allPoints.length / numParts;
-        shuffle(allPoints);
-        while (allPoints.length > 0)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-    }
-    else if (choice == 1) {
-        var numParts = chance.integer({min: 400, max: 600});
-        var numPointsPerPart = allPoints.length / numParts;
 
         var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
         allPoints.sort(function(a, b) {
@@ -114,51 +108,59 @@ function genParts(imageData) {
             }
         }
     }
-    else if (choice == 2) {
-        var numParts = chance.integer({min: 500, max: 700});
+    else if (choice == 1) {
+        var numParts = chance.integer({min: 100, max: 200});
         numPointsPerPart = allPoints.length / numParts;
 
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
-        var sortMult = function(a, b) {
-            return ((xDiff*a[0][0])*(yDiff*a[0][1])) - ((xDiff*b[0][0])*(yDiff*b[0][1]));
-        }
-        var sortDiv = function(a, b) {
-            return ((xDiff*a[0][0])/(yDiff*a[0][1])) - ((xDiff*b[0][0])/(yDiff*b[0][1]));
+        // points preprocessing
+        var coordDict = {};
+        var numToProcess = allPoints.length;
+        for (var i = 0; i < allPoints.length; i++) {
+            var x = allPoints[i][0][0],y = allPoints[i][0][1];
+            if (!coordDict[x])    coordDict[x]    = {};
+            if (!coordDict[x][y]) coordDict[x][y] = [];
+            coordDict[x][y] = i;
         }
 
-        if (chance.bool()) allPoints.sort(sortMult);
-        else allPoints.sort(sortDiv);
-
-        while (allParts.length < numParts && allPoints.length > 1)
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-    }
-    else if (choice == 3) {
-        var numParts = chance.integer({min: 500, max: 1000});
-        numPointsPerPart = allPoints.length / numParts;
-
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        var xDiff = chance.floating({min: -2, max: 2});
-        var yDiff = chance.floating({min: -2, max: 2});
-        var sortByX = function(a, b) {
-            return ((xDiff*a[0][0])) - ((xDiff*b[0][0]));
-        }
-        var sortByY = function(a, b) {
-            return ((xDiff*a[0][1])) - ((xDiff*b[0][1]));
-        }
-        var curSort = chance.bool();
-        if (curSort) allPoints.sort(sortByX);
-        else allPoints.sort(sortByY);
-
-        while (allPoints.length > 1) {
-            var stPoint = chance.integer({min: 0, max: allPoints.length-1});
-            allParts.push(newPart(allPoints.splice(stPoint,Math.min(numPointsPerPart+1,allPoints.length-stPoint+1))));
-            if (chance.bool({likelihood: 10})) {
-                curSort = !curSort;
-                if (curSort) allPoints.sort(sortByX);
-                else allPoints.sort(sortByY);
+        while (numToProcess > 0) {
+            var xCoords = Object.keys(coordDict);
+            var startX = xCoords[chance.integer({min: 0, max: xCoords.length-1})];
+            var yCoords = Object.keys(coordDict[startX]);
+            if (yCoords.length < 1) {
+                delete coordDict[startX];
+                continue;
             }
+            var startY = yCoords[chance.integer({min: 0, max: yCoords.length-1})];
+
+            var partPoints = [];
+            partPoints.push(coordDict[startX][startY]);
+            delete coordDict[startX][startY];
+            while (partPoints.length < numPointsPerPart) {
+                var curX = allPoints[partPoints[partPoints.length-1]][0][0];
+                var curY = allPoints[partPoints[partPoints.length-1]][0][1];
+                var nbrs = [];
+                for (var diffX = -1; diffX <= 1; diffX++) {
+                    for (var diffY = -1; diffY <= 1; diffY++) {
+                        if (diffX == 0 && diffY == 0) continue;
+                        var newX = curX + diffX;
+                        var newY = curY + diffY;
+                        if (coordDict[newX] && coordDict[newX][newY]) {
+                            nbrs.push([newX,newY,coordDict[newX][newY]]);
+                            continue;
+                        }
+                    }
+                }
+                if (nbrs.length > 0) {
+                    var nbr = nbrs[chance.integer({min:0,max:nbrs.length-1})];
+                    partPoints.push(nbr[2]);
+                    delete coordDict[nbr[0]][nbr[1]];
+                }
+                else break;
+            }
+            numToProcess -= partPoints.length;
+            partPoints = partPoints.map((a) => allPoints[a]);
+            var part = newPart(partPoints);
+            allParts.push(part);
         }
     }
 
