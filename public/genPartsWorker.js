@@ -67,7 +67,7 @@ function genParts(imageData) {
         }
     }
 
-    console.log("points processed...");
+    // console.log("points processed...");
     if (allPoints.length < 1) {
         initContent();
         setTimeout(function () {
@@ -186,4 +186,4 @@ self.addEventListener('message', function(e) {
 }, false);
 
 
-console.log("loaded");
+// console.log("loaded");
