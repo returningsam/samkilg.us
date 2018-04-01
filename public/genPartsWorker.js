@@ -81,7 +81,8 @@ function genParts(imageData) {
 
     /**************************************************************************/
 
-    var choice = chance.integer({min: 0,max: 1});
+    // var choice = chance.integer({min: 0,max: 1});
+    var choice = 1;
     var numParts;
     var numPointsPerPart;
     if (choice == 0) {
