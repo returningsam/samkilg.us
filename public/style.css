@@ -1,9 +1,14 @@
+:root {
+    --bg: #000;
+    --blue: blue;
+}
+
 ::selection {
-  background: #0000ff; /* WebKit/Blink Browsers */
+  background: var(--blue); /* WebKit/Blink Browsers */
 }
 
 ::-moz-selection {
-  background: #0000ff; /* Gecko Browsers */
+  background: var(--blue); /* Gecko Browsers */
 }
 
 html, body {
@@ -20,40 +25,40 @@ html, body {
 }
 
 body.loading {
-    background-color: black;
+    background-color: var(--bg);
     transition: background-color 0.5s;
 }
 
-.loading canvas, .loading main {
+.loading canvas, .loading main, .loading .focusPoint {
     opacity: 0;
     transition: opacity 0.5s;
 }
 
 @keyframes loadTextAnim {
-    0% {content: "loading"}
-    10% {content: "lo0ading"}
-    20% {content: "lo0a&ding"}
-    30% {content: "lÒo0a&ding"}
-    40% {content: "lÒo0a&diÒ◊ng"}
-    50% {content: "lÒo0a&dÆiÒ◊ng"}
-    60% {content: "lÒo0a&diÒ◊ng"}
-    70% {content: "lÒo0a&ding"}
-    80% {content: "lo0a&ding"}
-    90% {content: "lo0ading"}
+    0% {content:   "loading"}
+    10% {content:  "lo0ading"}
+    20% {content:  "lo0a&ding"}
+    30% {content:  "lÒo0a&ding"}
+    40% {content:  "lÒo0a&diÒ◊ng"}
+    50% {content:  "lÒo0a&dÆiÒ◊ng"}
+    60% {content:  "lÒo0a&diÒ◊ng"}
+    70% {content:  "lÒo0a&ding"}
+    80% {content:  "lo0a&ding"}
+    90% {content:  "lo0ading"}
     100% {content: "loading"}
 }
 
 @-webkit-keyframes loadTextAnim {
-    0% {content: "loading"}
-    10% {content: "lo0ading"}
-    20% {content: "lo0a&ding"}
-    30% {content: "lÒo0a&ding"}
-    40% {content: "lÒo0a&diﬁ◊ng"}
-    50% {content: "lÒo0a&dÆiÒ◊ng"}
-    60% {content: "lÒo0a&diﬁ◊ng"}
-    70% {content: "lÒo0a&ding"}
-    80% {content: "lo0a&ding"}
-    90% {content: "lo0ading"}
+    0% {content:   "loading"}
+    10% {content:  "lo0ading"}
+    20% {content:  "lo0a&ding"}
+    30% {content:  "lÒo0a&ding"}
+    40% {content:  "lÒo0a&diﬁ◊ng"}
+    50% {content:  "lÒo0a&dÆiÒ◊ng"}
+    60% {content:  "lÒo0a&diﬁ◊ng"}
+    70% {content:  "lÒo0a&ding"}
+    80% {content:  "lo0a&ding"}
+    90% {content:  "lo0ading"}
     100% {content: "loading"}
 }
 
@@ -89,7 +94,7 @@ body.loading {
 }
 
 main {
-    width: 100%;
+    width: calc(100% - 80px);
     height: auto;
     margin: 0;
     padding: 0;
@@ -97,22 +102,29 @@ main {
     display: flex;
     flex-direction: column;
     transition: opacity 0.5s;
+    z-index: 5;
+    padding: 40px;
+    cursor: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 canvas {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 0;
     pointer-events: none;
     opacity: 1;
     transition: opacity 0.5s;
+    overflow: hidden;
 }
 
 p {
     margin: 0;
     padding: 0;
-    cursor: default;
 }
 
 a {
@@ -120,6 +132,8 @@ a {
     text-decoration: underline;
     height: auto;
     cursor: default;
+    transition: text-decoration-color 0.1s;
+    text-decoration-color: blue;
 }
 
 a:hover {
@@ -127,14 +141,17 @@ a:hover {
 }
 
 .hasHover a:hover {
-    text-decoration: underline dotted;
+    text-decoration-color: white;
 }
 
 @media screen and (min-width: 901px) {
     p, a {
+        font-size: 2rem;
+    }
+    #loadingText {
         font-size: 1.7rem;
     }
-    .links a {
+    .linksCont a {
         font-size: 1.5rem;
     }
     .description {
@@ -152,7 +169,10 @@ a:hover {
     p, a {
         font-size: 1.5rem;
     }
-    .links a {
+    #loadingText {
+        font-size: 1.5rem;
+    }
+    .linksCont a {
         font-size: 1.3rem;
     }
     .description {
@@ -170,7 +190,10 @@ a:hover {
     p, a {
         font-size: 1.3rem;
     }
-    .links a {
+    #loadingText {
+        font-size: 1.3rem;
+    }
+    .linksCont a {
         font-size: 1.25rem;
     }
     .description {
@@ -190,6 +213,7 @@ a:hover {
     -webkit-transform: translate(-50%, -50%);
     -webkit-backface-visibility: hidden;
     position: fixed;
+    /* transition: top 1s, left 1s; */
 
     top: 30%;
     left: 60%;
@@ -199,8 +223,9 @@ a:hover {
 
     border-radius: 50%;
     background-color: blue;
-    z-index: 2;
-    cursor: url('/assets/down.png'), pointer;
+    z-index: 1;
+    cursor: none;
+    pointer-events: none;
 
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -211,13 +236,9 @@ a:hover {
                                     supported by Chrome and Opera */
 }
 
-.focusPoint.anim {
-    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
-}
-
 .hasHover .focusPoint:hover {
     transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
-    background-color: black;
+    background-color: var(--bg);
 }
 
 .paddingEl {
@@ -229,16 +250,14 @@ a:hover {
 .menuCont {
     display: flex;
     width: 100%;
-    height: 100%;
     flex-direction: column;
     opacity: 1;
     transition: opacity 0.5s;
     color: white;
     z-index: 3;
     overflow: hidden;
-    overflow-y: scroll;
-    cursor: url('/assets/up.png'), pointer;
-    background-color: black;
+    background-color: var(--bg);
+    cursor: default;
 }
 
 .menuInnerCont {
@@ -246,12 +265,14 @@ a:hover {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    flex-grow: 1;
     height: auto;
 }
 
 .description {
     display: flex;
     flex-direction: column;
+    width: 60vw;
     max-width: 900px;
     height: auto;
     font-weight: lighter;
@@ -261,14 +282,6 @@ a:hover {
     padding: 20px 0;
 }
 
-.description a {
-    text-decoration: none;
-}
-
-.hasHover .description a:hover {
-    text-decoration: underline;
-}
-
 .linksCont {
     width: auto;
     display: flex;
@@ -276,28 +289,20 @@ a:hover {
     flex-wrap: wrap;
     flex-shrink: 1;
     height: auto;
+    padding-bottom: 100px;
 }
 
-.links {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    height: auto;
-}
-
-.links p {
+.linksCont a {
     margin-right: 25px;
-    margin-bottom: 25px;
+    /* margin-bottom: 10px; */
     padding: 0;
-    font-weight: bold;
+    color: rgba(255,255,255,0.5);
+    font-weight: 200;
+    transition: color 0.3s;
+    text-decoration: none;
 }
 
-.links a {
-    margin-right: 25px;
-    margin-bottom: 25px;
-    padding: 0;
-}
-
-.hasHover #friendButton:hover {
-    cursor: pointer;
+.linksCont a:hover {
+    color: rgba(255,255,255,1);
+    text-decoration: none;
 }

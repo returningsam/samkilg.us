@@ -52,6 +52,15 @@ function watchForHover() {
     enableHover();
 }
 
+var dampen = (cur,targ,dmp,min,max) => {
+    var dif = Math.abs(targ - cur);
+    if (dif == 0) return 0;
+    var dir = dif / (targ - cur);
+    if (min && dif < min) return dif*dir;
+    if (max && dif > max) return max;
+    return dir * Math.pow(dif,dmp);
+}
+
 /******************************************************************************/
 /*************************** CANVAS HELPERS ***********************************/
 /******************************************************************************/
@@ -83,8 +92,8 @@ const MAX_DIFF = 5000;
 var canv;
 var ctx;
 
-var mouseX;
-var mouseY;
+var mouseX = window.innerWidth/2;
+var mouseY = window.innerHeight/3;
 var mouseMoved = false;
 var curDist;
 
@@ -217,6 +226,7 @@ function loadAnimation() {
         curDist = loadDist;
         loadDist = 2;
         document.body.addEventListener("mousemove",updateMousePos);
+        initFocusPoint();
         if (typeof loadCallback == "function") {
             setTimeout(function () {
                 loadCallback();
@@ -228,6 +238,7 @@ function loadAnimation() {
 
 function startLoadAnimation(callback) {
     loadCallback = callback;
+    if (loadInterval) clearInterval(loadInterval);
     loadInterval = setInterval(loadAnimation, 50);
     if (canvUpdateInterval) clearInterval(canvUpdateInterval);
     canvUpdateInterval = setInterval(frame, 10);
@@ -239,27 +250,43 @@ function startLoadAnimation(callback) {
 
 var focusPoint;
 var focusPointEl;
+var focusPointUpdateInterval;
+
+function updateFocusPoint() {
+    var a = Math.abs(mouseX - focusPoint.x);
+    var b = Math.abs(mouseY - focusPoint.y);
+    var c = (a+b) ? a/(a+b) : 1;
+    var d = (a+b) ? b/(a+b) : 1;
+
+    // console.log(c,d);
+    focusPoint = {
+        x: focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.7,0.1)),
+        y: focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.7,0.1)),
+        r: 50
+    }
+}
 
 function drawFocusPoint() {
+    updateFocusPoint();
     focusPointEl = document.getElementById("focusPoint");
     focusPointEl.style.left = (focusPoint.x) + "px";
     focusPointEl.style.top  = (focusPoint.y) + "px";
+    focusPointEl.style.width  = (focusPoint.r) + "px";
+    focusPointEl.style.height  = (focusPoint.r) + "px";
 }
 
 function genFocusPoint() {
-    var padding = Math.min(window.innerWidth,window.innerHeight)/10;
     focusPoint = {
-        x: chance.integer({min: padding, max: window.innerWidth  - padding}),
-        y: chance.integer({min: padding, max: window.innerHeight - padding}),
-        r: 100
+        x: mouseX,
+        y: mouseY,
+        r: 50
     }
 }
 
 function initFocusPoint() {
     genFocusPoint();
     drawFocusPoint();
-    focusPointEl.removeEventListener("click",blueDotClickHandler);
-    focusPointEl.addEventListener("click",blueDotClickHandler);
+    focusPointUpdateInterval = setInterval(drawFocusPoint, 1);
 }
 
 /******************************************************************************/
@@ -271,18 +298,6 @@ function updateMousePos(ev) {
         mouseX = ev.clientX;
         mouseY = ev.clientY;
         mouseMoved = true;
-    }
-}
-
-function blueDotClickHandler(ev) {
-    var menuEl = document.getElementById("menuCont");
-    menuEl.scrollIntoView({behavior:"smooth", block: "start"});
-}
-
-function exitInfoHandler(ev) {
-    if (ev.target.tagName != "P" && ev.target.tagName != "A") {
-        var paddingEl = document.getElementById("paddingEl");
-        paddingEl.scrollIntoView({behavior:"smooth", block: "start"});
     }
 }
 
@@ -314,8 +329,8 @@ function initGrain() {
 var resizeTimeout;
 
 function resize() {
-    document.getElementById("menuCont").style.minHeight = window.innerHeight + "px";
-    document.getElementById("paddingEl").style.minHeight = window.innerHeight + "px";
+    document.getElementById("menuCont").style.minHeight = (window.innerHeight - 80) + "px";
+    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         initFocusPoint();
@@ -354,16 +369,7 @@ function initCanv() {
     canv.height = window.innerHeight * RATIO_MULT;
 }
 
-function init() {
-    isMobile = checkMobile();
-    watchForHover();
-    initCanv();
-    initContent();
-    var menuCont = document.getElementById("menuCont");
-    menuCont.style.minHeight = window.innerHeight + "px";
-    menuCont.addEventListener("click",exitInfoHandler);
-    document.getElementById("paddingEl").style.minHeight = window.innerHeight + "px";
-
+function initParts() {
     genPartsWorker = new Worker('genPartsWorker.js');
 
     genPartsWorker.addEventListener('message', function(e) {
@@ -383,8 +389,6 @@ function init() {
     genPartsAsync(function () {
         document.body.classList.remove("loading");
         initFocusPoint();
-        document.getElementById("focusPoint").classList.add("anim");
-
         if (isMobile) {
             setTimeout(function () {
                 startLoadAnimation(blueDotClickHandler);
@@ -392,6 +396,17 @@ function init() {
         }
         else setTimeout(startLoadAnimation,700);
     });
+}
+
+function init() {
+    isMobile = checkMobile();
+    watchForHover();
+    initCanv();
+    initContent();
+    var menuCont = document.getElementById("menuCont");
+    menuCont.style.minHeight = (window.innerHeight - 80) + "px";
+    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
+    initParts();
 }
 
 window.onload = init;
