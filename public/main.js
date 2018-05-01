@@ -82,12 +82,18 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
+function getDir(x1,y1,x2,y2) {
+    var a = x1 - x2;
+    var b = y1 - y2;
+    return [a/Math.abs(a),b/Math.abs(b)];
+}
+
 /******************************************************************************/
 /*************************** CANVAS ANIMATION *********************************/
 /******************************************************************************/
 
 const RATIO_MULT = 1.5;
-const MAX_DIFF = 5000;
+var minDist;
 
 var canv;
 var ctx;
@@ -107,31 +113,11 @@ var animCenter;
 
 var genPartsWorker;
 
-function getColorID(color) {
-    if (usedColors.indexOf(color) < 0) usedColors.push(color);
-    return usedColors.indexOf(color);
-}
-
-function newPart(points) {
-    var cx = 0;
-    var cy = 0;
-    for (var i = 0; i < points.length; i++) {
-        cx += points[i][0][0];
-        cy += points[i][0][1];
-    }
-    cx = cx / points.length;
-    cy = cy / points.length;
-    var cDist = getDist(cx,cy,animCenter[0][0],animCenter[0][1]);
-
-    return {
-        points: points,
-        cDist: cDist,
-        dx: chance.integer({min: -window.innerWidth/1.5, max: window.innerWidth/1.5}),
-        dy: chance.integer({min: -window.innerHeight/1.5, max: window.innerHeight/1.5}),
-    };
-}
-
 var genPartsWorkerCallback;
+
+function updateMinDist() {
+    minDist = Math.pow(Math.min(window.innerWidth,window.innerHeight),0.8);
+}
 
 function genPartsAsync(callback) {
     genPartsWorkerCallback = callback;
@@ -206,6 +192,43 @@ function frame() {
     }
 }
 
+function updateParts() {
+    var imgData = ctx.createImageData(canv.width,canv.height);
+    for (var i = 0; i < allParts.length; i++) {
+        var curPart = allParts[i];
+        var curDist = getDist(curPart.center[0],curPart.center[1],focusPoint.x*RATIO_MULT,focusPoint.y*RATIO_MULT) * curPart.m;
+        if (curDist < minDist) {
+            var distMult = 1- (curDist/minDist);
+            for (var j = 0; j < curPart.points.length; j++) {
+                var curPoint = curPart.points[j];
+                var newX = curPoint[0][0] + Math.floor(curPart.dx*distMult);
+                var newY = curPoint[0][1] + Math.floor(curPart.dy*distMult);
+                if (newX > 0 && newX < canv.width && newY > 0 && newY < canv.height) {
+                    var ind = coordToInd(newX,newY);
+                    var c = usedColors[curPoint[1]];
+                    imgData.data[ind]   = c[0];
+                    imgData.data[ind+1] = c[1];
+                    imgData.data[ind+2] = c[2];
+                    imgData.data[ind+3] = c[3];
+                }
+            }
+        }
+        else {
+            for (var j = 0; j < curPart.points.length; j++) {
+                var curPoint = curPart.points[j];
+                var ind = coordToInd(curPoint[0][0],curPoint[0][1]);
+                var c = usedColors[curPoint[1]];
+                imgData.data[ind]   = c[0];
+                imgData.data[ind+1] = c[1];
+                imgData.data[ind+2] = c[2];
+                imgData.data[ind+3] = c[3];
+            }
+        }
+    }
+    ctx.clearRect(0,0,canv.width,canv.height);
+    ctx.putImageData(imgData,0,0);
+}
+
 /******************************************************************************/
 /*************************** CANVAS LOAD ANIMATION ****************************/
 /******************************************************************************/
@@ -225,8 +248,6 @@ function loadAnimation() {
         loadInterval = null;
         curDist = loadDist;
         loadDist = 2;
-        document.body.addEventListener("mousemove",updateMousePos);
-        initFocusPoint();
         if (typeof loadCallback == "function") {
             setTimeout(function () {
                 loadCallback();
@@ -259,11 +280,8 @@ function updateFocusPoint() {
     var d = (a+b) ? b/(a+b) : 1;
 
     // console.log(c,d);
-    focusPoint = {
-        x: focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.7,0.1)),
-        y: focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.7,0.1)),
-        r: 50
-    }
+    focusPoint.x = focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.7,0.1));
+    focusPoint.y = focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.7,0.1));
 }
 
 function drawFocusPoint() {
@@ -278,8 +296,7 @@ function drawFocusPoint() {
 function genFocusPoint() {
     focusPoint = {
         x: mouseX,
-        y: mouseY,
-        r: 50
+        y: mouseY
     }
 }
 
@@ -339,7 +356,7 @@ function resize() {
             initContent();
             genPartsAsync(function () {
                 mouseMoved = true;
-                frame();
+                updateMinDist();
             });
         }, 10);
     }, 200);
@@ -356,8 +373,12 @@ function initContent() {
     ctx.fillStyle = "black";
     ctx.font = "bolder " + (Math.pow(canv.width,0.6)*RATIO_MULT) + "px Inter UI, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
-    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
+    // var numTexts = 10;
+    // for (var i = 1; i < numTexts; i++) {
+    //     ctx.fillText(chance.string({length:30}),canv.width/2, (canv.height/2)+(-i * (Math.pow(canv.width,0.6)*RATIO_MULT)));
+    //     ctx.fillText(chance.string({length:30}),canv.width/2, (canv.height/2)+(i  * (Math.pow(canv.width,0.6)*RATIO_MULT)));
+    // }
+    ctx.fillText("Samuel Kilgus",canv.width/2, (canv.height/2)+(0  * (Math.pow(canv.width,0.6)*RATIO_MULT)));
 }
 
 function initCanv() {
@@ -388,13 +409,9 @@ function initParts() {
 
     genPartsAsync(function () {
         document.body.classList.remove("loading");
+        document.body.addEventListener("mousemove",updateMousePos);
         initFocusPoint();
-        if (isMobile) {
-            setTimeout(function () {
-                startLoadAnimation(blueDotClickHandler);
-            }, 700);
-        }
-        else setTimeout(startLoadAnimation,700);
+        setInterval(updateParts, 10);
     });
 }
 
@@ -402,6 +419,7 @@ function init() {
     isMobile = checkMobile();
     watchForHover();
     initCanv();
+    updateMinDist();
     initContent();
     var menuCont = document.getElementById("menuCont");
     menuCont.style.minHeight = (window.innerHeight - 80) + "px";

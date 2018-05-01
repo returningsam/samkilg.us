@@ -132,15 +132,11 @@ a {
     text-decoration: underline;
     height: auto;
     cursor: default;
-    transition: text-decoration-color 0.1s;
     text-decoration-color: blue;
 }
 
-a:hover {
-    cursor: pointer;
-}
-
 .hasHover a:hover {
+    cursor: pointer;
     text-decoration-color: white;
 }
 
@@ -218,8 +214,8 @@ a:hover {
     top: 30%;
     left: 60%;
 
-    width: 100px;
-    height: 100px;
+    width: 25px;
+    height: 25px;
 
     border-radius: 50%;
     background-color: blue;
@@ -294,7 +290,6 @@ a:hover {
 
 .linksCont a {
     margin-right: 25px;
-    /* margin-bottom: 10px; */
     padding: 0;
     color: rgba(255,255,255,0.5);
     font-weight: 200;
