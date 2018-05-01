@@ -131,13 +131,12 @@ a {
     color: white;
     text-decoration: underline;
     height: auto;
-    cursor: default;
+    cursor: none !important;
     text-decoration-color: blue;
 }
 
 .hasHover a:hover {
-    cursor: pointer;
-    text-decoration-color: white;
+    /* text-decoration-color: white; */
 }
 
 @media screen and (min-width: 901px) {
@@ -209,7 +208,7 @@ a {
     -webkit-transform: translate(-50%, -50%);
     -webkit-backface-visibility: hidden;
     position: fixed;
-    /* transition: top 1s, left 1s; */
+    transition: background-color 0.3s;
 
     top: 30%;
     left: 60%;
@@ -219,7 +218,7 @@ a {
 
     border-radius: 50%;
     background-color: blue;
-    z-index: 1;
+    z-index: 5;
     cursor: none;
     pointer-events: none;
 
@@ -230,6 +229,18 @@ a {
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome and Opera */
+}
+
+.focusPoint.clicked {
+    filter: invert(100%);
+}
+
+.menuCont:hover .focusPoint {
+    background-color: white;
+}
+
+.menuCont:hover .focusPoint.link {
+    background-color: blue;
 }
 
 .hasHover .focusPoint:hover {
@@ -253,7 +264,6 @@ a {
     z-index: 3;
     overflow: hidden;
     background-color: var(--bg);
-    cursor: default;
 }
 
 .menuInnerCont {
@@ -298,6 +308,5 @@ a {
 }
 
 .linksCont a:hover {
-    color: rgba(255,255,255,1);
-    text-decoration: none;
+    /* color: rgba(255,255,255,1); */
 }
