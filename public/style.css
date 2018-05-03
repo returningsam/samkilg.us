@@ -104,7 +104,29 @@ main {
     transition: opacity 0.5s;
     z-index: 5;
     padding: 40px;
+    padding-top: calc(100% + 40px);
     cursor: none;
+}
+
+.projectsCont {
+    position: fixed;
+    height: auto;
+    width: auto;
+    max-width: calc(100% - 80px);
+    pointer-events: none;
+    right: 40px;
+    padding-top: 100vh;
+    z-index: 8;
+    cursor: none;
+}
+
+.projectsCont .box {
+    height: 100vh;
+    width: 600px;
+    max-width: 100%;
+    background-color: blue;
+    margin-bottom: 100px;
+    pointer-events: all;
 }
 
 body::-webkit-scrollbar {
@@ -135,10 +157,6 @@ a {
     text-decoration-color: blue;
 }
 
-.hasHover a:hover {
-    /* text-decoration-color: white; */
-}
-
 @media screen and (min-width: 901px) {
     p, a {
         font-size: 2rem;
@@ -148,12 +166,6 @@ a {
     }
     .linksCont a {
         font-size: 1.5rem;
-    }
-    .description {
-        margin: 50px 50px 50px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
     }
     .links {
         min-width: 200px;
@@ -170,12 +182,6 @@ a {
     .linksCont a {
         font-size: 1.3rem;
     }
-    .description {
-        margin: 30px 50px 30px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
-    }
     .links {
         min-width: 150px;
     }
@@ -190,12 +196,6 @@ a {
     }
     .linksCont a {
         font-size: 1.25rem;
-    }
-    .description {
-        margin: 20px 50px 20px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
     }
     .links {
         min-width: 100px;
@@ -218,7 +218,7 @@ a {
 
     border-radius: 50%;
     background-color: blue;
-    z-index: 5;
+    z-index: 10;
     cursor: none;
     pointer-events: none;
 
@@ -243,11 +243,6 @@ a {
     background-color: blue;
 }
 
-.hasHover .focusPoint:hover {
-    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
-    background-color: var(--bg);
-}
-
 .paddingEl {
     width: 100%;
     height: 100%;
@@ -256,7 +251,7 @@ a {
 
 .menuCont {
     display: flex;
-    width: 100%;
+    width: calc(100% - 80px);
     flex-direction: column;
     opacity: 1;
     transition: opacity 0.5s;
@@ -264,6 +259,14 @@ a {
     z-index: 3;
     overflow: hidden;
     background-color: var(--bg);
+    padding: 40px;
+}
+
+.menuCont.pinned {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 80px);
+    margin-top: 40px;
 }
 
 .menuInnerCont {
@@ -278,14 +281,14 @@ a {
 .description {
     display: flex;
     flex-direction: column;
-    width: 60vw;
-    max-width: 900px;
+    width: 800px;
+    max-width: calc(100vw - 160px);
     height: auto;
     font-weight: lighter;
 }
 
 .description p {
-    padding: 20px 0;
+    margin-bottom: 40px;
 }
 
 .linksCont {

@@ -20,38 +20,6 @@ function shuffle(a) {
     }
 }
 
-function watchForHover() {
-    var hasHoverClass = false;
-    var container = document.body;
-    var lastTouchTime = 0;
-
-    function enableHover() {
-        // filter emulated events coming from touch events
-        if (new Date() - lastTouchTime < 500) return;
-        if (hasHoverClass) return;
-
-        container.classList.add("hasHover");
-        hasHoverClass = true;
-    }
-
-    function disableHover() {
-        if (!hasHoverClass) return;
-
-        container.className = container.classList.remove("hasHover");
-        hasHoverClass = false;
-    }
-
-    function updateLastTouchTime() {
-        lastTouchTime = new Date();
-    }
-
-    document.addEventListener('touchstart', updateLastTouchTime, true);
-    document.addEventListener('touchstart', disableHover, true);
-    document.addEventListener('mousemove', enableHover, true);
-
-    enableHover();
-}
-
 var dampen = (cur,targ,dmp,min,max) => {
     var dif = Math.abs(targ - cur);
     if (dif == 0) return 0;
@@ -306,6 +274,9 @@ function initFocusPoint() {
 /*************************** EVENT HANDLERS ***********************************/
 /******************************************************************************/
 
+var curScroll = 0;
+var fauxScrollAmt = 0;
+
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
         mouseX = ev.clientX;
@@ -314,8 +285,25 @@ function updateMousePos(ev) {
     }
 }
 
+function updateProjectsCont(delta) {
+    fauxScrollAmt += delta;
+    var pCont = document.getElementById("projectsCont");
+    if (fauxScrollAmt <= 0)
+        pCont.style.top = null;
+    else pCont.style.top = -fauxScrollAmt + "px";
+    console.log(fauxScrollAmt);
+}
+
 function handleMainScroll(ev) {
-    console.log(ev);
+    curScroll += ev.deltaY;
+    var curScrollTop = document.body.scrollTop;
+    curScroll = Math.min(curScrollTop,Math.max(curScroll,0));
+    var stage1Scroll = document.getElementById("menuCont").clientHeight;
+    // console.log(curScroll);
+    if (curScroll >= stage1Scroll || fauxScrollAmt > 0) {
+        ev.preventDefault();
+        updateProjectsCont(ev.deltaY);
+    }
 }
 
 /******************************************************************************/
@@ -325,8 +313,7 @@ function handleMainScroll(ev) {
 var resizeTimeout;
 
 function resize() {
-    document.getElementById("menuCont").style.minHeight = (window.innerHeight - 80) + "px";
-    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
+    fixSectionHeights();
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         initFocusPoint();
@@ -391,14 +378,14 @@ function initParts() {
 function fixSectionHeights() {
     var menuCont = document.getElementById("menuCont");
 
-    menuCont.style.height = (window.innerHeight - 80) + "px";
-    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
-    menuCont.addEventListener("scroll",handleMainScroll);
+    menuCont.style.height = (window.innerHeight - 160) + "px";
+    document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
+    // document.getElementById("projectsCont").style.paddingTop = (window.innerHeight - 40) + "px";
+    // document.body.addEventListener("wheel",handleMainScroll);
 }
 
 function init() {
     isMobile = checkMobile();
-    watchForHover();
     initCanv();
     updateMinDist();
     initContent();
