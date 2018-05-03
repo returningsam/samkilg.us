@@ -158,10 +158,14 @@ function updateParts() {
             var distMult = 1- (curDist/minDist);
             var xDelta = Math.floor(curPart.dx*distMult);
             var yDelta = Math.floor(curPart.dy*distMult);
+
+
+
             for (var j = 0; j < curPart.points.length; j++) {
                 var curPoint = curPart.points[j];
                 var newX = curPoint[0][0] + xDelta;
                 var newY = curPoint[0][1] + yDelta;
+
                 if (newX > 0 && newX < canv.width && newY > 0 && newY < canv.height) {
                     var ind = coordToInd(newX,newY);
                     var c = usedColors[curPoint[1]];
@@ -221,7 +225,8 @@ function genFocusPoint() {
         x: mouseX,
         y: mouseY,
         push: 100,
-        r: 25
+        r: 25,
+        jitter: 0
     }
 }
 
@@ -252,7 +257,6 @@ function handleGeneralMouseDown() {
         push: 30,
         r: 35,
         easing: 'easeInOutSine',
-        // round: 1,
         duration: 400,
         update: function() {
             console.log(focusPoint);
@@ -280,9 +284,8 @@ function handleGeneralMouseUp() {
         targets: focusPoint,
         push: 100,
         r: 25,
-        duration: 400,
         easing: 'easeInOutSine',
-        // round: 1,
+        duration: 400,
         update: function() {
             console.log(focusPoint);
         }
