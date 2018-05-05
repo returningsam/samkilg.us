@@ -33,21 +33,33 @@ function getColorID(color) {
 }
 
 function newPart(points) {
-    var cx = 0;
-    var cy = 0;
+    var center = [0,0,];
     for (var i = 0; i < points.length; i++) {
-        cx += points[i][0][0];
-        cy += points[i][0][1];
+        center[0] += points[i][0][0];
+        center[1] += points[i][0][1];
     }
-    cx = cx / points.length;
-    cy = cy / points.length;
-    var cDist = parseFloat(getDist(cx,cy,animCenter[0][0],animCenter[0][1]).toFixed(2));
+    center[0] = Math.round(center[0]/points.length);
+    center[1] = Math.round(center[1]/points.length);
+
+    var dx;
+    var dy;
+
+    var ddiv = 3.5;
+    if (chance.bool()) {
+        dx = chance.integer({min: -windowWidth/ddiv, max: windowWidth/ddiv});
+        dy = chance.integer({min: -windowWidth/ddiv, max: windowWidth/ddiv});
+    }
+    else {
+        dy = chance.integer({min: -windowWidth/ddiv, max: windowWidth/ddiv});
+        dx = chance.integer({min: -windowWidth/ddiv, max: windowWidth/ddiv});
+    }
 
     return {
         points: points,
-        cDist: cDist,
-        dx: chance.integer({min: -windowWidth/1.5, max: windowWidth/1.5}),
-        dy: chance.integer({min: -windowHeight/1.5, max: windowHeight/1.5}),
+        center: center,
+        dx: dx,
+        dy: dy,
+        m: chance.floating({min:0.7,max:1.3})
     };
 }
 

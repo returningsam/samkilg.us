@@ -20,38 +20,6 @@ function shuffle(a) {
     }
 }
 
-function watchForHover() {
-    var hasHoverClass = false;
-    var container = document.body;
-    var lastTouchTime = 0;
-
-    function enableHover() {
-        // filter emulated events coming from touch events
-        if (new Date() - lastTouchTime < 500) return;
-        if (hasHoverClass) return;
-
-        container.classList.add("hasHover");
-        hasHoverClass = true;
-    }
-
-    function disableHover() {
-        if (!hasHoverClass) return;
-
-        container.className = container.classList.remove("hasHover");
-        hasHoverClass = false;
-    }
-
-    function updateLastTouchTime() {
-        lastTouchTime = new Date();
-    }
-
-    document.addEventListener('touchstart', updateLastTouchTime, true);
-    document.addEventListener('touchstart', disableHover, true);
-    document.addEventListener('mousemove', enableHover, true);
-
-    enableHover();
-}
-
 var dampen = (cur,targ,dmp,min,max) => {
     var dif = Math.abs(targ - cur);
     if (dif == 0) return 0;
@@ -82,12 +50,19 @@ function getDist(x1,y1,x2,y2) {
     return Math.sqrt((a*a)+(b*b));
 }
 
+function getDir(x1,y1,x2,y2) {
+    var a = x1 - x2;
+    var b = y1 - y2;
+    return [a/Math.abs(a),b/Math.abs(b)];
+}
+
 /******************************************************************************/
 /*************************** CANVAS ANIMATION *********************************/
 /******************************************************************************/
 
 const RATIO_MULT = 1.5;
-const MAX_DIFF = 5000;
+const MIN_DIST_EXP = 0.8;
+var minDist;
 
 var canv;
 var ctx;
@@ -107,31 +82,11 @@ var animCenter;
 
 var genPartsWorker;
 
-function getColorID(color) {
-    if (usedColors.indexOf(color) < 0) usedColors.push(color);
-    return usedColors.indexOf(color);
-}
-
-function newPart(points) {
-    var cx = 0;
-    var cy = 0;
-    for (var i = 0; i < points.length; i++) {
-        cx += points[i][0][0];
-        cy += points[i][0][1];
-    }
-    cx = cx / points.length;
-    cy = cy / points.length;
-    var cDist = getDist(cx,cy,animCenter[0][0],animCenter[0][1]);
-
-    return {
-        points: points,
-        cDist: cDist,
-        dx: chance.integer({min: -window.innerWidth/1.5, max: window.innerWidth/1.5}),
-        dy: chance.integer({min: -window.innerHeight/1.5, max: window.innerHeight/1.5}),
-    };
-}
-
 var genPartsWorkerCallback;
+
+function updateMinDist() {
+    minDist = Math.pow(Math.min(window.innerWidth,window.innerHeight),0.8);
+}
 
 function genPartsAsync(callback) {
     genPartsWorkerCallback = callback;
@@ -162,86 +117,60 @@ function genPartsAsync(callback) {
     });
 }
 
-function drawParts(dist) {
-    var noise = 1;
+function updateParts() {
     var imgData = ctx.createImageData(canv.width,canv.height);
     for (var i = 0; i < allParts.length; i++) {
         var curPart = allParts[i];
-        var distMult = Math.pow(1.001,Math.max(-1*((curPart.cDist/2) - dist),1))-1.001;
-        for (var j = 0; j < curPart.points.length; j++) {
-            var curPoint = curPart.points[j];
-            var newX = curPoint[0][0] + Math.floor(curPart.dx*distMult);
-            var newY = curPoint[0][1] + Math.floor(curPart.dy*distMult);
-            if (newX > 0 && newX < canv.width && newY > 0 && newY < canv.height) {
-                var ind = coordToInd(newX,newY);
+        var curDist = getDist(curPart.center[0],curPart.center[1],focusPoint.x*RATIO_MULT,focusPoint.y*RATIO_MULT) * curPart.m * (focusPoint.push/100);
+        if (curDist < minDist) {
+            var distMult = 1 - (curDist/minDist);
+            if (distMult >= 1) console.log(distMult);
+            var xDelta = Math.floor(curPart.dx*distMult);
+            var yDelta = Math.floor(curPart.dy*distMult);
+
+            for (var j = 0; j < curPart.points.length; j++) {
+                var curPoint = curPart.points[j];
+                var newX = curPoint[0][0] + xDelta;
+                var newY = curPoint[0][1] + yDelta;
+
+                if (newX > 0 && newX < canv.width && newY > 0 && newY < canv.height) {
+                    var ind = coordToInd(newX,newY);
+                    var c = usedColors[curPoint[1]];
+                    imgData.data[ind]   = c[0];
+                    imgData.data[ind+1] = c[1];
+                    imgData.data[ind+2] = c[2];
+                    imgData.data[ind+3] = c[3];
+                }
+            }
+            allParts[i].updated = false;
+        }
+        else {
+            for (var j = 0; j < curPart.points.length; j++) {
+                var curPoint = curPart.points[j];
+                var ind = coordToInd(curPoint[0][0],curPoint[0][1]);
                 var c = usedColors[curPoint[1]];
                 imgData.data[ind]   = c[0];
                 imgData.data[ind+1] = c[1];
                 imgData.data[ind+2] = c[2];
                 imgData.data[ind+3] = c[3];
             }
+
+            if (!allParts[i].updated) {
+                var ddiv = 3.5;
+                if (chance.bool()) {
+                    allParts[i].dx = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                    allParts[i].dy = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                }
+                else {
+                    allParts[i].dx = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                    allParts[i].dy = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                }
+                allParts[i].updated = true;
+            }
         }
     }
     ctx.clearRect(0,0,canv.width,canv.height);
     ctx.putImageData(imgData,0,0);
-}
-
-function frame() {
-    if (mouseMoved) {
-        if (loadTimeout) clearTimeout(loadTimeout);
-        if (loadInterval) clearInterval(loadInterval);
-        var newDist = getDist(focusPoint.x,focusPoint.y,mouseX,mouseY);
-        if (newDist <= focusPoint.r/2) newDist = 0;
-        else newDist = Math.abs(newDist - (focusPoint.r/2));
-
-        var distCh = Math.abs(newDist-curDist);
-        var distChDir = (newDist-curDist)/Math.abs(newDist-curDist);
-        if (distCh > 1)
-            distCh = parseFloat((Math.pow(Math.abs(newDist-curDist),0.6) * distChDir).toFixed(1));
-        else mouseMoved = false;
-
-        curDist += distCh;
-
-        drawParts(curDist);
-    }
-}
-
-/******************************************************************************/
-/*************************** CANVAS LOAD ANIMATION ****************************/
-/******************************************************************************/
-
-const MAX_LOAD_DIST = 500;
-
-var loadTimeout;
-var loadInterval;
-var loadDist = 2;
-var loadCallback;
-
-function loadAnimation() {
-    loadDist += Math.min(Math.max(1,Math.pow(MAX_LOAD_DIST - loadDist,0.8)),loadDist*2);
-    drawParts(loadDist);
-    if (loadDist >= MAX_LOAD_DIST && loadInterval) {
-        clearInterval(loadInterval);
-        loadInterval = null;
-        curDist = loadDist;
-        loadDist = 2;
-        document.body.addEventListener("mousemove",updateMousePos);
-        initFocusPoint();
-        if (typeof loadCallback == "function") {
-            setTimeout(function () {
-                loadCallback();
-                loadCallback = null;
-            }, 500);
-        }
-    }
-}
-
-function startLoadAnimation(callback) {
-    loadCallback = callback;
-    if (loadInterval) clearInterval(loadInterval);
-    loadInterval = setInterval(loadAnimation, 50);
-    if (canvUpdateInterval) clearInterval(canvUpdateInterval);
-    canvUpdateInterval = setInterval(frame, 10);
 }
 
 /******************************************************************************/
@@ -251,6 +180,7 @@ function startLoadAnimation(callback) {
 var focusPoint;
 var focusPointEl;
 var focusPointUpdateInterval;
+var focusPointColor = false;
 
 function updateFocusPoint() {
     var a = Math.abs(mouseX - focusPoint.x);
@@ -259,39 +189,109 @@ function updateFocusPoint() {
     var d = (a+b) ? b/(a+b) : 1;
 
     // console.log(c,d);
-    focusPoint = {
-        x: focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.7,0.1)),
-        y: focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.7,0.1)),
-        r: 50
-    }
+    focusPoint.x = focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.95,0.1));
+    focusPoint.y = focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.95,0.1));
 }
 
 function drawFocusPoint() {
     updateFocusPoint();
-    focusPointEl = document.getElementById("focusPoint");
-    focusPointEl.style.left = (focusPoint.x) + "px";
-    focusPointEl.style.top  = (focusPoint.y) + "px";
+    focusPointEl.style.left   = (focusPoint.x) + "px";
+    focusPointEl.style.top    = (focusPoint.y) + "px";
+    focusPointEl.style.height = (focusPoint.r) + "px";
     focusPointEl.style.width  = (focusPoint.r) + "px";
-    focusPointEl.style.height  = (focusPoint.r) + "px";
 }
 
 function genFocusPoint() {
     focusPoint = {
         x: mouseX,
         y: mouseY,
-        r: 50
+        push: 100,
+        r: 25,
+        jitter: 0
     }
 }
 
+function initFocusPointEventListeners() {
+    var links = document.getElementsByTagName("a");
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener("mouseover",function () {
+            focusPointEl.classList.add("link");
+        });
+        links[i].addEventListener("mouseleave",function () {
+            focusPointEl.classList.remove("link");
+        });
+    }
+}
+
+var FPClickAnim;
+var FPClickAnimDoFinish = false;
+var FPClickAnimDone = true;
+
+function handleGeneralMouseDown() {
+    FPClickAnimDone = false;
+    if (FPClickAnim) {
+        FPClickAnim.pause();
+        FPClickAnim = null;
+    }
+    FPClickAnim = anime({
+        targets: focusPoint,
+        push: 30,
+        r: 35,
+        easing: 'easeInOutSine',
+        duration: 250,
+        update: function() {
+            console.log(focusPoint);
+        },
+        complete: function(anim) {
+            FPClickAnimDone = true;
+            if (!FPClickAnimDoFinish) return;
+            FPClickAnimDoFinish = false;
+            handleGeneralMouseUp();
+        }
+    });
+}
+
+function handleGeneralMouseUp() {
+    if (!FPClickAnimDone) {
+        FPClickAnimDoFinish = true;
+        return;
+    };
+    if (FPClickAnim) {
+        FPClickAnim.pause();
+        FPClickAnim = null;
+    }
+    FPClickAnimResolve = false;
+    FPClickAnim = anime({
+        targets: focusPoint,
+        push: 100,
+        r: 25,
+        easing: 'easeInOutSine',
+        duration: 500,
+        update: function() {
+            console.log(focusPoint);
+        }
+    });
+}
+
 function initFocusPoint() {
-    genFocusPoint();
-    drawFocusPoint();
-    focusPointUpdateInterval = setInterval(drawFocusPoint, 1);
+    focusPointEl = document.getElementById("focusPoint");
+    if (isMobile) focusPointEl.style.display = "none";
+    else {
+        genFocusPoint();
+        drawFocusPoint();
+        focusPointUpdateInterval = setInterval(drawFocusPoint, 10);
+        initFocusPointEventListeners();
+        document.body.addEventListener("mousedown",handleGeneralMouseDown);
+        document.body.addEventListener("mouseup",handleGeneralMouseUp);
+    }
 }
 
 /******************************************************************************/
 /*************************** EVENT HANDLERS ***********************************/
 /******************************************************************************/
+
+var curScroll = 0;
+var fauxScrollAmt = 0;
 
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
@@ -301,25 +301,23 @@ function updateMousePos(ev) {
     }
 }
 
-/******************************************************************************/
-/*************************** RESIZING *****************************************/
-/******************************************************************************/
+function updateProjectsCont(delta) {
+    fauxScrollAmt += delta;
+    var pCont = document.getElementById("projectsCont");
+    if (fauxScrollAmt <= 0)
+        pCont.style.top = null;
+    else pCont.style.top = -fauxScrollAmt + "px";
+    console.log(fauxScrollAmt);
+}
 
-function initGrain() {
-    var gCanv = document.getElementById("grainCanv");
-    var gCtx = gCanv.getContext("2d");
-    gCanv.width  = window.innerWidth  * 2;
-    gCanv.height = window.innerHeight * 2;
-    gCtx.clearRect(0,0,gCanv.width,gCanv.width);
-    var imgData = gCtx.createImageData(gCanv.width,gCanv.height);
-    for (var i = 0; i < imgData.data.length; i+=4) {
-        imgData.data[i]   = chance.integer({min: 0, max: 200});
-        imgData.data[i+1] = chance.integer({min: 0, max: 200});
-        imgData.data[i+2] = chance.integer({min: 0, max: 200});
-        imgData.data[i+3] = chance.integer({min: 0, max: 25});
-    }
-    gCtx.putImageData(imgData, 0, 0);
-    console.log("grain done");
+function handleMainScroll(ev) {
+    curScroll = document.body.scrollTop;
+    // var stage1Scroll = document.getElementById("menuCont").clientHeight;
+    // // console.log(curScroll);
+    // if (curScroll >= stage1Scroll || fauxScrollAmt > 0) {
+    //     ev.preventDefault();
+    //     updateProjectsCont(ev.deltaY);
+    // }
 }
 
 /******************************************************************************/
@@ -329,8 +327,7 @@ function initGrain() {
 var resizeTimeout;
 
 function resize() {
-    document.getElementById("menuCont").style.minHeight = (window.innerHeight - 80) + "px";
-    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
+    fixSectionHeights();
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         initFocusPoint();
@@ -339,7 +336,7 @@ function resize() {
             initContent();
             genPartsAsync(function () {
                 mouseMoved = true;
-                frame();
+                updateMinDist();
             });
         }, 10);
     }, 200);
@@ -356,8 +353,7 @@ function initContent() {
     ctx.fillStyle = "black";
     ctx.font = "bolder " + (Math.pow(canv.width,0.6)*RATIO_MULT) + "px Inter UI, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
-    ctx.fillText("Samuel Kilgus",canv.width/2, canv.height/2);
+    ctx.fillText("Samuel Kilgus",canv.width/2, (canv.height/2)+(0  * (Math.pow(canv.width,0.6)*RATIO_MULT)));
 }
 
 function initCanv() {
@@ -382,31 +378,47 @@ function initParts() {
                 return parseInt(item, 10);
             });
         }
-        frame();
         if (genPartsWorkerCallback) genPartsWorkerCallback();
     }, false);
 
     genPartsAsync(function () {
         document.body.classList.remove("loading");
+        document.body.addEventListener("mousemove",updateMousePos);
         initFocusPoint();
-        if (isMobile) {
-            setTimeout(function () {
-                startLoadAnimation(blueDotClickHandler);
-            }, 700);
-        }
-        else setTimeout(startLoadAnimation,700);
+        setInterval(updateParts, 10);
     });
+}
+
+function fixSectionHeights() {
+    var menuCont = document.getElementById("menuCont");
+
+    menuCont.style.height = (window.innerHeight - 120) + "px";
+    if (isMobile) {
+        document.getElementById("main").style.paddingTop = 40 + "px";
+    }
+    else {
+        document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
+    }
+
+    document.body.addEventListener("scroll",handleMainScroll);
 }
 
 function init() {
     isMobile = checkMobile();
-    watchForHover();
-    initCanv();
-    initContent();
-    var menuCont = document.getElementById("menuCont");
-    menuCont.style.minHeight = (window.innerHeight - 80) + "px";
-    document.getElementById("paddingEl").style.minHeight = (window.innerHeight - 80) + "px";
-    initParts();
+    if (!isMobile) {
+        updateMinDist();
+        initCanv();
+        initContent();
+        initParts();
+        document.getElementById("mobileText").style.display = "none";
+    }
+    else {
+        setTimeout(() => {
+            document.body.classList.remove("loading");
+        }, 500);
+        initFocusPoint();
+    }
+    fixSectionHeights();
 }
 
 window.onload = init;

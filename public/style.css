@@ -20,7 +20,6 @@ html, body {
     font-family: Inter UI, sans-serif;
     overflow-y: scroll;
     scroll-behavior: smooth;
-    background-color: white;
     transition: background-color 0.5s;
 }
 
@@ -104,7 +103,29 @@ main {
     transition: opacity 0.5s;
     z-index: 5;
     padding: 40px;
+    padding-top: calc(100% + 40px);
     cursor: none;
+}
+
+.projectsCont {
+    position: fixed;
+    height: auto;
+    width: auto;
+    max-width: calc(100% - 80px);
+    pointer-events: none;
+    right: 40px;
+    padding-top: 100vh;
+    z-index: 8;
+    cursor: none;
+}
+
+.projectsCont .box {
+    height: 100vh;
+    width: 600px;
+    max-width: 100%;
+    background-color: blue;
+    margin-bottom: 100px;
+    pointer-events: all;
 }
 
 body::-webkit-scrollbar {
@@ -115,7 +136,7 @@ canvas {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: -1;
     pointer-events: none;
     opacity: 1;
     transition: opacity 0.5s;
@@ -131,76 +152,52 @@ a {
     color: white;
     text-decoration: underline;
     height: auto;
-    cursor: default;
-    transition: text-decoration-color 0.1s;
+    cursor: none !important;
     text-decoration-color: blue;
+    -webkit-text-decoration-color: blue;
+    padding: 0;
+    transition: text-decoration-color 0.3s, -webkit-text-decoration-color 0.3s;
 }
 
-a:hover {
-    cursor: pointer;
-}
-
-.hasHover a:hover {
-    text-decoration-color: white;
-}
-
-@media screen and (min-width: 901px) {
+@media screen and (min-width: 1281px) {
     p, a {
-        font-size: 2rem;
+        font-size: 28px;
     }
     #loadingText {
-        font-size: 1.7rem;
+        font-size: 25px;
     }
     .linksCont a {
-        font-size: 1.5rem;
-    }
-    .description {
-        margin: 50px 50px 50px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
+        font-size: 25px;
     }
     .links {
         min-width: 200px;
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1280px) {
     p, a {
-        font-size: 1.5rem;
+        font-size: 25px;
     }
     #loadingText {
-        font-size: 1.5rem;
+        font-size: 23px;
     }
     .linksCont a {
-        font-size: 1.3rem;
-    }
-    .description {
-        margin: 30px 50px 30px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
+        font-size: 23px;
     }
     .links {
         min-width: 150px;
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
     p, a {
-        font-size: 1.3rem;
+        font-size: 23px;
     }
     #loadingText {
-        font-size: 1.3rem;
+        font-size: 20px;
     }
     .linksCont a {
-        font-size: 1.25rem;
-    }
-    .description {
-        margin: 20px 50px 20px 50px;
-    }
-    .linksCont {
-        margin: 0 50px 0 50px;
+        font-size: 20px;
     }
     .links {
         min-width: 100px;
@@ -213,17 +210,17 @@ a:hover {
     -webkit-transform: translate(-50%, -50%);
     -webkit-backface-visibility: hidden;
     position: fixed;
-    /* transition: top 1s, left 1s; */
+    transition: background-color 0.3s;
 
     top: 30%;
     left: 60%;
 
-    width: 100px;
-    height: 100px;
+    width: 25px;
+    height: 25px;
 
     border-radius: 50%;
     background-color: blue;
-    z-index: 1;
+    z-index: 10;
     cursor: none;
     pointer-events: none;
 
@@ -236,9 +233,16 @@ a:hover {
                                     supported by Chrome and Opera */
 }
 
-.hasHover .focusPoint:hover {
-    transition: border-radius 0.2s ease-in, background-color 0.2s, left 0.4s ease-in, top 0.4s ease-in, width 0.4s ease-in, height 0.4s ease-in;
-    background-color: var(--bg);
+.focusPoint.clicked {
+    filter: invert(100%);
+}
+
+.menuCont:hover .focusPoint {
+    background-color: white;
+}
+
+.menuCont:hover .focusPoint.link {
+    background-color: blue;
 }
 
 .paddingEl {
@@ -249,15 +253,23 @@ a:hover {
 
 .menuCont {
     display: flex;
-    width: 100%;
+    width: calc(100% - 80px);
     flex-direction: column;
     opacity: 1;
     transition: opacity 0.5s;
     color: white;
     z-index: 3;
     overflow: hidden;
+    overflow-y: scroll;
     background-color: var(--bg);
-    cursor: default;
+    padding: 40px 40px 0 40px;
+}
+
+.menuCont.pinned {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 80px);
+    margin-top: 40px;
 }
 
 .menuInnerCont {
@@ -272,14 +284,18 @@ a:hover {
 .description {
     display: flex;
     flex-direction: column;
-    width: 60vw;
-    max-width: 900px;
+    width: 800px;
+    max-width: calc(100vw - 160px);
     height: auto;
     font-weight: lighter;
 }
 
 .description p {
-    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+.description a:hover {
+    text-decoration-color: white;
 }
 
 .linksCont {
@@ -289,13 +305,11 @@ a:hover {
     flex-wrap: wrap;
     flex-shrink: 1;
     height: auto;
-    padding-bottom: 100px;
 }
 
 .linksCont a {
     margin-right: 25px;
-    /* margin-bottom: 10px; */
-    padding: 0;
+    margin-bottom: 40px;
     color: rgba(255,255,255,0.5);
     font-weight: 200;
     transition: color 0.3s;
@@ -303,6 +317,5 @@ a:hover {
 }
 
 .linksCont a:hover {
-    color: rgba(255,255,255,1);
-    text-decoration: none;
+    color: white;
 }
