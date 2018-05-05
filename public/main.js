@@ -123,11 +123,10 @@ function updateParts() {
         var curPart = allParts[i];
         var curDist = getDist(curPart.center[0],curPart.center[1],focusPoint.x*RATIO_MULT,focusPoint.y*RATIO_MULT) * curPart.m * (focusPoint.push/100);
         if (curDist < minDist) {
-            var distMult = 1- (curDist/minDist);
+            var distMult = 1 - (curDist/minDist);
+            if (distMult >= 1) console.log(distMult);
             var xDelta = Math.floor(curPart.dx*distMult);
             var yDelta = Math.floor(curPart.dy*distMult);
-
-
 
             for (var j = 0; j < curPart.points.length; j++) {
                 var curPoint = curPart.points[j];
@@ -143,6 +142,7 @@ function updateParts() {
                     imgData.data[ind+3] = c[3];
                 }
             }
+            allParts[i].updated = false;
         }
         else {
             for (var j = 0; j < curPart.points.length; j++) {
@@ -153,6 +153,19 @@ function updateParts() {
                 imgData.data[ind+1] = c[1];
                 imgData.data[ind+2] = c[2];
                 imgData.data[ind+3] = c[3];
+            }
+
+            if (!allParts[i].updated) {
+                var ddiv = 3.5;
+                if (chance.bool()) {
+                    allParts[i].dx = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                    allParts[i].dy = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                }
+                else {
+                    allParts[i].dx = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                    allParts[i].dy = chance.integer({min: -window.innerWidth/ddiv, max: window.innerWidth/ddiv});
+                }
+                allParts[i].updated = true;
             }
         }
     }
@@ -176,8 +189,8 @@ function updateFocusPoint() {
     var d = (a+b) ? b/(a+b) : 1;
 
     // console.log(c,d);
-    focusPoint.x = focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.9,0.1));
-    focusPoint.y = focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.9,0.1));
+    focusPoint.x = focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.95,0.1));
+    focusPoint.y = focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.95,0.1));
 }
 
 function drawFocusPoint() {
@@ -225,7 +238,7 @@ function handleGeneralMouseDown() {
         push: 30,
         r: 35,
         easing: 'easeInOutSine',
-        duration: 400,
+        duration: 250,
         update: function() {
             console.log(focusPoint);
         },
@@ -253,7 +266,7 @@ function handleGeneralMouseUp() {
         push: 100,
         r: 25,
         easing: 'easeInOutSine',
-        duration: 400,
+        duration: 500,
         update: function() {
             console.log(focusPoint);
         }
@@ -262,12 +275,15 @@ function handleGeneralMouseUp() {
 
 function initFocusPoint() {
     focusPointEl = document.getElementById("focusPoint");
-    genFocusPoint();
-    drawFocusPoint();
-    focusPointUpdateInterval = setInterval(drawFocusPoint, 1);
-    initFocusPointEventListeners();
-    document.body.addEventListener("mousedown",handleGeneralMouseDown);
-    document.body.addEventListener("mouseup",handleGeneralMouseUp);
+    if (isMobile) focusPointEl.style.display = "none";
+    else {
+        genFocusPoint();
+        drawFocusPoint();
+        focusPointUpdateInterval = setInterval(drawFocusPoint, 10);
+        initFocusPointEventListeners();
+        document.body.addEventListener("mousedown",handleGeneralMouseDown);
+        document.body.addEventListener("mouseup",handleGeneralMouseUp);
+    }
 }
 
 /******************************************************************************/
@@ -295,15 +311,13 @@ function updateProjectsCont(delta) {
 }
 
 function handleMainScroll(ev) {
-    curScroll += ev.deltaY;
-    var curScrollTop = document.body.scrollTop;
-    curScroll = Math.min(curScrollTop,Math.max(curScroll,0));
-    var stage1Scroll = document.getElementById("menuCont").clientHeight;
-    // console.log(curScroll);
-    if (curScroll >= stage1Scroll || fauxScrollAmt > 0) {
-        ev.preventDefault();
-        updateProjectsCont(ev.deltaY);
-    }
+    curScroll = document.body.scrollTop;
+    // var stage1Scroll = document.getElementById("menuCont").clientHeight;
+    // // console.log(curScroll);
+    // if (curScroll >= stage1Scroll || fauxScrollAmt > 0) {
+    //     ev.preventDefault();
+    //     updateProjectsCont(ev.deltaY);
+    // }
 }
 
 /******************************************************************************/
@@ -378,19 +392,33 @@ function initParts() {
 function fixSectionHeights() {
     var menuCont = document.getElementById("menuCont");
 
-    menuCont.style.height = (window.innerHeight - 160) + "px";
-    document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
-    // document.getElementById("projectsCont").style.paddingTop = (window.innerHeight - 40) + "px";
-    // document.body.addEventListener("wheel",handleMainScroll);
+    menuCont.style.height = (window.innerHeight - 120) + "px";
+    if (isMobile) {
+        document.getElementById("main").style.paddingTop = 40 + "px";
+    }
+    else {
+        document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
+    }
+
+    document.body.addEventListener("scroll",handleMainScroll);
 }
 
 function init() {
     isMobile = checkMobile();
-    initCanv();
-    updateMinDist();
-    initContent();
+    if (!isMobile) {
+        updateMinDist();
+        initCanv();
+        initContent();
+        initParts();
+        document.getElementById("mobileText").style.display = "none";
+    }
+    else {
+        setTimeout(() => {
+            document.body.classList.remove("loading");
+        }, 500);
+        initFocusPoint();
+    }
     fixSectionHeights();
-    initParts();
 }
 
 window.onload = init;

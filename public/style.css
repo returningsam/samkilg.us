@@ -20,7 +20,6 @@ html, body {
     font-family: Inter UI, sans-serif;
     overflow-y: scroll;
     scroll-behavior: smooth;
-    background-color: white;
     transition: background-color 0.5s;
 }
 
@@ -137,7 +136,7 @@ canvas {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: -1;
     pointer-events: none;
     opacity: 1;
     transition: opacity 0.5s;
@@ -155,47 +154,50 @@ a {
     height: auto;
     cursor: none !important;
     text-decoration-color: blue;
+    -webkit-text-decoration-color: blue;
+    padding: 0;
+    transition: text-decoration-color 0.3s, -webkit-text-decoration-color 0.3s;
 }
 
-@media screen and (min-width: 901px) {
+@media screen and (min-width: 1281px) {
     p, a {
-        font-size: 2rem;
+        font-size: 28px;
     }
     #loadingText {
-        font-size: 1.7rem;
+        font-size: 25px;
     }
     .linksCont a {
-        font-size: 1.5rem;
+        font-size: 25px;
     }
     .links {
         min-width: 200px;
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1280px) {
     p, a {
-        font-size: 1.5rem;
+        font-size: 25px;
     }
     #loadingText {
-        font-size: 1.5rem;
+        font-size: 23px;
     }
     .linksCont a {
-        font-size: 1.3rem;
+        font-size: 23px;
     }
     .links {
         min-width: 150px;
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
     p, a {
-        font-size: 1.3rem;
+        font-size: 23px;
     }
     #loadingText {
-        font-size: 1.3rem;
+        font-size: 20px;
     }
     .linksCont a {
-        font-size: 1.25rem;
+        font-size: 20px;
     }
     .links {
         min-width: 100px;
@@ -258,8 +260,9 @@ a {
     color: white;
     z-index: 3;
     overflow: hidden;
+    overflow-y: scroll;
     background-color: var(--bg);
-    padding: 40px;
+    padding: 40px 40px 0 40px;
 }
 
 .menuCont.pinned {
@@ -291,6 +294,10 @@ a {
     margin-bottom: 40px;
 }
 
+.description a:hover {
+    text-decoration-color: white;
+}
+
 .linksCont {
     width: auto;
     display: flex;
@@ -298,12 +305,11 @@ a {
     flex-wrap: wrap;
     flex-shrink: 1;
     height: auto;
-    padding-bottom: 100px;
 }
 
 .linksCont a {
     margin-right: 25px;
-    padding: 0;
+    margin-bottom: 40px;
     color: rgba(255,255,255,0.5);
     font-weight: 200;
     transition: color 0.3s;
@@ -311,5 +317,5 @@ a {
 }
 
 .linksCont a:hover {
-    /* color: rgba(255,255,255,1); */
+    color: white;
 }
