@@ -424,4 +424,3 @@ function init() {
 }
 
 window.onload = init;
-window.onresize = fixSectionHeights;
