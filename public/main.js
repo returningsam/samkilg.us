@@ -84,6 +84,8 @@ var genPartsWorker;
 
 var genPartsWorkerCallback;
 
+var canvasInteraction = true;
+
 function updateMinDist() {
     minDist = Math.pow(Math.min(window.innerWidth,window.innerHeight),0.8);
 }
@@ -118,13 +120,13 @@ function genPartsAsync(callback) {
 }
 
 function updateParts() {
+    if (!canvasInteraction) return;
     var imgData = ctx.createImageData(canv.width,canv.height);
     for (var i = 0; i < allParts.length; i++) {
         var curPart = allParts[i];
         var curDist = getDist(curPart.center[0],curPart.center[1],focusPoint.x*RATIO_MULT,focusPoint.y*RATIO_MULT) * curPart.m * (focusPoint.push/100);
         if (curDist < minDist) {
             var distMult = 1 - (curDist/minDist);
-            if (distMult >= 1) console.log(distMult);
             var xDelta = Math.floor(curPart.dx*distMult);
             var yDelta = Math.floor(curPart.dy*distMult);
 
@@ -239,9 +241,6 @@ function handleGeneralMouseDown() {
         r: 35,
         easing: 'easeInOutSine',
         duration: 250,
-        update: function() {
-            console.log(focusPoint);
-        },
         complete: function(anim) {
             FPClickAnimDone = true;
             if (!FPClickAnimDoFinish) return;
@@ -267,9 +266,6 @@ function handleGeneralMouseUp() {
         r: 25,
         easing: 'easeInOutSine',
         duration: 500,
-        update: function() {
-            console.log(focusPoint);
-        }
     });
 }
 
@@ -291,7 +287,7 @@ function initFocusPoint() {
 /******************************************************************************/
 
 var curScroll = 0;
-var fauxScrollAmt = 0;
+var fauxScrollAmt = 1;
 
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
@@ -307,17 +303,18 @@ function updateProjectsCont(delta) {
     if (fauxScrollAmt <= 0)
         pCont.style.top = null;
     else pCont.style.top = -fauxScrollAmt + "px";
-    console.log(fauxScrollAmt);
 }
 
 function handleMainScroll(ev) {
     curScroll = document.body.scrollTop;
-    // var stage1Scroll = document.getElementById("menuCont").clientHeight;
-    // // console.log(curScroll);
-    // if (curScroll >= stage1Scroll || fauxScrollAmt > 0) {
-    //     ev.preventDefault();
-    //     updateProjectsCont(ev.deltaY);
-    // }
+    var stage1Scroll = document.getElementById("menuCont").clientHeight;
+    // console.log(curScroll);
+    if (curScroll >= stage1Scroll && fauxScrollAmt > 0) {
+        ev.preventDefault();
+        updateProjectsCont(ev.deltaY);
+    }
+    else fauxScrollAmt = 1;
+    console.log(document.getElementById("lastProj").getBoundingClientRect().bottom - window.innerHeight + 40);
 }
 
 /******************************************************************************/
@@ -399,8 +396,6 @@ function fixSectionHeights() {
     else {
         document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
     }
-
-    document.body.addEventListener("scroll",handleMainScroll);
 }
 
 function init() {
@@ -419,6 +414,14 @@ function init() {
         initFocusPoint();
     }
     fixSectionHeights();
+    document.getElementById("menuCont").addEventListener("mouseenter",function () {
+        canvasInteraction = false;
+    })
+    document.getElementById("menuCont").addEventListener("mouseleave",function () {
+        canvasInteraction = true;
+    })
+    // document.body.addEventListener("wheel",handleMainScroll);
 }
 
 window.onload = init;
+window.onresize = fixSectionHeights;
