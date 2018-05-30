@@ -69,7 +69,6 @@ var ctx;
 
 var mouseX = window.innerWidth/2;
 var mouseY = window.innerHeight/3;
-var mouseMoved = false;
 var curDist;
 
 var canvUpdateInterval;
@@ -204,12 +203,20 @@ function drawFocusPoint() {
 }
 
 function genFocusPoint() {
-    focusPoint = {
-        x: mouseX,
-        y: mouseY,
-        push: 100,
-        r: 25,
-        jitter: 0
+    if (!focusPoint) {
+        focusPoint = {
+            x: mouseX,
+            y: mouseY,
+            push: 0,
+            r: 25,
+            jitter: 0
+        }
+        anime({
+            targets: focusPoint,
+            push: 100,
+            easing: 'easeInOutSine',
+            duration: 1000
+        });
     }
 }
 
@@ -283,38 +290,75 @@ function initFocusPoint() {
 }
 
 /******************************************************************************/
+/*************************** PROJECTS *****************************************/
+/******************************************************************************/
+
+function updateProjectsCont(delta) {
+    fauxScrollAmt += delta;
+    fauxScrollAmt = Math.max(0,fauxScrollAmt);
+    var pCont = document.getElementById("projectsCont");
+    pCont.style.top = -fauxScrollAmt + "px";
+}
+
+function positionProjectBoxes() {
+    var projBoxes = document.getElementsByClassName("box");
+    for (var i = 0; i < projBoxes.length; i++) {
+        projBoxes[i].style.marginRight = chance.integer({min:0,max:((window.innerWidth*2/3) - 40) - projBoxes[i].clientWidth}) + "px";
+    }
+}
+
+function initProjects() {
+    // document.body.addEventListener("wheel",handleMainScroll);
+    positionProjectBoxes();
+}
+
+/******************************************************************************/
 /*************************** EVENT HANDLERS ***********************************/
 /******************************************************************************/
 
 var curScroll = 0;
-var fauxScrollAmt = 1;
+var fauxScrollAmt = 0;
 
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
         mouseX = ev.clientX;
         mouseY = ev.clientY;
-        mouseMoved = true;
-    }
-}
 
-function updateProjectsCont(delta) {
-    fauxScrollAmt += delta;
-    var pCont = document.getElementById("projectsCont");
-    if (fauxScrollAmt <= 0)
-        pCont.style.top = null;
-    else pCont.style.top = -fauxScrollAmt + "px";
+        if (fauxScrollAmt > 0) {
+            var horizOffset = ((mouseX - (window.innerWidth/2))/(window.innerWidth/2))*15;
+            if (fauxScrollAmt > 0 && fauxScrollAmt < 50)
+                horizOffset *= fauxScrollAmt / 50;
+            document.getElementById("projectsCont").style.transform = "rotate(" + horizOffset + "deg)";
+        }
+    }
 }
 
 function handleMainScroll(ev) {
+    var scrollAmt = ev.deltaY
     curScroll = document.body.scrollTop;
+    var boxes = document.getElementsByClassName("box");
     var stage1Scroll = document.getElementById("menuCont").clientHeight;
-    // console.log(curScroll);
-    if (curScroll >= stage1Scroll && fauxScrollAmt > 0) {
-        ev.preventDefault();
-        updateProjectsCont(ev.deltaY);
+    var distToBottom = boxes[boxes.length-1]
+        .getBoundingClientRect().bottom - window.innerHeight + 40;
+
+    if (scrollAmt > 0) {
+        if (curScroll >= stage1Scroll && distToBottom > 0) {
+            ev.preventDefault();
+            updateProjectsCont(Math.min(scrollAmt,distToBottom));
+            document.getElementById("projectsCont").style.transformOrigin = "center " + (fauxScrollAmt + (window.innerHeight/2)) + "px";
+        }
     }
-    else fauxScrollAmt = 1;
-    console.log(document.getElementById("lastProj").getBoundingClientRect().bottom - window.innerHeight + 40);
+    else {
+        if (fauxScrollAmt > 0) {
+            ev.preventDefault();
+            updateProjectsCont(scrollAmt);
+            document.getElementById("projectsCont").style.transformOrigin = "center " + (fauxScrollAmt + (window.innerHeight/2)) + "px";
+        }
+    }
+    var horizOffset = ((mouseX - (window.innerWidth/2))/(window.innerWidth/2))*15;
+    if (fauxScrollAmt >= 0 && fauxScrollAmt < (window.innerHeight/2))
+        horizOffset *= fauxScrollAmt / (window.innerHeight/2);
+    document.getElementById("projectsCont").style.transform = "rotate(" + horizOffset + "deg)";
 }
 
 /******************************************************************************/
@@ -329,10 +373,10 @@ function resize() {
     resizeTimeout = setTimeout(function () {
         initFocusPoint();
         initCanv();
+        positionProjectBoxes();
         setTimeout(function () {
             initContent();
             genPartsAsync(function () {
-                mouseMoved = true;
                 updateMinDist();
             });
         }, 10);
@@ -420,7 +464,7 @@ function init() {
     document.getElementById("menuCont").addEventListener("mouseleave",function () {
         canvasInteraction = true;
     })
-    // document.body.addEventListener("wheel",handleMainScroll);
+    initProjects();
 }
 
 window.onload = init;
