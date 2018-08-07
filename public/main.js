@@ -20,13 +20,39 @@ function shuffle(a) {
     }
 }
 
-var dampen = (cur,targ,dmp,min,max) => {
-    var dif = Math.abs(targ - cur);
-    if (dif == 0) return 0;
-    var dir = dif / (targ - cur);
-    if (min && dif < min) return dif*dir;
-    if (max && dif > max) return max;
-    return dir * Math.pow(dif,dmp);
+function getParentByClass(el,parentClass) {
+    while (!el.classList.contains(parentClass)) {
+        if (el.tagName == "BODY") return false;
+        el = el.parentNode;
+    }
+    return el;
+}
+
+function getParentByTag(el,parentTag) {
+    while (el.tagName.toLowerCase() != parentTag) {
+        if (el.tagName == "BODY") return false;
+        el = el.parentNode;
+    }
+    return el;
+}
+
+function getBodyScrollTop () {
+    return Math.max(window.pageYOffset,
+                    document.documentElement.scrollTop,
+                    document.body.scrollTop);
+}
+
+function insertAsFirstChild(parent,child) {
+    parent.insertBefore(child, parent.firstChild);
+}
+
+function roundTo(n, digits) {
+    if (digits === undefined) digits = 0;
+
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    var test =(Math.round(n) / multiplicator);
+    return +(test.toFixed(digits));
 }
 
 /******************************************************************************/
@@ -100,7 +126,7 @@ function genPartsAsync(callback) {
         }
     }
     if (!drawn) {
-        initContent();
+        initSplashContent();
         setTimeout(function () {
             genPartsAsync(callback);
         }, 10);
@@ -124,7 +150,7 @@ function updateParts() {
     for (var i = 0; i < allParts.length; i++) {
         var curPart = allParts[i];
         var curDist = getDist(curPart.center[0],curPart.center[1],focusPoint.x*RATIO_MULT,focusPoint.y*RATIO_MULT) * curPart.m * (focusPoint.push/100);
-        if (curDist < minDist) {
+        if (curDist <= minDist) {
             var distMult = 1 - (curDist/minDist);
             var xDelta = Math.floor(curPart.dx*distMult);
             var yDelta = Math.floor(curPart.dy*distMult);
@@ -182,24 +208,25 @@ var focusPoint;
 var focusPointEl;
 var focusPointUpdateInterval;
 var focusPointColor = false;
+var focusPointTween;
 
 function updateFocusPoint() {
-    var a = Math.abs(mouseX - focusPoint.x);
-    var b = Math.abs(mouseY - focusPoint.y);
-    var c = (a+b) ? a/(a+b) : 1;
-    var d = (a+b) ? b/(a+b) : 1;
-
-    // console.log(c,d);
-    focusPoint.x = focusPoint.x + (c*dampen(focusPoint.x,mouseX,0.95,0.1));
-    focusPoint.y = focusPoint.y + (d*dampen(focusPoint.y,mouseY,0.95,0.1));
+    if (TweenMax.isTweening(focusPointTween)) {
+        focusPointTween.updateTo({x:mouseX,y:mouseY});
+    }
+    else {
+        focusPointTween = TweenMax.to(focusPoint,0.2,{
+            x: mouseX,
+            y: mouseY,
+            easing: Linear.easeInOut
+        });
+    }
 }
 
 function drawFocusPoint() {
     updateFocusPoint();
-    focusPointEl.style.left   = (focusPoint.x) + "px";
-    focusPointEl.style.top    = (focusPoint.y) + "px";
-    focusPointEl.style.height = (focusPoint.r) + "px";
-    focusPointEl.style.width  = (focusPoint.r) + "px";
+    focusPointEl.style.left   = roundTo(focusPoint.x,2) + "px";
+    focusPointEl.style.top    = roundTo(focusPoint.y,2) + "px";
 }
 
 function genFocusPoint() {
@@ -211,69 +238,75 @@ function genFocusPoint() {
             r: 25,
             jitter: 0
         }
-        anime({
-            targets: focusPoint,
+        focusPointTween = TweenMax.to(focusPoint,1,{
             push: 100,
-            easing: 'easeInOutSine',
-            duration: 1000
+            easing: Quad.easeInOut
         });
+    }
+}
+
+function enableLinkCursor() {focusPointEl.classList.add("link");}
+function disableLinkCursor() {focusPointEl.classList.remove("link");}
+function enableTextCursor() {focusPointEl.classList.add("text");}
+function disableTextCursor() {focusPointEl.classList.remove("text");}
+
+
+function addFocusPointListener(el,isLink) {
+    if (isLink) {
+        el.removeEventListener("mouseover",enableLinkCursor);
+        el.addEventListener("mouseover",enableLinkCursor);
+        el.removeEventListener("mouseleave",disableLinkCursor);
+        el.addEventListener("mouseleave",disableLinkCursor);
+    }
+    else {
+        el.removeEventListener("mousemove",enableTextCursor);
+        el.addEventListener("mousemove",enableTextCursor);
+        el.removeEventListener("mouseleave",disableTextCursor);
+        el.addEventListener("mouseleave",disableTextCursor);
     }
 }
 
 function initFocusPointEventListeners() {
     var links = document.getElementsByTagName("a");
-    for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener("mouseover",function () {
-            focusPointEl.classList.add("link");
-        });
-        links[i].addEventListener("mouseleave",function () {
-            focusPointEl.classList.remove("link");
-        });
+    for (var i = 0; i < links.length; i++) addFocusPointListener(links[i],true);
+
+    var textElements = document.getElementsByTagName("p");
+    for (var i = 0; i < textElements.length; i++) {
+        addFocusPointListener(textElements[i],false);
     }
 }
 
-var FPClickAnim;
-var FPClickAnimDoFinish = false;
-var FPClickAnimDone = true;
+var FPClickTween;
 
 function handleGeneralMouseDown() {
-    FPClickAnimDone = false;
-    if (FPClickAnim) {
-        FPClickAnim.pause();
-        FPClickAnim = null;
+    if (TweenMax.isTweening(FPClickTween)) {
+        FPClickTween.updateTo({
+            push: 30
+        },true);
     }
-    FPClickAnim = anime({
-        targets: focusPoint,
-        push: 30,
-        r: 35,
-        easing: 'easeInOutSine',
-        duration: 250,
-        complete: function(anim) {
-            FPClickAnimDone = true;
-            if (!FPClickAnimDoFinish) return;
-            FPClickAnimDoFinish = false;
-            handleGeneralMouseUp();
-        }
-    });
+    else {
+        FPClickTween = TweenMax.to(focusPoint,0.4,{
+            push: 30,
+            easing: Quad.easeInOut
+        });
+    }
+
+    focusPointEl.classList.add("click");
 }
 
 function handleGeneralMouseUp() {
-    if (!FPClickAnimDone) {
-        FPClickAnimDoFinish = true;
-        return;
-    };
-    if (FPClickAnim) {
-        FPClickAnim.pause();
-        FPClickAnim = null;
+    if (TweenMax.isTweening(FPClickTween)) {
+        FPClickTween.updateTo({
+            push: 100
+        },true);
     }
-    FPClickAnimResolve = false;
-    FPClickAnim = anime({
-        targets: focusPoint,
-        push: 100,
-        r: 25,
-        easing: 'easeInOutSine',
-        duration: 500,
-    });
+    else {
+        FPClickTween = TweenMax.to(focusPoint,0.7,{
+            push: 100,
+            easing: Quad.easeInOut
+        });
+    }
+    focusPointEl.classList.remove("click");
 }
 
 function initFocusPoint() {
@@ -283,7 +316,6 @@ function initFocusPoint() {
         genFocusPoint();
         drawFocusPoint();
         focusPointUpdateInterval = setInterval(drawFocusPoint, 10);
-        initFocusPointEventListeners();
         document.body.addEventListener("mousedown",handleGeneralMouseDown);
         document.body.addEventListener("mouseup",handleGeneralMouseUp);
     }
@@ -293,72 +325,206 @@ function initFocusPoint() {
 /*************************** PROJECTS *****************************************/
 /******************************************************************************/
 
-function updateProjectsCont(delta) {
-    fauxScrollAmt += delta;
-    fauxScrollAmt = Math.max(0,fauxScrollAmt);
-    var pCont = document.getElementById("projectsCont");
-    pCont.style.top = -fauxScrollAmt + "px";
-}
+const projData = [
+    {
+        title: "Julia Schafer",
+        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
+        link: "http://dennis6e.com",
+        role: "Site Development, Interaction Design",
+        preview: "still_julia_schafer.jpg",
+        gif: "julia_schafer.gif"
+    },
+    {
+        title: "Dennis 6E",
+        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
+        link: "http://dennis6e.com",
+        role: "Site Development, Interaction Design",
+        preview: "still_not_supposed.jpg",
+        gif: "not_supposed.gif"
+    },
+    {
+        title: "WKNY Design",
+        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
+        link: "http://wknydesign.com",
+        role: "Site Development, Interaction Design",
+        preview: "still_wkny.jpg",
+        gif: "wkny.gif"
+    },
+    {
+        title: "gl-ph",
+        desc: "The home of the inaugural submission call for gl-ph, the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature. The text-only graphic elements and plentiful interactivity were designed to illustrate the dynamic  and surprising nature of the 'digital  literature'.",
+        link: "http://gl-ph.com",
+        role: "Site Design & Development",
+        preview: "still_glph.jpg",
+        gif: "glph.gif"
+    },
+    {
+        title: "brb",
+        desc: "A convenient utility to notify others where you are when you leave your workspace. It was thought up by <a href='https://cole.works' target='_blank'>Cole Johnson</a> and populated with illustrations by <a href='https://dasha.design' target='_blank'>Dasha Buduchina</a>.",
+        link: "http://illbrb.com",
+        role: "Site Design & Development",
+        preview: "still_brb.jpg",
+        gif: "brb.gif"
+    },
+    {
+        title: "Random Friends",
+        desc: "Hoping to remedy the impersonal nature of having a web presence, this tool generates a link that, when visited, will randomly redirect to one of the links provided. This interconnectedness creates a sense of community and make it easier to find other amazing people on 'the web'.",
+        link: "https://samkilg.us/friends",
+        role: "Site Design & Development",
+        preview: "friends.png"
+    }
+];
+
+var curProjRotate;
 
 function positionProjectBoxes() {
     var projBoxes = document.getElementsByClassName("box");
     for (var i = 0; i < projBoxes.length; i++) {
-        projBoxes[i].style.marginRight = chance.integer({min:0,max:((window.innerWidth*2/3) - 40) - projBoxes[i].clientWidth}) + "px";
+        var maxPerc = 100;
+        maxPerc -= Math.min(100,100*((projBoxes[i].offsetWidth + 40)/window.innerWidth));
+        if (!projBoxes[i].style.marginRight)
+            projBoxes[i].style.marginRight = chance.integer({min:0,max:maxPerc}) + "%";
     }
 }
 
+function showProjGif(ev) {
+    var targetBox = getParentByClass(ev.target,"box");
+    var targInd = parseInt(targetBox.id.split("_")[1]);
+    ev.target.src = "assets/project_previews/" + projData[targInd].gif;
+    focusPointEl.classList.add("link");
+}
+
+function hideProjGif(ev) {
+    var targetBox = getParentByClass(ev.target,"box");
+    var targInd = parseInt(targetBox.id.split("_")[1]);
+    ev.target.src = "assets/project_previews/" + projData[targInd].preview;
+    focusPointEl.classList.remove("link");
+}
+
+function previewClickHandler(ev) {
+    var projInd = parseInt(ev.target.id.split("_")[1]);
+    window.open(projData[projInd].link,"_blank");
+}
+
+function addProjects() {
+    var projectsCont = document.getElementById("projectsCont");
+    for (var i = 0; i < projData.length; i++) {
+        if (document.getElementById("proj_" + i)) continue;
+        projBoxCont = document.createElement("div");
+        projBoxCont.classList.add("boxCont");
+
+        projBox = document.createElement("div");
+        projBox.id = "proj_" + i;
+        projBox.classList.add("box");
+
+        // title
+
+        var projTitleCont = document.createElement("a");
+        projTitleCont.classList.add("boxTitle");
+        projTitleCont.href = projData[i].link;
+        projTitleCont.target = "_blank";
+        var projTitle     = document.createElement("span");
+        projTitle.classList.add("titleText");
+        projTitle.innerHTML = projData[i].title;
+        var projTitleLI     = document.createElement("span");
+        projTitleLI.classList.add("linkIcon");
+        projTitleLI.innerHTML = "visit &rarr;";
+
+        projTitleCont.appendChild(projTitle);
+        projTitleCont.appendChild(projTitleLI);
+        projBox.appendChild(projTitleCont);
+
+        // preview
+
+        var projPreviewCont = document.createElement("div");
+        projPreviewCont.classList.add("previewCont");
+        var projPreview = document.createElement("img");
+        if (projData[i].gif) {
+            var gifImg = new Image();
+            gifImg.src = "assets/project_previews/" + projData[i].gif;
+            projPreview.addEventListener("mouseover",showProjGif);
+            projPreview.addEventListener("mouseleave",hideProjGif);
+        }
+        projPreview.src = "assets/project_previews/" + projData[i].preview;
+        projPreview.id = "prev_" + i;
+        projPreview.addEventListener("click",previewClickHandler);
+        projPreviewCont.appendChild(projPreview);
+
+        projBox.appendChild(projPreviewCont);
+
+        // description
+
+        var projDescCont  = document.createElement("div");
+        projDescCont.classList.add("boxDesc");
+        var projDesc     = document.createElement("p");
+        projDesc.innerHTML = projData[i].desc;
+
+        var projRole     = document.createElement("p");
+        projRole.innerHTML = projData[i].role;
+        projRole.classList.add("secondary");
+
+
+        projDescCont.appendChild(projDesc);
+        projDescCont.appendChild(projRole);
+        projBox.appendChild(projDescCont);
+
+        projBoxCont.appendChild(projBox);
+        projectsCont.appendChild(projBoxCont);
+    }
+    initFocusPointEventListeners();
+}
+
+function createProjectBoxes() {
+    // clear projects just in case
+    var projectsCont = document.getElementById("projectsCont");
+    projectsCont.innerHTML = "";
+    addProjects();
+}
+
 function initProjects() {
-    // document.body.addEventListener("wheel",handleMainScroll);
+    createProjectBoxes();
     positionProjectBoxes();
+    window.addEventListener("wheel",handleMainScroll,false);
+    document.getElementById("projScrollCont").addEventListener("wheel",restrictWheel,false);
+}
+
+function restrictWheel(ev) {
+    ev.preventDefault();
+    // return false;
 }
 
 /******************************************************************************/
 /*************************** EVENT HANDLERS ***********************************/
 /******************************************************************************/
 
-var curScroll = 0;
-var fauxScrollAmt = 0;
+var curProjScroll = 0;
 
 function updateMousePos(ev) {
     if (mouseX != ev.clientX || mouseY != ev.clientY) {
         mouseX = ev.clientX;
         mouseY = ev.clientY;
-
-        if (fauxScrollAmt > 0) {
-            var horizOffset = ((mouseX - (window.innerWidth/2))/(window.innerWidth/2))*15;
-            if (fauxScrollAmt > 0 && fauxScrollAmt < 50)
-                horizOffset *= fauxScrollAmt / 50;
-            document.getElementById("projectsCont").style.transform = "rotate(" + horizOffset + "deg)";
-        }
     }
+
+    var hoveringProj = (getParentByClass(ev.target,"box") && true);
+    if (hoveringProj) focusPointEl.style.transform = "rotate(" + curProjRotate + "deg) translate(-50%, -50%)";
+    else focusPointEl.style.transform = null;
 }
 
 function handleMainScroll(ev) {
-    var scrollAmt = ev.deltaY
-    curScroll = document.body.scrollTop;
-    var boxes = document.getElementsByClassName("box");
-    var stage1Scroll = document.getElementById("menuCont").clientHeight;
-    var distToBottom = boxes[boxes.length-1]
-        .getBoundingClientRect().bottom - window.innerHeight + 40;
+    curProjScroll = Math.min(0,Math.max(-(projectsCont.clientHeight + window.innerHeight),curProjScroll - ev.deltaY));
+    ev.preventDefault();
+    var menuCont = document.getElementById("menuCont");
+    menuCont.style.top = Math.min(window.innerHeight - 40,Math.max(40,window.innerHeight + curProjScroll)) + "px";
 
-    if (scrollAmt > 0) {
-        if (curScroll >= stage1Scroll && distToBottom > 0) {
-            ev.preventDefault();
-            updateProjectsCont(Math.min(scrollAmt,distToBottom));
-            document.getElementById("projectsCont").style.transformOrigin = "center " + (fauxScrollAmt + (window.innerHeight/2)) + "px";
-        }
+    if (curProjScroll < window.innerHeight*2) {
+        curProjRotate = Math.sin((-curProjScroll / (window.innerHeight*2)) * Math.PI) * 5;
+
+        projectsCont.style.transformOrigin = "center " + ((-curProjScroll) - window.innerHeight*1.5) + "px";
+        projectsCont.style.transform = "rotate(" + curProjRotate + "deg)";
     }
-    else {
-        if (fauxScrollAmt > 0) {
-            ev.preventDefault();
-            updateProjectsCont(scrollAmt);
-            document.getElementById("projectsCont").style.transformOrigin = "center " + (fauxScrollAmt + (window.innerHeight/2)) + "px";
-        }
-    }
-    var horizOffset = ((mouseX - (window.innerWidth/2))/(window.innerWidth/2))*15;
-    if (fauxScrollAmt >= 0 && fauxScrollAmt < (window.innerHeight/2))
-        horizOffset *= fauxScrollAmt / (window.innerHeight/2);
-    document.getElementById("projectsCont").style.transform = "rotate(" + horizOffset + "deg)";
+    // console.log(ev.deltaY);
+    // console.log(curProjScroll);
+    projectsCont.style.top = (window.innerHeight*2 + curProjScroll) + "px";
 }
 
 /******************************************************************************/
@@ -368,14 +534,15 @@ function handleMainScroll(ev) {
 var resizeTimeout;
 
 function resize() {
-    fixSectionHeights();
+    fixMainContentHeight();
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function () {
         initFocusPoint();
         initCanv();
-        positionProjectBoxes();
+        createProjectBoxes();
         setTimeout(function () {
-            initContent();
+            initSplashContent();
+            positionProjectBoxes();
             genPartsAsync(function () {
                 updateMinDist();
             });
@@ -389,7 +556,7 @@ window.onresize = resize;
 /*************************** INITIALIZATION ***********************************/
 /******************************************************************************/
 
-function initContent() {
+function initSplashContent() {
     ctx.clearRect(0,0,canv.width,canv.height);
     ctx.fillStyle = "black";
     ctx.font = "bolder " + (Math.pow(canv.width,0.6)*RATIO_MULT) + "px Inter UI, sans-serif";
@@ -426,20 +593,36 @@ function initParts() {
         document.body.classList.remove("loading");
         document.body.addEventListener("mousemove",updateMousePos);
         initFocusPoint();
+        initMainContent();
         setInterval(updateParts, 10);
     });
 }
 
-function fixSectionHeights() {
-    var menuCont = document.getElementById("menuCont");
-
-    menuCont.style.height = (window.innerHeight - 120) + "px";
+function fixMainContentHeight() {
     if (isMobile) {
-        document.getElementById("main").style.paddingTop = 40 + "px";
+        document.getElementById("main").style.top = 40 + "px";
+        document.getElementById("menuCont").style.top = 0;
     }
-    else {
-        document.getElementById("main").style.paddingTop = (window.innerHeight - 40) + "px";
-    }
+}
+
+function initMainContent() {
+    fixMainContentHeight();
+    document.getElementById("menuCont").addEventListener("mouseenter",function () {
+        canvasInteraction = false;
+    });
+    document.getElementById("menuCont").addEventListener("mouseleave",function () {
+        canvasInteraction = true;
+    });
+    document.getElementById("projectsCont").addEventListener("mouseenter",function () {
+        canvasInteraction = false;
+    });
+    document.getElementById("projectsCont").addEventListener("mouseleave",function () {
+        canvasInteraction = true;
+    });
+    if (!isMobile) initProjects();
+    else document.getElementById("projectsMessage").innerHTML =
+        "Visit this page on a non-mobile device to see my projects.";
+    window.scrollTo(0,0);
 }
 
 function init() {
@@ -447,7 +630,7 @@ function init() {
     if (!isMobile) {
         updateMinDist();
         initCanv();
-        initContent();
+        initSplashContent();
         initParts();
         document.getElementById("mobileText").style.display = "none";
     }
@@ -456,15 +639,8 @@ function init() {
             document.body.classList.remove("loading");
         }, 500);
         initFocusPoint();
+        initMainContent();
     }
-    fixSectionHeights();
-    document.getElementById("menuCont").addEventListener("mouseenter",function () {
-        canvasInteraction = false;
-    })
-    document.getElementById("menuCont").addEventListener("mouseleave",function () {
-        canvasInteraction = true;
-    })
-    initProjects();
 }
 
 window.onload = init;

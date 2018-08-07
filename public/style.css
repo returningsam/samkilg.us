@@ -1,14 +1,45 @@
 :root {
     --bg: #000;
     --blue: blue;
+    --black: rgba(0,0,0,0.99);
+    --text-size: 28px;
+    --link-size: 23px;
 }
 
-::selection {
-  background: var(--blue); /* WebKit/Blink Browsers */
+.black_highlight p::selection {
+    background-color: var(--black);
+    color: white;
 }
 
-::-moz-selection {
-  background: var(--blue); /* Gecko Browsers */
+.black_highlight p::-moz-selection {
+    background-color: var(--black);
+    color: white;
+}
+
+.black_highlight a::selection {
+    background-color: var(--black);
+    color: white;
+}
+
+.black_highlight a::-moz-selection {
+    background-color: var(--black);
+    color: white;
+}
+
+.blue_highlight p::selection {
+    background-color: var(--blue);
+}
+
+.blue_highlight p::-moz-selection {
+    background-color: var(--blue);
+}
+
+.blue_highlight a::selection {
+    background-color: var(--blue);
+}
+
+.blue_highlight a::-moz-selection {
+    background-color: var(--blue);
 }
 
 html, body {
@@ -16,10 +47,10 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
     font-family: Inter UI, sans-serif;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
+    /* overflow-y: scroll; */
+    /* scroll-behavior: smooth; */
     transition: background-color 0.5s;
 }
 
@@ -70,6 +101,7 @@ body.loading {
     width: 100%;
     height: 100%;
     cursor: progress;
+    font-size: var(--link-size);
 }
 
 .loading #loadingText {
@@ -94,7 +126,7 @@ body.loading {
 
 main {
     width: calc(100% - 80px);
-    height: auto;
+    height: calc(100% - 80px);
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -103,43 +135,146 @@ main {
     transition: opacity 0.5s;
     z-index: 5;
     padding: 40px;
-    padding-top: calc(100% + 40px);
     cursor: none;
+    position: fixed;
+}
+
+.projectsScrollCont {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    /* overflow-y: scroll; */
+    cursor: none;
+    z-index: 8;
+    background-color: rgba(0,0,0,0);
+    transition: background-color 2s;
+    pointer-events: none;
 }
 
 .projectsCont {
-    position: fixed;
-    width: calc(100% - 80px);
-    max-width: calc(100% - 80px);
+    position: absolute;
+    top: 100vh;
+    width: calc(100vw - 80px);
+    max-width: calc(100vw - 80px);
+    overflow: hidden;
     pointer-events: none;
-    top:   40px;
-    right: 40px;
-    padding-top: 100vh;
-    z-index: 8;
-    cursor: none;
-    overflow: visible;
+    padding: 80px;
+    /* padding-top: 100vh; */
+    z-index: 3;
 }
 
 .projectsCont .boxCont {
-    height: calc(100vh - 80px);
+    /* min-height: calc(100vh - 160px); */
     width: 100%;
-    max-width: 100%;
     margin-bottom: 40px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    pointer-events: none;
 }
 
 .projectsCont .box {
-    height: calc(100% - 80px);
+    /* min-height: 100%; */
     width: 520px;
-    max-width: 100%;
-    background-color: white;
+    max-width: calc(100% - 40px);
+
     pointer-events: all;
+    color: black;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-position: center;
+    background-size: cover;
+
+    background-color: white;
 }
 
-body::-webkit-scrollbar {
+.projectsCont .box a, .projectsCont .box p {
+    color: black;
+}
+
+.projectsCont .box .previewCont {
+    padding: 0;
+    max-width: 100%;
+    margin: 100px 0;
+    height: auto;
+    -webkit-box-shadow: 0px 0px 35px 2px rgba(0,0,0,0.1);
+    -moz-box-shadow:    0px 0px 35px 2px rgba(0,0,0,0.1);
+    box-shadow:         0px 0px 35px 2px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.projectsCont .box .previewCont img {
+    padding: 0;
+    margin: 0;
+    margin-bottom: -4px;
+    object-fit: contain;
+    width: 100%;
+}
+
+.projectsCont .box .boxTitle {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    font-size: var(--text-size);
+    text-decoration: none;
+}
+
+.projectsCont .box .boxTitle .titleText {
+    text-decoration: underline;
+}
+
+.projectsCont .box .boxTitle .linkIcon {
+    opacity: 0;
+    transition: opacity 0.3s, margin 0.3s;
+    margin-left: 0;
+}
+
+.projectsCont .box .boxTitle:hover .linkIcon {
+    opacity: 1;
+    margin-left: 40px;
+}
+
+.projectsCont .box .boxDesc {
+    font-size: var(--link-size);
+    flex-shrink: 0;
+}
+
+.projectsCont .box .boxDesc p {
+    margin: 20px 0;
+}
+
+.projectsCont .box .boxDesc p.secondary {
+    color: rgb(100,100,100);
+    font-size: calc(var(--link-size) - 5px);
+}
+
+.projectsCont .box .boxDesc p:first-child {
+    margin-top: 0;
+}
+.projectsCont .box .boxDesc p:last-child {
+    margin-bottom: 0;
+}
+
+*::-webkit-scrollbar {
     display: none;
+    opacity: 0;
+    max-width: 0;
+}
+
+*::-moz-scrollbar {
+    display: none;
+    opacity: 0;
+    max-width: 0;
+}
+
+*::scrollbar {
+    display: none;
+    opacity: 0;
+    max-width: 0;
 }
 
 canvas {
@@ -160,40 +295,21 @@ p {
 }
 
 a {
-    color: white;
-    text-decoration: underline;
-    height: auto;
-    cursor: none !important;
-    text-decoration-color: blue;
-    -webkit-text-decoration-color: blue;
+    margin: 0;
     padding: 0;
-    transition: text-decoration-color 0.3s, -webkit-text-decoration-color 0.3s;
+    cursor: none !important;
 }
 
 @media screen and (min-width: 1281px) {
-    p, a {
-        font-size: 28px;
-    }
-    #loadingText {
-        font-size: 25px;
-    }
-    .linksCont a {
-        font-size: 25px;
-    }
     .links {
         min-width: 200px;
     }
 }
 
 @media screen and (max-width: 1280px) {
-    p, a {
-        font-size: 25px;
-    }
-    #loadingText {
-        font-size: 23px;
-    }
-    .linksCont a {
-        font-size: 23px;
+    :root {
+        --text-size: 25px;
+        --link-size: 20px;
     }
     .links {
         min-width: 150px;
@@ -201,14 +317,9 @@ a {
 }
 
 @media screen and (max-width: 700px) {
-    p, a {
-        font-size: 23px;
-    }
-    #loadingText {
-        font-size: 20px;
-    }
-    .linksCont a {
-        font-size: 20px;
+    :root {
+        --text-size: 23px;
+        --link-size: 20px;
     }
     .links {
         min-width: 100px;
@@ -219,9 +330,9 @@ a {
     transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
-    -webkit-backface-visibility: hidden;
+    /* -webkit-backface-visibility: hidden; */
     position: fixed;
-    transition: background-color 0.3s;
+    transition: width 0.25s, height 0.25s, transform 0.25s, border-radius 0.25s;
 
     top: 30%;
     left: 60%;
@@ -231,9 +342,8 @@ a {
 
     border-radius: 50%;
     background-color: white;
+    border: 0px solid white;
     mix-blend-mode: difference;
-    filter: grayscale(100%);
-    -webkit-filter: grayscale(100%);
     z-index: 100;
     cursor: none;
     pointer-events: none;
@@ -247,36 +357,81 @@ a {
                                     supported by Chrome and Opera */
 }
 
-.focusPoint.clicked {
-    filter: invert(100%);
+.focusPoint.link {
+    width: 35px;
+    height: 35px;
 }
 
-.menuCont:hover .focusPoint {
-    /* background-color: white; */
+.focusPoint.click {
+    width: 35px;
+    height: 35px;
 }
 
-.menuCont:hover .focusPoint.link {
-    /* background-color: blue; */
+.focusPoint.link.click {
+    width: 25px;
+    height: 25px;
+}
+
+.focusPoint.text {
+    width: 2px;
+    height: 25px;
+    border-radius: 0;
+}
+
+.focusPoint.text.link {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.focusPoint.text.link.click {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
 }
 
 .paddingEl {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 40px);
     background: rgba(0,0,0,0);
 }
 
 .menuCont {
+    position: absolute;
+    top: calc(100vh - 40px);
     display: flex;
-    width: calc(100% - 80px);
+    width: calc(100% - 160px);
+    height: calc(100vh - 120px);
     flex-direction: column;
     opacity: 1;
-    transition: opacity 0.5s;
+    /* transition: opacity 0.5s; */
     color: white;
     z-index: 3;
     overflow: hidden;
-    overflow-y: scroll;
     background-color: var(--bg);
     padding: 40px 40px 0 40px;
+    flex-shrink: 0;
+}
+
+/* .menuCont.stuck {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    width: calc(100% - 160px);
+    z-index: -1 !important;
+} */
+
+.menuCont.hidden {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.menuCont::selection {
+  background: blue; /* WebKit/Blink Browsers */
+}
+
+.menuCont::-moz-selection {
+  background: blue; /* Gecko Browsers */
 }
 
 .menuCont.pinned {
@@ -302,14 +457,27 @@ a {
     max-width: calc(100vw - 160px);
     height: auto;
     font-weight: lighter;
+    font-size: var(--text-size);
 }
 
 .description p {
     margin-bottom: 40px;
 }
 
+.description a {
+    color: white;
+    text-decoration: underline;
+    height: auto;
+    cursor: none !important;
+    text-decoration-color: blue;
+    -webkit-text-decoration-color: blue;
+    padding: 0;
+    transition: text-decoration-color 0.3s, -webkit-text-decoration-color 0.3s;
+}
+
 .description a:hover {
     text-decoration-color: white;
+    -webkit-text-decoration-color: white;
 }
 
 .linksCont {
@@ -319,6 +487,7 @@ a {
     flex-wrap: wrap;
     flex-shrink: 1;
     height: auto;
+    font-size: var(--link-size);
 }
 
 .linksCont a {

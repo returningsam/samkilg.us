@@ -6,9 +6,9 @@
         <link rel="stylesheet" href="/assets/inter/inter-ui.css">
         <link rel="stylesheet" href="style.css">
         <link rel="icon" href="favicon.png">
-        <script src="/assets/anime.min.js" charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
         <script src="/assets/chance.min.js" charset="utf-8"></script>
-        <script src="main.js" charset="utf-8"></script>
+        <script src="main.js"               charset="utf-8"></script>
         <meta name="theme-color" content="#555555">
     </head>
 
@@ -51,15 +51,18 @@
     (source: https://www.a1k0n.net/2006/09/15/obfuscated-c-donut.html)
 
     Thanks again,
-                    ~~ Sam Kilgus
+                    ~~ Samuel Kilgus
 -->
 
     <body class="loading">
         <div class="focusPoint" id="focusPoint"></div>
         <p id="loadingText"></p>
+        <div class="projectsScrollCont" id="projScrollCont">
+            <div class="projectsCont black_highlight" id="projectsCont"></div>
+        </div>
         <canvas id="canvas"></canvas>
-        <main id="main">
-            <div id="menuCont" class="menuCont">
+        <main id="main" data-sticky-container>
+            <div id="menuCont" class="menuCont blue_highlight sticky" data-sticky data-margin-top="40" data-sticky-class="stuck">
                 <div class="menuInnerCont">
                     <div class="description">
                         <p id="mobileText">Hello, my name is Samuel Kilgus.</p>
@@ -69,8 +72,8 @@
                         <p>
                             By bridging these two discrete disciplines, I offer new perspectives to enhance the creative decision-making process.
                         </p>
-                        <p>
-                            Portfolio is under construction.
+                        <p id="projectsMessage">
+                            Keep scrolling to see a selection of my recent projects.
                         </p>
                         <p>
                             Check out my <a href="/playground">playground</a> to see what freetime is for, visit a <a href="https://samkilg.us/friends/?links=https%3A%2F%2Fdasha.design,http%3A%2F%2Fcole.works,https%3A%2F%2Fizzyb.net,http%3A%2F%2Fcalebpayne.xyz,http%3A%2F%2Flukaschulz.com,http%3A%2F%2Fwww.tatenewfield.com%2F,https%3A%2F%2Fblogs.lt.vt.edu%2Fcamrbuss%2F" target="_blank">random friend</a>, or <a href="mailto:samkilgus@gmail.com">reach out</a> if you’d like to work together.
@@ -78,29 +81,12 @@
                     </div>
                 </div>
                 <div class="linksCont">
-                    <a href="/assets/resume.pdf"                     target="_blank">resumé</a>
+                    <a href="/assets/resume.pdf"                     target="_blank">resume</a>
                     <a href="https://github.com/returningsam"        target="_blank">github</a>
                     <a href="https://www.linkedin.com/in/samkilgus/" target="_blank">linkedin</a>
                     <a href="https://www.instagram.com/returningsam" target="_blank">instagram</a>
                 </div>
             </div>
-            <!-- <div class="projectsCont" id="projectsCont">
-                <div class="boxCont">
-                    <div class="box"></div>
-                </div>
-                <div class="boxCont">
-                    <div class="box"></div>
-                </div>
-                <div class="boxCont">
-                    <div class="box"></div>
-                </div>
-                <div class="boxCont">
-                    <div class="box"></div>
-                </div>
-                <div class="boxCont">
-                    <div class="box"></div>
-                </div>
-            </div> -->
         </main>
     </body>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-73703405-1"></script>

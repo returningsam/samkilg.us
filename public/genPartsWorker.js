@@ -93,88 +93,58 @@ function genParts(imageData) {
 
     /**************************************************************************/
 
-    // var choice = chance.integer({min: 0,max: 1});
-    var choice = 1;
-    var numParts;
-    var numPointsPerPart;
-    if (choice == 0) {
-        numParts = chance.integer({min:500, max: 700});
-        numPointsPerPart = allPoints.length / numParts;
+    var numParts = 50;
+    var numPointsPerPart = allPoints.length / numParts;
 
-        var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-        allPoints.sort(function(a, b) {
-            var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
-            var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
-            return distA - distB;
-        });
-
-        while (allParts.length < numParts && allPoints.length > 1) {
-            allParts.push(newPart(allPoints.splice(0,Math.min(numPointsPerPart+1,allPoints.length))));
-
-            if (chance.bool({likelihood: 10}) && allPoints.length > 1) {
-                var stPoint = allPoints[chance.integer({min: 0, max: allPoints.length-1})];
-                allPoints.sort(function(a, b) {
-                    var distA = getDist(a[0][0],a[0][1],stPoint[0][0],stPoint[0][1]);
-                    var distB = getDist(b[0][0],b[0][1],stPoint[0][0],stPoint[0][1]);
-                    return distA - distB;
-                });
-            }
-        }
+    // points preprocessing
+    var coordDict = {};
+    var numToProcess = allPoints.length;
+    for (var i = 0; i < allPoints.length; i++) {
+        var x = allPoints[i][0][0],y = allPoints[i][0][1];
+        if (!coordDict[x])    coordDict[x]    = {};
+        if (!coordDict[x][y]) coordDict[x][y] = [];
+        coordDict[x][y] = i;
     }
-    else if (choice == 1) {
-        var numParts = chance.integer({min: 100, max: 200});
-        numPointsPerPart = allPoints.length / numParts;
 
-        // points preprocessing
-        var coordDict = {};
-        var numToProcess = allPoints.length;
-        for (var i = 0; i < allPoints.length; i++) {
-            var x = allPoints[i][0][0],y = allPoints[i][0][1];
-            if (!coordDict[x])    coordDict[x]    = {};
-            if (!coordDict[x][y]) coordDict[x][y] = [];
-            coordDict[x][y] = i;
+    while (numToProcess > 0) {
+        var xCoords = Object.keys(coordDict);
+        var startX = xCoords[chance.integer({min: 0, max: xCoords.length-1})];
+        var yCoords = Object.keys(coordDict[startX]);
+        if (yCoords.length < 1) {
+            delete coordDict[startX];
+            continue;
         }
+        var startY = yCoords[chance.integer({min: 0, max: yCoords.length-1})];
 
-        while (numToProcess > 0) {
-            var xCoords = Object.keys(coordDict);
-            var startX = xCoords[chance.integer({min: 0, max: xCoords.length-1})];
-            var yCoords = Object.keys(coordDict[startX]);
-            if (yCoords.length < 1) {
-                delete coordDict[startX];
-                continue;
-            }
-            var startY = yCoords[chance.integer({min: 0, max: yCoords.length-1})];
-
-            var partPoints = [];
-            partPoints.push(coordDict[startX][startY]);
-            delete coordDict[startX][startY];
-            while (partPoints.length < numPointsPerPart) {
-                var curX = allPoints[partPoints[partPoints.length-1]][0][0];
-                var curY = allPoints[partPoints[partPoints.length-1]][0][1];
-                var nbrs = [];
-                for (var diffX = -1; diffX <= 1; diffX++) {
-                    for (var diffY = -1; diffY <= 1; diffY++) {
-                        if (diffX == 0 && diffY == 0) continue;
-                        var newX = curX + diffX;
-                        var newY = curY + diffY;
-                        if (coordDict[newX] && coordDict[newX][newY]) {
-                            nbrs.push([newX,newY,coordDict[newX][newY]]);
-                            continue;
-                        }
+        var partPoints = [];
+        partPoints.push(coordDict[startX][startY]);
+        delete coordDict[startX][startY];
+        while (partPoints.length < numPointsPerPart) {
+            var curX = allPoints[partPoints[partPoints.length-1]][0][0];
+            var curY = allPoints[partPoints[partPoints.length-1]][0][1];
+            var nbrs = [];
+            for (var diffX = -1; diffX <= 1; diffX++) {
+                for (var diffY = -1; diffY <= 1; diffY++) {
+                    if (diffX == 0 && diffY == 0) continue;
+                    var newX = curX + diffX;
+                    var newY = curY + diffY;
+                    if (coordDict[newX] && coordDict[newX][newY]) {
+                        nbrs.push([newX,newY,coordDict[newX][newY]]);
+                        continue;
                     }
                 }
-                if (nbrs.length > 0) {
-                    var nbr = nbrs[chance.integer({min:0,max:nbrs.length-1})];
-                    partPoints.push(nbr[2]);
-                    delete coordDict[nbr[0]][nbr[1]];
-                }
-                else break;
             }
-            numToProcess -= partPoints.length;
-            partPoints = partPoints.map((a) => allPoints[a]);
-            var part = newPart(partPoints);
-            allParts.push(part);
+            if (nbrs.length > 0) {
+                var nbr = nbrs[chance.integer({min:0,max:nbrs.length-1})];
+                partPoints.push(nbr[2]);
+                delete coordDict[nbr[0]][nbr[1]];
+            }
+            else break;
         }
+        numToProcess -= partPoints.length;
+        partPoints = partPoints.map((a) => allPoints[a]);
+        var part = newPart(partPoints);
+        allParts.push(part);
     }
 
     return {allParts:allParts,animCenter:animCenter,usedColors:usedColors};
