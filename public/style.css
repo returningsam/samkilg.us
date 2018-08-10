@@ -330,7 +330,7 @@ a {
     transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
-    /* -webkit-backface-visibility: hidden; */
+    -webkit-backface-visibility: hidden;
     position: fixed;
     transition: width 0.25s, height 0.25s, transform 0.25s, border-radius 0.25s;
 

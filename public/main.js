@@ -209,17 +209,19 @@ var focusPointEl;
 var focusPointUpdateInterval;
 var focusPointColor = false;
 var focusPointTween;
+var mouseMoveTime = 0.5;
 
 function updateFocusPoint() {
     if (TweenMax.isTweening(focusPointTween)) {
         focusPointTween.updateTo({x:mouseX,y:mouseY});
     }
     else {
-        focusPointTween = TweenMax.to(focusPoint,0.2,{
+        focusPointTween = TweenMax.to(focusPoint,mouseMoveTime,{
             x: mouseX,
             y: mouseY,
             easing: Linear.easeInOut
         });
+        mouseMoveTime = 0.01;
     }
 }
 
@@ -328,15 +330,15 @@ function initFocusPoint() {
 const projData = [
     {
         title: "Julia Schafer",
-        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
-        link: "http://dennis6e.com",
+        desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a>, as well as a hand crafted CMS that allows dynamic content and code-free style editing.",
+        link: "http://juliaschaefer.ch",
         role: "Site Development, Interaction Design",
         preview: "still_julia_schafer.jpg",
         gif: "julia_schafer.gif"
     },
     {
-        title: "Dennis 6E",
-        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
+        title: "Dennis6E",
+        desc: "A website for <a href='https://beta.p-e-o-p-l-e.com/recording/not-supposed' target='_blank'>Serengeti's</a> new album, Dennis6E, the final installment of the Kenny Dennis saga. Using WebGL, an interactive video element emulates the act of fast-forwarding and rewinding a VHS tape. Created in collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a>.",
         link: "http://dennis6e.com",
         role: "Site Development, Interaction Design",
         preview: "still_not_supposed.jpg",
@@ -352,7 +354,7 @@ const projData = [
     },
     {
         title: "gl-ph",
-        desc: "The home of the inaugural submission call for gl-ph, the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature. The text-only graphic elements and plentiful interactivity were designed to illustrate the dynamic  and surprising nature of the 'digital  literature'.",
+        desc: "The home of the inaugural submission call for gl-ph, the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature. The text-only graphic elements and plentiful interactivity were designed to illustrate the dynamic and surprising nature of the 'digital  literature'.",
         link: "http://gl-ph.com",
         role: "Site Design & Development",
         preview: "still_glph.jpg",
@@ -510,21 +512,42 @@ function updateMousePos(ev) {
     else focusPointEl.style.transform = null;
 }
 
+function tweenScrollUpdateHandler() {
+    var menuCont = document.getElementById("menuCont");
+    menuCont.style.top = Math.min(window.innerHeight - 40,Math.max(40,window.innerHeight + curScroll.targ)) + "px";
+    projectsCont.style.top = (window.innerHeight*2 + curScroll.targ) + "px";
+
+    if (curScroll.targ < window.innerHeight*2) {
+        curProjRotate = Math.sin((-curScroll.targ / (window.innerHeight*2)) * Math.PI) * 5;
+
+        projectsCont.style.transformOrigin = "center " + ((-curScroll.targ) - window.innerHeight*1.5) + "px";
+        projectsCont.style.transform = "rotate(" + curProjRotate + "deg)";
+    }
+}
+
+var scrollTween;
+var curScroll = {};
+
+function tweenScroll(targ) {
+    if (TweenMax.isTweening(scrollTween)) {
+        scrollTween.updateTo({
+            targ: targ,
+        },false);
+    }
+    else {
+        scrollTween = TweenMax.to(curScroll,0.25,{
+            targ: targ,
+            easing: Sine.easeOut,
+            onUpdate: tweenScrollUpdateHandler
+        });
+    }
+}
+
 function handleMainScroll(ev) {
     curProjScroll = Math.min(0,Math.max(-(projectsCont.clientHeight + window.innerHeight),curProjScroll - ev.deltaY));
     ev.preventDefault();
-    var menuCont = document.getElementById("menuCont");
-    menuCont.style.top = Math.min(window.innerHeight - 40,Math.max(40,window.innerHeight + curProjScroll)) + "px";
 
-    if (curProjScroll < window.innerHeight*2) {
-        curProjRotate = Math.sin((-curProjScroll / (window.innerHeight*2)) * Math.PI) * 5;
-
-        projectsCont.style.transformOrigin = "center " + ((-curProjScroll) - window.innerHeight*1.5) + "px";
-        projectsCont.style.transform = "rotate(" + curProjRotate + "deg)";
-    }
-    // console.log(ev.deltaY);
-    // console.log(curProjScroll);
-    projectsCont.style.top = (window.innerHeight*2 + curProjScroll) + "px";
+    tweenScroll(curProjScroll);
 }
 
 /******************************************************************************/
