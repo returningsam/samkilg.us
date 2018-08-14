@@ -330,7 +330,7 @@ function initFocusPoint() {
 const projData = [
     {
         title: "Julia Schafer",
-        desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a>, as well as a hand crafted CMS that allows dynamic content and code-free style editing.",
+        desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a> and <a href='https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)' target='_blank'>GLSL</a>, as well as a hand crafted CMS that allows dynamic content and code-free style editing.",
         link: "https://juliaschaefer.ch",
         role: "Site Development, Interaction Design",
         preview: "still_julia_schafer.jpg",
@@ -346,7 +346,7 @@ const projData = [
     },
     {
         title: "WKNY Design",
-        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for Weiden and Kennedy's New York design department. My efforts were focused on adding interactivity to the website to show the studio's willingness to break rules and create the unexpected.",
+        desc: "A collaboration with <a href='http://noideas.biz' target='_blank'>No Ideas</a> to create a new homepage for <a href='http://www.wk.com/' target='_blank'>Wieden and Kennedy's</a> New York design department. My efforts were focused on adding interactivity to the website to illustrate the studio's willingness to break rules and create the unexpected.",
         link: "http://wknydesign.com",
         role: "Site Development, Interaction Design",
         preview: "still_wkny.jpg",

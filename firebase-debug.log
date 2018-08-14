@@ -1,0 +1,26 @@
+[debug] [2018-08-14T13:47:54.235Z] ----------------------------------------------------------------------
+[debug] [2018-08-14T13:47:54.237Z] Command:       /Users/samkilgus/.nvm/versions/node/v10.6.0/bin/node /Users/samkilgus/.nvm/versions/node/v10.6.0/bin/firebase deploy
+[debug] [2018-08-14T13:47:54.238Z] CLI Version:   4.0.3
+[debug] [2018-08-14T13:47:54.238Z] Platform:      darwin
+[debug] [2018-08-14T13:47:54.238Z] Node Version:  v10.6.0
+[debug] [2018-08-14T13:47:54.241Z] Time:          Tue Aug 14 2018 09:47:54 GMT-0400 (Eastern Daylight Time)
+[debug] [2018-08-14T13:47:54.242Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-08-14T13:47:54.253Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-08-14T13:47:54.253Z] > authorizing via signed-in user
+[debug] [2018-08-14T13:47:54.255Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/samkilgus-49192  
+  
+ Tue Aug 14 2018 09:47:54 GMT-0400 (Eastern Daylight Time)
+[debug] [2018-08-14T13:47:54.692Z] <<< HTTP RESPONSE 200
+[debug] [2018-08-14T13:47:54.693Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/samkilgus-49192/tokens  
+  
+ Tue Aug 14 2018 09:47:54 GMT-0400 (Eastern Daylight Time)
+[debug] [2018-08-14T13:47:55.099Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'samkilgus-49192'...
+[info] 
+[info] i  deploying hosting
+[info] i  hosting: preparing public directory for upload...
+[debug] [2018-08-14T13:48:03.997Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/samkilgus-49192/uploads/-LJsgLWAS7uT6Lw_X65X?fileCount=496&message=  
+  
+ Tue Aug 14 2018 09:48:03 GMT-0400 (Eastern Daylight Time)
