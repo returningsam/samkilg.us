@@ -162,6 +162,7 @@ main {
     padding: 80px;
     /* padding-top: 100vh; */
     z-index: 3;
+    will-change: top, transform;
 }
 
 .projectsCont .boxCont {
@@ -347,6 +348,7 @@ a {
     z-index: 100;
     cursor: none;
     pointer-events: none;
+    will-change: top, left;
 
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -411,6 +413,7 @@ a {
     background-color: var(--bg);
     padding: 40px 40px 0 40px;
     flex-shrink: 0;
+    will-change: top;
 }
 
 /* .menuCont.stuck {

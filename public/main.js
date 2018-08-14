@@ -331,7 +331,7 @@ const projData = [
     {
         title: "Julia Schafer",
         desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a>, as well as a hand crafted CMS that allows dynamic content and code-free style editing.",
-        link: "http://juliaschaefer.ch",
+        link: "https://juliaschaefer.ch",
         role: "Site Development, Interaction Design",
         preview: "still_julia_schafer.jpg",
         gif: "julia_schafer.gif"
@@ -354,7 +354,7 @@ const projData = [
     },
     {
         title: "gl-ph",
-        desc: "The home of the inaugural submission call for gl-ph, the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature. The text-only graphic elements and plentiful interactivity were designed to illustrate the dynamic and surprising nature of the 'digital  literature'.",
+        desc: "The home of the inaugural submission call for gl-ph, the first undergraduate literary journals in the nation dedicated exclusively to the publication of digital literature. The text-only graphic elements, static and interactive, were designed to illustrate the dynamic and surprising nature of the 'digital  literature'.",
         link: "http://gl-ph.com",
         role: "Site Design & Development",
         preview: "still_glph.jpg",
@@ -362,7 +362,7 @@ const projData = [
     },
     {
         title: "brb",
-        desc: "A convenient utility to notify others where you are when you leave your workspace. It was thought up by <a href='https://cole.works' target='_blank'>Cole Johnson</a> and populated with illustrations by <a href='https://dasha.design' target='_blank'>Dasha Buduchina</a>.",
+        desc: "A convenient utility to notify others where you are when you leave your workspace. This concept was thought up by <a href='https://cole.works' target='_blank'>Cole Johnson</a> and populated with illustrations by <a href='https://dasha.design' target='_blank'>Dasha Buduchina</a>.",
         link: "http://illbrb.com",
         role: "Site Design & Development",
         preview: "still_brb.jpg",
@@ -370,7 +370,7 @@ const projData = [
     },
     {
         title: "Random Friends",
-        desc: "Hoping to remedy the impersonal nature of having a web presence, this tool generates a link that, when visited, will randomly redirect to one of the links provided. This interconnectedness creates a sense of community and make it easier to find other amazing people on 'the web'.",
+        desc: "As a remedy to impersonal nature of the average web presence, this tool generates a link that, when visited, will randomly redirect to one of the links that you provide. This interconnectedness creates a sense of community and make it easier to find other amazing people on 'the web'.",
         link: "https://samkilg.us/friends",
         role: "Site Design & Development",
         preview: "friends.png"
