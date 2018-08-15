@@ -330,7 +330,7 @@ function initFocusPoint() {
 const projData = [
     {
         title: "Julia Schafer",
-        desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a> and <a href='https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)' target='_blank'>GLSL</a>, as well as a hand crafted CMS that allows dynamic content and code-free style editing.",
+        desc: "A portfolio/blog for Julia Schafer. This site features an interactive 3D liquid text element created with <a href='https://threejs.org/' target='_blank'>Three.js</a> and <a href='https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)' target='_blank'>GLSL</a>, as well as a handcrafted CMS that allows dynamic content and code-free style editing.",
         link: "https://juliaschaefer.ch",
         role: "Site Development, Interaction Design",
         preview: "still_julia_schafer.jpg",
@@ -363,7 +363,7 @@ const projData = [
     {
         title: "brb",
         desc: "A convenient utility to notify others where you are when you leave your workspace. This concept was thought up by <a href='https://cole.works' target='_blank'>Cole Johnson</a> and populated with illustrations by <a href='https://dasha.design' target='_blank'>Dasha Buduchina</a>.",
-        link: "http://illbrb.com",
+        link: "https://illbrb.com/",
         role: "Site Design & Development",
         preview: "still_brb.jpg",
         gif: "brb.gif"
